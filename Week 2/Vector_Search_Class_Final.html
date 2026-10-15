@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vector Search & Vector Databases — Three-Slide Deep Dive</title>
+<style>
+:root{
+  --maroon:#800000; --maroon-dark:#5b0000; --maroon-soft:#f6eeee;
+  --ink:#171717; --muted:#626262; --paper:#fbfaf8; --card:#ffffff;
+  --line:#ded9d4; --soft:#f5f1ed; --gold:#c7a34b; --blue:#2f6f9f;
+  --green:#397a5c; --red:#ae3d36; --purple:#6f5b96;
+  --shadow:0 14px 34px rgba(32,24,20,.07);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.57}
+a{color:#0b536d;text-underline-offset:3px}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}
+.topbar .inner{max-width:1220px;margin:auto;padding:11px 22px;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.brand{font-weight:900;color:var(--maroon);letter-spacing:.2px;white-space:nowrap}
+nav{display:flex;gap:17px;flex-wrap:wrap;justify-content:flex-end}
+nav a{color:#333;text-decoration:none;font-size:13px;font-weight:800}
+nav a:hover{color:var(--maroon)}
+.hero{background:linear-gradient(135deg,var(--maroon-dark),var(--maroon));color:#fff;padding:62px 24px 54px}
+.hero .inner{max-width:1220px;margin:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-weight:900;font-size:12px;opacity:.83}
+h1{font-size:52px;line-height:1.04;margin:10px 0 16px;max-width:1040px}
+.hero p{font-size:20px;max-width:940px;margin:0;opacity:.95}
+.hero .mental{display:inline-block;margin-top:23px;padding:10px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-weight:800;font-size:14px;background:rgba(255,255,255,.08)}
+main{max-width:1220px;margin:auto;padding:34px 24px 76px}
+.section{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:42px;margin:0 0 36px;box-shadow:var(--shadow);overflow:hidden}
+.section:before{content:"";position:absolute;left:0;right:0;top:0;height:7px;background:var(--maroon)}
+.kicker{color:var(--maroon);text-transform:uppercase;letter-spacing:.13em;font-weight:900;font-size:12px;margin-bottom:8px}
+h2{font-size:39px;line-height:1.14;margin:0 0 12px}
+h3{font-size:21px;line-height:1.2;margin:0 0 8px}
+h4{margin:0 0 6px;font-size:17px}
+.lead{font-size:20px;max-width:980px;color:#333;margin:0 0 22px}
+.grid2{display:grid;grid-template-columns:1.06fr .94fr;gap:28px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}
+.card p{margin:0;color:#424242}
+.card + .card{}
+.mini{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-weight:900;margin-bottom:9px}
+.callout{background:var(--maroon-soft);border-left:5px solid var(--maroon);padding:15px 17px;border-radius:10px;margin:18px 0;font-size:17px}
+.note{background:#fff9e8;border:1px solid #e8d5a0;padding:14px 16px;border-radius:12px;margin:16px 0}
+.good{background:#eff7f3;border:1px solid #bed9ca;padding:14px 16px;border-radius:12px}
+.small{font-size:13px;color:var(--muted)}
+.tag{display:inline-block;padding:5px 9px;border-radius:999px;background:#eee8e2;font-size:12px;font-weight:850;margin:3px 5px 3px 0}
+.flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.node{min-width:142px;text-align:center;border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px 14px;font-weight:850}
+.node small{display:block;font-size:11px;color:var(--muted);font-weight:650;margin-top:3px}
+.arrow{font-size:27px;color:var(--maroon);font-weight:900}
+.pipeline{background:#fcfbfa;border:1px solid var(--line);border-radius:17px;padding:17px;margin:20px 0 24px}
+.phase-title{text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);font-weight:900;margin-bottom:5px}
+.visual{border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px}
+.vector-space{height:330px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,#fff,#faf7f3);position:relative;overflow:hidden}
+.axis-x,.axis-y{position:absolute;background:#aaa}.axis-x{height:1px;left:42px;right:18px;bottom:42px}.axis-y{width:1px;top:18px;bottom:42px;left:42px}
+.dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%)}
+.query{background:var(--red);left:43%;top:49%}.a{background:var(--gold);left:50%;top:43%}.b{background:var(--green);left:72%;top:27%}.c{background:var(--blue);left:76%;top:69%}
+.ring{position:absolute;width:82px;height:82px;border:2px dashed var(--maroon);border-radius:50%;left:43%;top:49%;transform:translate(-50%,-50%)}
+.vlabel{position:absolute;background:#fff;padding:2px 5px;border-radius:5px;font-size:12px;font-weight:800}.q-l{left:35%;top:53%}.a-l{left:51%;top:35%}.b-l{left:73%;top:19%}.c-l{left:77%;top:72%}
+.caption{font-size:13px;color:var(--muted);margin-top:8px}
+.metric{display:grid;grid-template-columns:180px 1fr;gap:12px;border-bottom:1px dashed var(--line);padding:10px 0}.metric:last-child{border-bottom:none}.metric b{color:var(--maroon)}
+.table-wrap{overflow-x:auto;border-radius:13px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;background:#fff}
+th,td{padding:12px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#f5f1ed;color:var(--maroon);font-size:13px}tr:last-child td{border-bottom:none}
+.stack{display:grid;gap:12px}
+.layer{border:1px solid var(--line);border-radius:14px;padding:15px 17px;background:#fff;display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+.layer strong{color:var(--maroon)}
+.layer.numpy{border-left:6px solid var(--gold)}.layer.lib{border-left:6px solid var(--blue)}.layer.db{border-left:6px solid var(--green)}
+.eq{font-size:29px;font-weight:900;text-align:center;color:var(--maroon);padding:9px 10px;background:#f7f0f0;border-radius:14px;margin:14px 0 20px}
+.checks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}.check{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}.check b{color:var(--maroon)}
+details{border:1px solid var(--line);border-radius:13px;background:#fcfbfa;padding:12px 15px;margin-top:16px}summary{cursor:pointer;font-weight:900;color:var(--maroon)}details p{margin:10px 0 0}
+.code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f5f1ed;border-radius:8px;padding:2px 6px}
+.footer-card{background:#1d1d1d;color:#fff;border:none}.footer-card h2{color:#fff}.footer-card .card{background:#272727;border-color:#444}.footer-card .card p{color:#eee}
+.sources{font-size:13px;color:#ddd;margin-top:18px}.sources a{color:#d9eef7}
+@media(max-width:950px){.grid2,.grid3,.grid4{grid-template-columns:1fr}.checks{grid-template-columns:1fr}h1{font-size:40px}h2{font-size:31px}.section{padding:28px}.layer{grid-template-columns:1fr}.topbar nav{display:none}}
+@media print{.topbar{display:none}.section{break-after:page;box-shadow:none}.hero{break-after:page}body{background:white}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="inner">
+    <div class="brand">THE UNIVERSITY OF CHICAGO · Vector Search</div>
+    <nav>
+      <a href="#slide1">1. Vectorstores</a>
+      <a href="#slide2">2. NN vs Vector DB</a>
+      <a href="#slide3">3. What a Vector DB Adds</a>
+      <a href="#recap">Recap</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="inner">
+    <div class="eyebrow">Embeddings · Nearest Neighbors · FAISS · Vector Databases</div>
+    <h1>Vector Search & Vector Databases: A Three-Slide Deep Dive</h1>
+    <p>A classroom-ready explanation of the three original slides: how vectorstores retrieve relevant chunks, how nearest-neighbor search differs from a vector database, and what production database capabilities add beyond NumPy or FAISS.</p>
+    <div class="mental">Mental model: Embedding gives coordinates → NN search finds neighbors → Vector DB operationalizes the search.</div>
+  </div>
+</section>
+
+<main>
+<section class="section" id="slide1">
+  <div class="kicker">Original Slide 1 · Vectorstores implement this search</div>
+  <h2>High-dimensional search for nearby—or semantically similar—documents</h2>
+  <p class="lead">The retrieval problem begins after documents and the user question have been embedded into the same vector space. A vectorstore stores the document vectors and retrieves the vectors that are closest to the query vector.</p>
+
+  <div class="pipeline">
+    <div class="phase-title">Indexing path — done before the user asks the question</div>
+    <div class="flow">
+      <div class="node">Documents<small>PDF, HTML, wiki, tickets</small></div><div class="arrow">→</div>
+      <div class="node">Split / chunk<small>character, section, semantic</small></div><div class="arrow">→</div>
+      <div class="node">Embedding model<small>chunk → dense vector</small></div><div class="arrow">→</div>
+      <div class="node">Vectorstore<small>vector + text + metadata</small></div>
+    </div>
+    <div class="phase-title" style="margin-top:17px">Query path — done for each user question</div>
+    <div class="flow">
+      <div class="node">Question<small>natural-language query</small></div><div class="arrow">→</div>
+      <div class="node">Query embedding<small>same embedding model</small></div><div class="arrow">→</div>
+      <div class="node">NN / ANN search<small>find nearby vectors</small></div><div class="arrow">→</div>
+      <div class="node">Relevant splits<small>top-k chunks for RAG</small></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div>
+      <div class="mini">What “nearby” means</div>
+      <p>An embedding is a high-dimensional coordinate. Texts with related meaning often land near one another even if the wording is different. The system therefore ranks document chunks using a distance or similarity metric such as cosine similarity, inner product, or Euclidean distance.</p>
+      <div class="callout"><b>Important:</b> the vector database does not “understand” the document in the human sense and it does not write the final answer. It retrieves candidate context. In RAG, the language model uses that retrieved context to produce the response.</div>
+      <div class="metric"><b>Chunking</b><span>Controls the unit of retrieval. Too large can mix topics; too small can remove the context needed to interpret a passage.</span></div>
+      <div class="metric"><b>Embedding model</b><span>Defines the geometry of the semantic space. Documents and queries must be encoded compatibly.</span></div>
+      <div class="metric"><b>Similarity metric</b><span>Defines what “close” means mathematically. The metric should match the embedding model and index configuration.</span></div>
+      <div class="metric"><b>Top-k</b><span>Controls how many candidate chunks are returned. More context is not always better because irrelevant chunks can dilute the prompt.</span></div>
+    </div>
+    <div>
+      <div class="mini">2-D picture of a much higher-dimensional space</div>
+      <div class="vector-space">
+        <div class="axis-x"></div><div class="axis-y"></div><div class="ring"></div>
+        <div class="dot query"></div><div class="vlabel q-l">query</div>
+        <div class="dot a"></div><div class="vlabel a-l">chunk A</div>
+        <div class="dot b"></div><div class="vlabel b-l">chunk B</div>
+        <div class="dot c"></div><div class="vlabel c-l">chunk C</div>
+      </div>
+      <div class="caption">The dashed region represents a local neighborhood around the query. Real embedding spaces may have hundreds or thousands of dimensions; 2-D is only a teaching visualization.</div>
+    </div>
+  </div>
+
+  <div class="mini" style="margin-top:28px">Why ANN methods appear on the slide</div>
+  <p>If the collection is small, we can compare the query vector with every stored vector. At large scale, that exhaustive scan is expensive, so vector systems often use <b>Approximate Nearest Neighbor (ANN)</b> indexes to reduce the candidate search space.</p>
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><h3>HNSW</h3><p><b>Hierarchical Navigable Small World</b> builds a multi-layer proximity graph. Search jumps through coarse layers and then refines locally. It is popular because it often provides strong latency/recall performance.</p><div style="margin-top:10px"><span class="tag">graph</span><span class="tag">high recall</span><span class="tag">memory cost</span></div></div>
+    <div class="card"><h3>IVF</h3><p><b>Inverted File Index</b> partitions vectors into clusters. A query probes only a subset of nearby clusters instead of scanning the full collection. More probes usually improve recall but increase latency.</p><div style="margin-top:10px"><span class="tag">clustering</span><span class="tag">candidate pruning</span><span class="tag">tunable</span></div></div>
+    <div class="card"><h3>PQ</h3><p><b>Product Quantization</b> compresses high-dimensional vectors into compact codes. This reduces memory and can speed distance estimation, at the cost of approximation error.</p><div style="margin-top:10px"><span class="tag">compression</span><span class="tag">memory efficient</span><span class="tag">lossy</span></div></div>
+  </div>
+  <div class="note"><b>Teaching nuance:</b> HNSW, IVF, and PQ are not mutually exclusive categories. Systems can combine them—for example IVF+PQ, and modern vector engines may also combine graph search with quantization.</div>
+  <details><summary>30-second classroom explanation</summary><p>“Imagine every paragraph in our document library as a pin on a giant semantic map. The user question becomes another pin. Retrieval means finding the closest pins. When the map has millions of points, we do not want to measure the distance to every pin, so we build shortcuts—graphs, clusters, or compressed representations—to get to the right neighborhood quickly.”</p></details>
+</section>
+
+<section class="section" id="slide2">
+  <div class="kicker">Original Slide 2 · Nearest neighbor search vs vector databases</div>
+  <h2>The search algorithm and the database are different layers</h2>
+  <p class="lead">Once the query is embedded, the mathematical task is simple: find the nearest vectors. The engineering question is how much infrastructure we need around that search.</p>
+
+  <div class="stack">
+    <div class="layer numpy"><strong>NumPy / brute force</strong><span>Store vectors in an array, compute similarity to every row, sort, and take the top-k. Simple, transparent, and exact.</span></div>
+    <div class="layer lib"><strong>ANN library</strong><span>Use libraries such as FAISS or Annoy to build specialized indexes that make nearest-neighbor retrieval faster or more memory-efficient.</span></div>
+    <div class="layer db"><strong>Vector database</strong><span>Add durable storage, metadata, filtering, APIs, concurrent access, index lifecycle management, and production operations around vector search.</span></div>
+  </div>
+
+  <div class="grid2" style="margin-top:26px">
+    <div>
+      <h3>1. Exact nearest-neighbor search</h3>
+      <p>The most straightforward implementation computes a distance or similarity score between the query and every vector in the archive. For a modest collection, this can be entirely reasonable and is often the cleanest baseline.</p>
+      <div class="callout"><b>Do not teach a hard vector-count threshold.</b> “Thousands or tens of thousands” is a useful intuition, but the practical break-even point depends on dimensionality, hardware, batch size, latency target, and query volume.</div>
+      <div class="card"><h4>Conceptually</h4><p><span class="code">scores = X @ q</span> (for normalized vectors / dot-product style search), then select the top-k rows. That is nearest-neighbor retrieval without a database.</p></div>
+    </div>
+    <div>
+      <h3>2. Search libraries such as FAISS / Annoy</h3>
+      <p>These libraries focus on vector indexing and similarity search. FAISS, for example, includes exhaustive indexes as well as ANN techniques such as inverted files, product quantization, and HNSW.</p>
+      <div class="good" style="margin-top:15px"><b>Useful when:</b> you control the application process, want a fast local index, have limited operational requirements, or are prototyping retrieval before adding a database layer.</div>
+    </div>
+  </div>
+
+  <div class="mini" style="margin-top:28px">3. What a vector database changes</div>
+  <div class="checks">
+    <div class="check"><b>Durability</b><br/>Persist vectors and associated records instead of treating the index as only an in-process data structure.</div>
+    <div class="check"><b>Metadata filtering</b><br/>Combine semantic similarity with constraints such as year, source, department, modality, tenant, or permissions.</div>
+    <div class="check"><b>Data mutation</b><br/>Support inserts, deletes, and updates as part of normal application workflows. How indexes are maintained is implementation-specific.</div>
+    <div class="check"><b>Serving</b><br/>Expose APIs / SDKs and handle concurrent queries from multiple applications or users.</div>
+    <div class="check"><b>Scaling</b><br/>Provide mechanisms for partitioning, replication, resource management, and larger-than-single-process workloads.</div>
+    <div class="check"><b>Operations</b><br/>Add access control, monitoring, backups, metrics, logs, and lifecycle management depending on the product.</div>
+  </div>
+
+  <div class="callout"><b>Key distinction:</b> nearest-neighbor search is a <i>capability</i>; a vector database is a <i>system</i> that exposes and operates that capability along with data-management features.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Question</th><th>NumPy / exact scan</th><th>FAISS / Annoy</th><th>Vector database</th></tr></thead>
+      <tbody>
+        <tr><td>Can it find nearest vectors?</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+        <tr><td>Can it use ANN indexing?</td><td>Not by itself</td><td>Yes</td><td>Usually yes</td></tr>
+        <tr><td>Durable data service?</td><td>No</td><td>Library-level persistence varies</td><td>Yes, as a database/service capability</td></tr>
+        <tr><td>Rich metadata filters?</td><td>Manual application logic</td><td>Limited / library-specific</td><td>Common capability</td></tr>
+        <tr><td>Concurrent API serving?</td><td>You build it</td><td>You build it</td><td>Typically built in</td></tr>
+        <tr><td>Auth / observability / ops?</td><td>You build it</td><td>You build it</td><td>Product-dependent, commonly provided</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <details><summary>30-second classroom explanation</summary><p>“NumPy gives us the math. FAISS gives us a specialized search engine. A vector database wraps that search capability in the machinery we expect from a production data service—storage, filters, APIs, updates, scaling, security, and monitoring.”</p></details>
+</section>
+
+<section class="section" id="slide3">
+  <div class="kicker">Original Slide 3 · Vector DB vs NumPy NN (or FAISS)</div>
+  <h2>A vector database is more than an ANN index</h2>
+  <div class="eq">Vector DB ≈ vector index/search + metadata store + service API + production operations</div>
+  <div class="note"><b>Use the “FAISS + Postgres + REST API + DevOps” equation as an analogy, not a literal implementation.</b> Some vector databases use different internal engines, and general-purpose databases with vector extensions can provide overlapping capabilities.</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th style="width:20%">Capability</th><th style="width:36%">What it means</th><th>Why it matters in a RAG / AI system</th></tr></thead>
+      <tbody>
+        <tr><td><b>Storage</b></td><td>Persists vectors, IDs, documents, and/or references on durable infrastructure rather than relying only on a Python process.</td><td>The retrieval layer survives restarts and can be shared by multiple services.</td></tr>
+        <tr><td><b>Indexing</b></td><td>Builds exact or approximate search structures such as HNSW, IVF, or quantized indexes.</td><td>Controls the latency, recall, memory, and build-time trade-offs of retrieval.</td></tr>
+        <tr><td><b>Metadata store</b></td><td>Keeps scalar attributes alongside vectors—for example <span class="code">year=2026</span>, <span class="code">modality=CT</span>, or <span class="code">department=Radiology</span>.</td><td>Lets the application combine semantic search with business or governance constraints.</td></tr>
+        <tr><td><b>Real-time / online updates</b></td><td>Supports normal insert, delete, or update workflows while managing index maintenance behind the service.</td><td>Knowledge bases can change without an application team rebuilding everything manually after every change.</td></tr>
+        <tr><td><b>Horizontal scaling</b></td><td>Distributes data or query workload across machines, partitions, shards, or replicas depending on the product.</td><td>Supports larger datasets, higher availability, and more concurrent traffic.</td></tr>
+        <tr><td><b>API / SDKs</b></td><td>Offers programmatic interfaces for Python, REST/gRPC, LangChain integrations, and application services.</td><td>Separates the retrieval service from the client application and simplifies integration.</td></tr>
+        <tr><td><b>Security & auth</b></td><td>May provide identity, roles, tenant controls, network policies, and encryption depending on the deployment/product.</td><td>Important when enterprise documents have different access levels or contain sensitive information.</td></tr>
+        <tr><td><b>Observability</b></td><td>Metrics, query latency, error rates, resource use, logs, dashboards, and operational telemetry.</td><td>Retrieval quality is not enough; teams also need to know whether the service is healthy and fast.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid2" style="margin-top:27px">
+    <div>
+      <div class="mini">A useful enterprise example</div>
+      <div class="card">
+        <h3>“Find similar paragraphs from Radiology papers after 2022.”</h3>
+        <p style="margin-top:9px">This is not just vector similarity. It is:</p>
+        <p style="margin-top:9px"><b>semantic condition</b> → paragraphs similar to the query</p>
+        <p style="margin-top:5px"><b>metadata condition</b> → domain = Radiology</p>
+        <p style="margin-top:5px"><b>metadata condition</b> → publication year &gt; 2022</p>
+        <p style="margin-top:5px"><b>possibly security condition</b> → user is authorized to see the source</p>
+      </div>
+    </div>
+    <div>
+      <div class="mini">Production request path</div>
+      <div class="flow" style="justify-content:flex-start">
+        <div class="node">Application<small>LangChain / service</small></div><div class="arrow">→</div>
+        <div class="node">Vector DB API<small>auth + filter + top-k</small></div><div class="arrow">→</div>
+        <div class="node">Search index<small>ANN candidates</small></div>
+      </div>
+      <div class="flow" style="justify-content:flex-start">
+        <div class="node">Metadata / records<small>filter + fetch text</small></div><div class="arrow">→</div>
+        <div class="node">Ranked results<small>IDs + scores + chunks</small></div><div class="arrow">→</div>
+        <div class="node">LLM context<small>RAG generation</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout"><b>Common misconception:</b> “FAISS versus vector database” is not always an either/or architectural decision. FAISS is a search library and can be embedded inside a larger system. A database/service adds operational and data-management concerns around the search primitive.</div>
+  <details><summary>30-second classroom explanation</summary><p>“The vector index is the engine, but the database is the car. The engine makes search fast; the car adds storage, controls, interfaces, monitoring, and everything needed to operate reliably in traffic.”</p></details>
+</section>
+
+<section class="section footer-card" id="recap">
+  <div class="kicker" style="color:#e6c7c7">Class recap</div>
+  <h2>Four ideas students should leave with</h2>
+  <div class="grid4" style="margin-top:18px">
+    <div class="card"><h3>1. Embed</h3><p>Documents and queries are mapped into the same high-dimensional vector space.</p></div>
+    <div class="card"><h3>2. Retrieve</h3><p>Nearest-neighbor search ranks chunks by vector similarity or distance.</p></div>
+    <div class="card"><h3>3. Approximate</h3><p>ANN indexes such as HNSW, IVF, and PQ trade a little exactness for speed and scale.</p></div>
+    <div class="card"><h3>4. Operationalize</h3><p>A vector database wraps search with persistence, metadata, APIs, updates, scaling, security, and observability.</p></div>
+  </div>
+  <div class="callout" style="background:#342222;border-left-color:#d8b0b0;color:#fff;margin-top:22px"><b>One-line summary:</b> embeddings create the space; nearest-neighbor algorithms search the space; vector databases make that search usable as a production data service.</div>
+  <div class="sources"><b>Further reading / validation:</b>
+    <a href="https://faiss.ai/" target="_blank" rel="noopener">FAISS documentation</a> ·
+    <a href="https://milvus.io/docs/index-explained.md" target="_blank" rel="noopener">Milvus index overview</a> ·
+    <a href="https://milvus.io/docs/ivf-pq.md" target="_blank" rel="noopener">Milvus IVF_PQ</a> ·
+    <a href="https://www.pinecone.io/learn/series/faiss/hnsw/" target="_blank" rel="noopener">Pinecone HNSW explainer</a> ·
+    <a href="https://milvus.io/blog/scalable-and-blazing-fast-similarity-search-with-milvus-vector-database.md" target="_blank" rel="noopener">Milvus similarity-search article referenced on the original slide</a>
+  </div>
+</section>
+</main>
+</body>
+</html>

@@ -1,0 +1,113 @@
+WEATHER OPERATIONS MANUAL
+Flight Operations and Ground Safety Division
+Version 5.3 | Effective: January 1, 2025
+
+=============================================================
+SECTION 1: WEATHER DECISION AUTHORITY
+=============================================================
+
+Weather-related operational decisions are distributed across three authorities:
+
+1. Captain (PIC) — Final authority on aircraft departure and safety. The Captain may refuse departure if weather conditions do not meet crew or aircraft limitations, regardless of OCC guidance.
+
+2. OCC Weather Desk — Issues Weather Advisories, coordinates ground stops, and communicates with ATC and the National Weather Service. Monitors all hub and station weather in real time via the Meteorological Data Feed (MDF).
+
+3. Hub Station Manager — Authority over ground-side weather decisions (de-icing scheduling, ramp holds, tow operations) in coordination with the OCC.
+
+=============================================================
+SECTION 2: GROUND STOP TRIGGERS
+=============================================================
+
+The OCC Weather Desk will initiate a request for an ATC Ground Stop when any of the following conditions exist at a hub airport:
+
+- Ceiling below 500 feet and visibility below 1 mile (IFR Category III or worse)
+- Active tornado warning within 10 miles of the airport
+- Active lightning within 3 miles of the aircraft ramp area (triggers ramp closure per FAA Advisory Circular)
+- Wind gusts exceeding 50 knots sustained for more than 10 minutes
+- Reported or forecast freezing rain accumulation exceeding 0.25 inches in any 1-hour period
+
+When a ground stop is self-initiated by the OCC (before ATC issues one), the OCC Duty Manager notifies the Hub Station Manager and issues a Ground Stop Notice to all gate agents via the Operations Portal broadcast system.
+
+=============================================================
+SECTION 3: AUTOMATIC REBOOKING WEATHER THRESHOLD
+=============================================================
+
+The airline's SABRE Rebooking Engine is configured to trigger automatic passenger rebooking when a Weather Advisory is issued AND any of the following conditions apply:
+
+- Flight delay is forecast to exceed 2 hours due to weather at the departure airport
+- Flight delay is forecast to exceed 3 hours due to weather at the destination airport
+- Flight is in the cancellation queue based on OCC recovery planning
+
+Automatic rebooking does NOT trigger for forecasted weather that has not yet resulted in an issued Weather Advisory. Gate agents should not proactively rebook passengers based on forecast alone — this must be initiated by a formal OCC Weather Advisory.
+
+Passengers who proactively contact the airline before a Weather Advisory is issued may request voluntary changes, subject to standard change fees (unless their status tier provides fee waivers).
+
+=============================================================
+SECTION 4: DE-ICING OPERATIONS
+=============================================================
+
+4.1 General De-Icing Principles
+
+De-icing is required whenever frozen contaminants (snow, ice, frost, freezing rain, or freezing drizzle) are present on aircraft critical surfaces at the time of departure. The "clean aircraft concept" requires that no frozen contamination exist on wings, control surfaces, engine inlets, or fuselage surfaces at the time of takeoff.
+
+De-icing is performed using Type I, II, III, or IV fluids, each appropriate for different conditions:
+- Type I: Orange; low-viscosity; short holdover time; used for initial de-icing
+- Type II: Yellow-green; higher viscosity; longer holdover; used for anti-icing in moderate snowfall
+- Type III: Yellow-green; designed for slower aircraft (commuter aircraft); not used on mainline jets
+- Type IV: Green; highest viscosity; longest holdover; used for anti-icing in heavy snowfall or freezing drizzle
+
+4.2 Freezing Rain Procedures
+
+Freezing rain requires the most aggressive de-icing protocol due to its rapid recontamination rate. The following mandatory steps apply:
+
+Step 1: Aircraft must receive a two-step treatment: Type I fluid application first to remove existing ice, followed immediately by Type IV fluid application for anti-icing protection.
+
+Step 2: De-icing must be performed as close to departure time as possible. The holdover time clock begins when Type IV application is complete.
+
+Step 3: Holdover time for Type IV fluid in freezing rain conditions at 28°F is approximately 14–26 minutes (reference: FAA Holdover Time Guidelines Table 4). Departure must occur within the holdover window.
+
+Step 4: If the aircraft does not depart within the holdover window, a full re-application of Type I followed by Type IV is required before takeoff.
+
+Step 5: The Captain must perform a pre-takeoff contamination check (visual inspection of wings from cabin window or via wing camera if equipped) before initiating takeoff roll.
+
+Step 6: Gate agents must not close the aircraft door until the Captain confirms de-icing is complete and the anti-icing fluid has been applied.
+
+4.3 De-Icing Documentation
+
+For each de-iced aircraft, the ground crew Deicing Foreman must complete the De-Icing Record Card and transmit it to the Captain before pushback. The card records:
+- Fluid type(s) used
+- Application start and end times
+- Holdover time window
+- Outside air temperature at application
+- Recontamination check result
+
+The Captain retains the De-Icing Record Card in the aircraft documentation throughout the flight.
+
+=============================================================
+SECTION 5: LIGHTNING RAMP CLOSURE PROCEDURES
+=============================================================
+
+When lightning is detected within 3 nautical miles of the aircraft ramp:
+
+Step 1: Ramp Supervisor issues immediate "Ramp Clear" order via radio. All ground personnel must vacate the ramp within 5 minutes.
+
+Step 2: All aircraft towing, fueling, and loading operations cease immediately.
+
+Step 3: Passengers who are boarding must be held in the gate area. Jetbridge doors remain closed.
+
+Step 4: Ramp operations may resume when no lightning has been detected within 3 nautical miles for 30 consecutive minutes.
+
+Step 5: Any passengers who were in transit on the ramp (via air stairs or bus gate) must be safely escorted to the terminal immediately.
+
+=============================================================
+SECTION 6: SNOW OPERATIONS
+=============================================================
+
+Airports classified as Snow Level 2 or higher (defined by the Airport Snow Plan) require activation of the Snow Operations Team. Snow Level classifications:
+
+Level 1: Trace to 2 inches; standard de-icing; no ramp restrictions
+Level 2: 2–6 inches; de-icing pads activated; ramp speed limits reduced to 5 mph
+Level 3: 6–12 inches; runway closures possible; gates may be consolidated to the main concourse
+Level 4: 12+ inches; hub suspension may be declared; all operations subject to OCC discretion
+
+Under Snow Level 3 or 4, the Hub Station Manager has authority to suspend all departures pending OCC and ATC coordination.

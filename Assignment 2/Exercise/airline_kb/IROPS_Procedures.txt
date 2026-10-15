@@ -1,0 +1,107 @@
+IRREGULAR OPERATIONS (IROPS) PROCEDURES MANUAL
+Version 4.2 | Operations Control Center
+Effective Date: March 1, 2025
+
+=============================================================
+SECTION 1: DEFINITION AND SCOPE
+=============================================================
+
+Irregular Operations (IROPS) are any events that disrupt normal airline operations and require a coordinated response beyond standard procedures. IROPS may be triggered by severe weather, mechanical failures, Air Traffic Control (ATC) ground stops, crew availability issues, airport facility failures, or security events.
+
+This manual applies to all Operations Control Center (OCC) staff, gate agents, ground supervisors, and customer service managers. All personnel listed above are required to follow these procedures during any declared IROPS event.
+
+=============================================================
+SECTION 2: IROPS DECLARATION AND ESCALATION
+=============================================================
+
+2.1 Declaration Thresholds
+
+An IROPS event is formally declared when any of the following conditions are met:
+- Three or more flights at a single hub are delayed more than 90 minutes simultaneously
+- One or more mainline flights are cancelled due to controllable or uncontrollable causes
+- A ground stop issued by ATC affects a hub airport for more than 45 minutes
+- A mechanical AOG (Aircraft on Ground) event prevents a departure for more than 2 hours
+- Crew rest regulatory requirements result in flight delays affecting more than two departures
+
+2.2 IROPS Response Team Activation
+
+Upon IROPS declaration, the Duty Manager contacts the following within 10 minutes:
+1. Senior Duty Manager (Operations Control Center)
+2. Hub Station Manager
+3. Customer Service Director (on-call)
+4. Crew Scheduling Supervisor
+5. Maintenance Control (if mechanical)
+6. Airport Liaison (if ATC or facility-related)
+
+2.3 Communication Protocol
+
+All IROPS communications must use the airline's internal ACARS messaging system and the OCC IROPS Dashboard. Voice confirmation is required for Severity Level 2 and above (see Section 3).
+
+For passenger-facing communications, the gate agent is responsible for making public address announcements at the following intervals:
+- Initial delay announcement: Within 15 minutes of known delay
+- Subsequent updates: Every 30 minutes until departure or cancellation
+- Cancellation announcement: Immediately upon confirmation
+
+For delays exceeding 2 hours, ground staff must also directly notify connecting passengers at gates. A list of connecting passenger gate locations is available via the Passenger Connect tool in the Operations Portal. Ground staff must personally approach each connecting gate and coordinate with the receiving agent.
+
+=============================================================
+SECTION 3: SEVERITY LEVELS
+=============================================================
+
+Level 1 — Localized Disruption
+- 1–3 flights delayed 30–90 minutes
+- Handled by station staff without OCC escalation
+- Gate agents update flight status in SABRE; no formal IROPS declaration required
+
+Level 2 — Station-Wide Disruption
+- 4+ flights delayed, or 1–2 cancellations at a single station
+- OCC notified; IROPS declared; Customer Service Director alerted
+- Rebooking resources activated; meal vouchers authorized up to $15 per passenger
+
+Level 3 — Hub Meltdown
+- Major hub affected; cascading delays and cancellations across multiple banks
+- Full IROPS team activated; executive notification required
+- Hotel accommodations activated for overnight stranded passengers
+- Rebooking window extended to 14 days; fee waivers applied automatically
+
+=============================================================
+SECTION 4: GATE ASSIGNMENT PRIORITY DURING IROPS
+=============================================================
+
+When gate capacity is reduced during IROPS, gate reassignment follows this strict priority order:
+
+Priority 1: Inbound medical emergency or diverted flight
+Priority 2: Flights with connecting passengers within 45 minutes of minimum connection time
+Priority 3: Outbound flights with the highest number of revenue passengers
+Priority 4: Flights where crew rest will expire if not departed within 60 minutes
+Priority 5: Cargo-only or empty repositioning flights
+
+The Gate Control Supervisor in the OCC must approve all Priority 1 and 2 reassignments. Priority 3–5 reassignments may be approved by the Hub Station Manager.
+
+When two flights have equal priority, the flight with the earlier scheduled departure time takes precedence.
+
+=============================================================
+SECTION 5: SYSTEM TOOLS
+=============================================================
+
+During IROPS, the following systems are the single source of truth:
+- SABRE: Flight inventory and passenger bookings
+- ACARS: Aircraft communications and maintenance status
+- Operations Portal (IROPS Dashboard): Real-time delay tracking, crew availability, and gate status
+- Passenger Connect: Connecting passenger location and rebooking queue
+
+All delay codes entered in SABRE must match the declared IROPS cause. Mismatched delay codes are a compliance violation and subject to audit.
+
+=============================================================
+SECTION 6: RECOVERY PLANNING
+=============================================================
+
+Recovery from an IROPS event is coordinated by the OCC Recovery Team. Recovery planning begins as soon as the disruptive event is forecasted or identified, not after it begins.
+
+Recovery plan elements include:
+- Aircraft swap and repositioning schedule
+- Crew recovery pairings (subject to FAA rest requirements)
+- Passenger rebooking queue prioritization
+- Gate and ground resource allocation for the recovery bank
+
+The recovery plan is reviewed every 2 hours during active IROPS. All station managers must confirm receipt of the recovery plan via the Operations Portal before implementation.

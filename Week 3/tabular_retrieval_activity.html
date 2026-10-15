@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tabular Data Retrieval — Guided Discovery Activity</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f4f8;
+      color: #1a2332;
+      line-height: 1.7;
+    }
+
+    /* ── Color Tokens ─────────────────────────────────────────── */
+    :root {
+      --navy:   #1e3a5f;
+      --teal:   #2a9d8f;
+      --amber:  #e9c46a;
+      --amber-dark: #c9a227;
+      --red:    #e63946;
+      --green:  #2d6a4f;
+      --green-light: #d8f3dc;
+      --red-light:   #ffd6d9;
+      --white:  #ffffff;
+      --card:   #ffffff;
+      --muted:  #6b7a8d;
+      --light-blue: #e8f4fd;
+      --border: #d0dce8;
+    }
+
+    /* ── Progress Bar ─────────────────────────────────────────── */
+    #progress-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    #progress-bar .title {
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .progress-track {
+      flex: 1;
+      background: rgba(255,255,255,0.15);
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--teal);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+    #progress-label {
+      color: var(--amber);
+      font-size: 0.8rem;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-dots {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .nav-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-dot.active { background: var(--amber); transform: scale(1.3); }
+    .nav-dot.done   { background: var(--teal); }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, #2a5298 100%);
+      color: #fff;
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--amber);
+      color: var(--navy);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+      line-height: 1.2;
+    }
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 1.5rem;
+      color: rgba(255,255,255,0.85);
+      font-size: 1.05rem;
+    }
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.85rem;
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 0.4rem; }
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Section Wrapper ──────────────────────────────────────── */
+    .section {
+      padding: 3rem 0 2rem;
+    }
+    .section + .section {
+      border-top: 2px solid var(--border);
+    }
+
+    /* ── Section Header ───────────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-number {
+      flex-shrink: 0;
+      width: 2.4rem; height: 2.4rem;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-top: 0.15rem;
+    }
+    .section-title-group h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+    .section-title-group p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    /* ── Cards ────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 1.25rem;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Callout boxes ────────────────────────────────────────── */
+    .callout {
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0;
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+    }
+    .callout-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .callout-body strong { display: block; margin-bottom: 0.25rem; font-size: 0.95rem; }
+    .callout-body p, .callout-body ul { font-size: 0.93rem; }
+    .callout-body ul { padding-left: 1.1rem; }
+    .callout-body li { margin-bottom: 0.2rem; }
+
+    .callout.insight {
+      background: #fff8e1;
+      border-left: 4px solid var(--amber-dark);
+    }
+    .callout.insight .callout-icon { color: var(--amber-dark); }
+
+    .callout.try-it {
+      background: var(--light-blue);
+      border-left: 4px solid #3b82f6;
+    }
+    .callout.try-it .callout-icon { color: #3b82f6; }
+
+    .callout.info {
+      background: #e8f5e9;
+      border-left: 4px solid var(--teal);
+    }
+    .callout.info .callout-icon { color: var(--teal); }
+
+    .callout.warning {
+      background: #fff3e0;
+      border-left: 4px solid #f4a261;
+    }
+    .callout.warning .callout-icon { color: #f4a261; }
+
+    /* ── Code blocks ──────────────────────────────────────────── */
+    pre, code {
+      font-family: 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
+    }
+    pre {
+      background: #1a2332;
+      color: #e0e8f0;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      overflow-x: auto;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      margin: 1rem 0;
+    }
+    code {
+      background: #e8edf2;
+      color: #1e3a5f;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      font-size: 0.88em;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+
+    /* ── Tables ───────────────────────────────────────────────── */
+    .data-table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 10px; border: 1px solid var(--border); }
+    table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+    thead { background: var(--navy); color: #fff; }
+    thead th { padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
+    tbody tr:nth-child(even) { background: #f5f8fc; }
+    tbody td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Buttons ──────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.3rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: opacity 0.15s, transform 0.1s;
+      text-decoration: none;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--teal); color: #fff; }
+    .btn-navy   { background: var(--navy); color: #fff; }
+    .btn-amber  { background: var(--amber); color: var(--navy); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--teal);
+      color: var(--teal);
+    }
+    .btn:hover { opacity: 0.88; }
+
+    /* ── Quiz styles ──────────────────────────────────────────── */
+    .quiz-option {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      font-size: 0.93rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .quiz-option:hover { border-color: var(--teal); background: var(--light-blue); }
+    .quiz-option.correct   { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 600; }
+    .quiz-option.incorrect { border-color: var(--red);   background: var(--red-light);   color: var(--red);   }
+    .quiz-option.disabled  { pointer-events: none; }
+
+    .quiz-feedback {
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct   { background: var(--green-light); color: var(--green); border: 1px solid #74c69d; }
+    .quiz-feedback.incorrect { background: var(--red-light);   color: #9b1d25;      border: 1px solid #f4a1a7; }
+
+    /* ── Classify quiz ────────────────────────────────────────── */
+    .classify-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .classify-item {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+    }
+    .classify-item .question-text {
+      font-size: 0.93rem;
+      margin-bottom: 0.6rem;
+      color: #1a2332;
+    }
+    .classify-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .classify-btn {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 2px solid;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      transition: background 0.15s, color 0.15s;
+    }
+    .classify-btn.content-btn  { border-color: var(--teal); color: var(--teal); }
+    .classify-btn.context-btn  { border-color: #8b5cf6;     color: #8b5cf6; }
+    .classify-btn.content-btn:hover  { background: var(--teal); color: #fff; }
+    .classify-btn.context-btn:hover  { background: #8b5cf6; color: #fff; }
+    .classify-btn.correct-pick   { background: var(--green); border-color: var(--green); color: #fff; }
+    .classify-btn.incorrect-pick { background: var(--red);   border-color: var(--red);   color: #fff; }
+    .classify-result { font-size: 0.82rem; margin-top: 0.4rem; min-height: 1.2em; }
+
+    /* ── Narrate demo ─────────────────────────────────────────── */
+    .narrate-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    @media (max-width: 650px) { .narrate-panel { grid-template-columns: 1fr; } }
+    .narrate-box {
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      font-size: 0.88rem;
+      min-height: 140px;
+    }
+    .narrate-raw {
+      background: #1a2332;
+      color: #9ecff4;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      white-space: pre-wrap;
+    }
+    .narrate-output {
+      background: #e8f5e9;
+      color: #1a2332;
+      border: 2px dashed #74c69d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #aaa;
+      font-style: italic;
+      transition: all 0.3s;
+    }
+    .narrate-output.revealed {
+      color: #1a2332;
+      font-style: normal;
+      text-align: left;
+      align-items: flex-start;
+    }
+
+    /* ── Semantic layer match ─────────────────────────────────── */
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) { .match-grid { grid-template-columns: 1fr; } }
+    .match-col-header {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+    }
+    .match-col-header.terms { background: var(--navy); color: #fff; }
+    .match-col-header.sql   { background: var(--teal); color: #fff; }
+    .match-chip {
+      display: block;
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      user-select: none;
+    }
+    .match-chip:hover { border-color: var(--teal); background: var(--light-blue); }
+    .match-chip.selected-term { border-color: var(--navy); background: #d8e8f8; }
+    .match-chip.selected-sql  { border-color: var(--teal); background: #d0f0ec; }
+    .match-chip.matched { border-color: var(--green); background: var(--green-light); pointer-events: none; opacity: 0.75; }
+    .match-chip.wrong   { border-color: var(--red); background: var(--red-light); animation: shake 0.3s; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-6px); }
+      75%      { transform: translateX(6px); }
+    }
+    .match-score { font-size: 0.88rem; color: var(--muted); margin-top: 0.5rem; }
+
+    /* ── Pipeline diagram ─────────────────────────────────────── */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .pipeline-step {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      position: relative;
+    }
+    .pipeline-step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 1.15rem;
+      top: 2.5rem;
+      bottom: -0.5rem;
+      width: 2px;
+      background: var(--teal);
+    }
+    .pipeline-num {
+      flex-shrink: 0;
+      width: 2.3rem; height: 2.3rem;
+      background: var(--teal);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      z-index: 1;
+    }
+    .pipeline-content {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+      flex: 1;
+      margin-bottom: 1rem;
+    }
+    .pipeline-content h4 { font-size: 0.97rem; color: var(--navy); margin-bottom: 0.3rem; }
+    .pipeline-content p  { font-size: 0.88rem; color: var(--muted); }
+    .pipeline-content .tag {
+      display: inline-block;
+      background: #e8f4fd;
+      color: #3b82f6;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.4rem;
+      margin-right: 0.3rem;
+    }
+
+    /* ── Two-column concept grid ──────────────────────────────── */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 600px) { .concept-grid { grid-template-columns: 1fr; } }
+    .concept-card {
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      border: 2px solid;
+    }
+    .concept-card.content-q  { border-color: var(--teal);   background: #edf9f8; }
+    .concept-card.context-q  { border-color: #8b5cf6;       background: #f3f0ff; }
+    .concept-card h4 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .concept-card p  { font-size: 0.87rem; }
+
+    /* ── Latent intent ────────────────────────────────────────── */
+    .latent-reveal { display: none; }
+    .latent-reveal.show { display: block; }
+    .dataset-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+    .dataset-chip {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* ── Final Quiz ───────────────────────────────────────────── */
+    .final-quiz-q {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .final-quiz-q .q-text {
+      font-size: 0.97rem;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.9rem;
+    }
+    .q-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.6rem; height: 1.6rem;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* ── Score banner ─────────────────────────────────────────── */
+    #final-score-banner {
+      display: none;
+      background: linear-gradient(135deg, var(--navy) 0%, #2a5298 100%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    #final-score-banner h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    #final-score-banner p  { color: rgba(255,255,255,0.8); }
+    #score-display { font-size: 3rem; font-weight: 800; color: var(--amber); }
+
+    /* ── Drag-drop ────────────────────────────────────────────── */
+    .dd-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 600px) { .dd-container { grid-template-columns: 1fr; } }
+    .dd-bank {
+      min-height: 120px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 0.75rem;
+      background: #f9fafc;
+    }
+    .dd-zone {
+      min-height: 70px;
+      border: 2px dashed var(--teal);
+      border-radius: 8px;
+      padding: 0.6rem;
+      background: var(--light-blue);
+      margin-bottom: 0.5rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .dd-zone.dragover { border-color: var(--amber-dark); background: #fff8e1; }
+    .dd-zone label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--navy); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .dd-item {
+      display: inline-flex;
+      align-items: center;
+      background: var(--navy);
+      color: #fff;
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: grab;
+      margin: 0.2rem;
+      user-select: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .dd-item:active { cursor: grabbing; transform: scale(1.05); }
+    .dd-item.dragging { opacity: 0.4; }
+    .dd-feedback { font-size: 0.82rem; margin-top: 0.6rem; color: var(--muted); }
+    .dd-feedback.correct-msg { color: var(--green); font-weight: 600; }
+    .dd-feedback.incorrect-msg { color: var(--red); font-weight: 600; }
+
+    /* ── Utilities ────────────────────────────────────────────── */
+    .tag-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.75rem 0; }
+    .tag {
+      display: inline-block;
+      border-radius: 4px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .tag.teal  { background: #d0f0ec; color: #1a6b62; }
+    .tag.navy  { background: #d0dbe8; color: var(--navy); }
+    .tag.amber { background: #fef3c7; color: #92400e; }
+    .tag.red   { background: var(--red-light); color: #9b1d25; }
+
+    p + p { margin-top: 0.75rem; }
+    h3 { font-size: 1.1rem; color: var(--navy); margin: 1.2rem 0 0.6rem; font-weight: 700; }
+
+    .text-muted { color: var(--muted); font-size: 0.88rem; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-3 { margin-top: 1.5rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+
+    .highlight { background: #fff8c5; padding: 0.1em 0.3em; border-radius: 3px; }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted);
+      font-size: 0.83rem;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    footer strong { color: var(--navy); }
+  </style>
+</head>
+<body>
+
+<!-- ── Progress Bar ──────────────────────────────────────────── -->
+<div id="progress-bar">
+  <span class="title">Tabular Retrieval</span>
+  <div class="progress-track"><div class="progress-fill" id="pFill"></div></div>
+  <span id="progress-label">Section 0 / 7</span>
+  <div class="nav-dots" id="navDots"></div>
+</div>
+
+<!-- ── Hero ─────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-badge">MSADS Capstone · Guided Discovery Activity</div>
+  <h1>Tabular Data Retrieval &amp;<br>The Pneuma Approach</h1>
+  <p>Go beyond document RAG. Learn how the Pneuma paper rethinks retrieval when your data lives in tables — and why schema narration, semantic layers, and latent intent change everything.</p>
+  <div class="hero-meta">
+    <span>&#x1F3A7; 7 Sections</span>
+    <span>&#x2699;&#xFE0F; Interactive Demos</span>
+    <span>&#x1F9EA; Hospital-themed Examples</span>
+    <span>&#x23F1; ~45 min</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 1: The Limits of Standard RAG
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s1" data-section="1">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <div class="section-title-group">
+      <h2>The Limits of Standard RAG</h2>
+      <p>Why the techniques from your Gen AI class break on tabular data</p>
+    </div>
+  </div>
+
+  <p>You already know how standard Retrieval-Augmented Generation (RAG) works: chunk a corpus of documents, embed them, and at query time retrieve the most similar chunks to feed to an LLM. This works beautifully for PDFs, articles, and web pages — natural language that carries meaning chunk-by-chunk.</p>
+
+  <p>But what happens when the source of truth is a <strong>relational database</strong> or a set of CSVs?</p>
+
+  <div class="callout warning">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <div class="callout-body">
+      <strong>The Core Problem</strong>
+      <p>Standard RAG treats every chunk as a small document. A row from a patient table is <em>not</em> a document. Isolated, it is nearly uninterpretable — and embedding it produces garbage retrieval.</p>
+    </div>
+  </div>
+
+  <h3>What a "document chunk" usually looks like</h3>
+  <p>A clean paragraph from a cardiology guideline:</p>
+  <pre>"Patients with heart failure and reduced ejection fraction (HFrEF) should be initiated on ACE inhibitors unless contraindicated. The target dose should be achieved gradually over 2–4 weeks to reduce the risk of hypotension..."</pre>
+  <p>This chunk carries its own meaning. You can embed it, retrieve it, and hand it to an LLM — and the LLM can answer questions from it directly.</p>
+
+  <h3>What a "table chunk" looks like</h3>
+  <p>A row from a hospital patient table, naively serialized:</p>
+
+  <div class="data-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>patient_id</th><th>admit_date</th><th>drg_code</th><th>primary_icd</th><th>los_days</th><th>disch_disp</th><th>payer_cd</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>10047</td><td>2024-11-03</td><td>291</td><td>E11.9</td><td>4</td><td>01</td><td>ME</td></tr>
+        <tr><td>10048</td><td>2024-11-04</td><td>470</td><td>M16.11</td><td>2</td><td>06</td><td>BC</td></tr>
+        <tr><td>10049</td><td>2024-11-04</td><td>683</td><td>K80.20</td><td>1</td><td>02</td><td>MD</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout try-it">
+    <div class="callout-icon">&#x1F4AC;</div>
+    <div class="callout-body">
+      <strong>Reflect: What's Wrong Here?</strong>
+      <p>Look at row 1: <code>10047 | 2024-11-03 | 291 | E11.9 | 4 | 01 | ME</code></p>
+      <p>If you embed this as a chunk, what useful signal does the vector carry? Click each problem below to reveal it.</p>
+    </div>
+  </div>
+
+  <div id="chunk-problems">
+    <button class="quiz-option" onclick="revealProblem(this,'p1')">&#x1F4CC; The values are meaningless without column headers</button>
+    <div id="p1" class="quiz-feedback correct">
+      <strong>Correct.</strong> "291" means nothing alone — it is DRG code 291 (Heart Failure w/ MCC). "ME" is a payer code for Medicaid. Without column context, no embedding model can recover this meaning.
+    </div>
+    <button class="quiz-option" onclick="revealProblem(this,'p2')">&#x1F4CC; Rows don't contain enough text to produce a meaningful embedding</button>
+    <div id="p2" class="quiz-feedback correct">
+      <strong>Correct.</strong> Embedding models are trained on natural language. A row like "10047 2024-11-03 291 E11.9 4 01 ME" looks like random tokens. The resulting vector will not reliably cluster with semantically related content.
+    </div>
+    <button class="quiz-option" onclick="revealProblem(this,'p3')">&#x1F4CC; You can fix this by making the chunks larger (e.g., 50 rows at a time)</button>
+    <div id="p3" class="quiz-feedback incorrect">
+      <strong>Not quite.</strong> Bigger chunks of raw rows compound the problem. Now you have 50 rows of undifferentiated numbers, and retrieving "chunk 3" gives you 50 mixed patients with no coherent theme. Chunk size is not the issue — the entire framing is wrong.
+    </div>
+    <button class="quiz-option" onclick="revealProblem(this,'p4')">&#x1F4CC; Columns have types and semantic roles that need to be preserved</button>
+    <div id="p4" class="quiz-feedback correct">
+      <strong>Correct.</strong> <code>primary_icd</code> is a categorical medical code with a strict ontology (ICD-10). <code>los_days</code> is a continuous measure. These structural properties are invisible to a flat embedding.
+    </div>
+  </div>
+
+  <div class="callout insight">
+    <div class="callout-icon">&#x1F4A1;</div>
+    <div class="callout-body">
+      <strong>Key Insight</strong>
+      <p>Tables have <em>structure</em> — rows relate to columns, columns have types and semantic roles, and values only make sense with their headers. Any retrieval strategy that ignores structure will fail. The Pneuma paper's central claim is that the <strong>retrieval target should be metadata and schema, not raw rows</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 2: What Is Tabular Data Retrieval?
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s2" data-section="2">
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <div class="section-title-group">
+      <h2>What Is Tabular Data Retrieval?</h2>
+      <p>Reframing the problem — from rows to datasets</p>
+    </div>
+  </div>
+
+  <p>Before we can answer a natural language question using data in a database, we need to find the <em>right</em> data. This is a two-level problem that is often conflated.</p>
+
+  <div class="concept-grid">
+    <div class="concept-card content-q">
+      <h4>Level 1 — Catalog Discovery</h4>
+      <p><em>"Which dataset or table contains what I need?"</em></p>
+      <p class="mt-1 text-muted">Example: "I need a table with diagnosis codes and length of stay." → Find <code>encounters</code> and <code>diagnoses</code> tables.</p>
+    </div>
+    <div class="concept-card context-q">
+      <h4>Level 2 — Content Retrieval</h4>
+      <p><em>"Which specific rows or values answer my question?"</em></p>
+      <p class="mt-1 text-muted">Example: "Show patients admitted in Q4 2024 with DRG 291." → Execute SQL against the right table.</p>
+    </div>
+  </div>
+
+  <p>Standard RAG conflates these. It embeds content and retrieves at the <em>value level</em>. But for tabular data, you almost always need to solve Level 1 first — get to the right table — before Level 2 even makes sense.</p>
+
+  <h3>The Pneuma Framing</h3>
+  <p>The Pneuma paper frames retrieval this way: <span class="highlight">the retrieval target is a <strong>catalog card</strong> — a structured description of a dataset that includes its schema, narrated purpose, column descriptions, and sample values.</span> The LLM then decides which catalog card best matches the user's intent.</p>
+
+  <div class="callout info">
+    <div class="callout-icon">&#x1F4D6;</div>
+    <div class="callout-body">
+      <strong>Think of it like a library catalog</strong>
+      <p>You don't search a library by reading every page of every book. You search the catalog (title, abstract, subject tags). Pneuma builds an analogous "catalog" for datasets, making each table discoverable by its meaning — not its raw values.</p>
+    </div>
+  </div>
+
+  <h3>&#x1F579;&#xFE0F; Try It: Match the Question to the Strategy</h3>
+  <p>Drag each question type into the correct retrieval strategy bucket.</p>
+
+  <div class="card">
+    <div class="dd-container">
+      <div>
+        <div class="match-col-header terms">Question Bank</div>
+        <div class="dd-bank" id="dd-bank">
+          <div class="dd-item" draggable="true" data-id="a">"Which dataset has diagnosis codes?"</div>
+          <div class="dd-item" draggable="true" data-id="b">"Show all patients with DRG 291"</div>
+          <div class="dd-item" draggable="true" data-id="c">"Which table was built for Joint Commission reporting?"</div>
+          <div class="dd-item" draggable="true" data-id="d">"Get the average LOS for Q4 2024"</div>
+        </div>
+      </div>
+      <div>
+        <div class="match-col-header sql">Retrieval Strategy</div>
+        <div class="dd-zone" id="zone-catalog" data-accept="a,c">
+          <label>Catalog Discovery (find the right dataset)</label>
+        </div>
+        <div class="dd-zone" id="zone-content" data-accept="b,d">
+          <label>Content Retrieval (query rows/values)</label>
+        </div>
+      </div>
+    </div>
+    <div id="dd-global-feedback" class="dd-feedback"></div>
+    <div class="mt-2">
+      <button class="btn btn-outline" onclick="resetDD()">&#x21BA; Reset</button>
+    </div>
+  </div>
+
+  <div class="callout insight">
+    <div class="callout-icon">&#x1F4A1;</div>
+    <div class="callout-body">
+      <strong>Key Insight</strong>
+      <p>Questions about <em>which dataset</em> or <em>what the data was built for</em> require catalog-level retrieval. Questions about <em>specific values, rows, or computations</em> require content retrieval. Pneuma focuses primarily on the first — because without the right table, the second is impossible.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 3: Content vs. Context Questions
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s3" data-section="3">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <div class="section-title-group">
+      <h2>Content Questions vs. Context Questions</h2>
+      <p>Same vector store — very different retrieval quality</p>
+    </div>
+  </div>
+
+  <p>Even within catalog discovery, Pneuma draws a crucial distinction between two types of natural language questions:</p>
+
+  <div class="concept-grid">
+    <div class="concept-card content-q">
+      <h4 style="color:#1a6b62;">Content Question</h4>
+      <p>Answerable by inspecting <strong>column names and data values</strong>.</p>
+      <ul style="font-size:0.87rem; padding-left:1.1rem; margin-top:0.5rem;">
+        <li>"Which dataset has diagnosis codes?"</li>
+        <li>"Find a table with patient age and BMI"</li>
+        <li>"Which table contains medication names?"</li>
+      </ul>
+      <p class="mt-1 text-muted">A schema embedding will surface this correctly.</p>
+    </div>
+    <div class="concept-card context-q">
+      <h4 style="color:#6d28d9;">Context Question</h4>
+      <p>Answerable only from <strong>documentation, metadata, or stated purpose</strong>.</p>
+      <ul style="font-size:0.87rem; padding-left:1.1rem; margin-top:0.5rem;">
+        <li>"Which dataset was built for Joint Commission reporting?"</li>
+        <li>"Find data collected under HIPAA waiver #2021-04"</li>
+        <li>"Which table supports the readmission reduction program?"</li>
+      </ul>
+      <p class="mt-1 text-muted">No column name or value will reveal this — you need <em>catalog metadata</em>.</p>
+    </div>
+  </div>
+
+  <p>A naive RAG system that only embeds schema information will answer content questions reasonably well. But it will completely fail on context questions, because the answer is not in the data itself — it is in the documentation about the data.</p>
+
+  <div class="callout warning">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <div class="callout-body">
+      <strong>Hospital Reality Check</strong>
+      <p>In a real hospital data catalog, many critical questions are context questions. "Which extract do we send to CMS for value-based care reporting?" cannot be answered from column names alone. The Pneuma approach enriches catalog cards with documentation text so context questions become answerable.</p>
+    </div>
+  </div>
+
+  <h3>&#x1F9EA; Quiz: Classify These Questions</h3>
+  <p>For each hospital data question, decide whether it is a <strong>Content</strong> or <strong>Context</strong> question. Click to see instant feedback.</p>
+
+  <div class="classify-grid" id="classifyGrid">
+    <!-- items generated by JS -->
+  </div>
+  <div class="mt-2">
+    <button class="btn btn-outline" onclick="resetClassify()">&#x21BA; Reset All</button>
+    <span id="classify-score" class="text-muted" style="margin-left:1rem;"></span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 4: Schema Narration
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s4" data-section="4">
+  <div class="section-header">
+    <div class="section-number">4</div>
+    <div class="section-title-group">
+      <h2>Schema Narration</h2>
+      <p>Bridging the vocabulary gap between user queries and technical schemas</p>
+    </div>
+  </div>
+
+  <p>Even if you know which table to look in, the column names are often cryptic. Consider this raw schema:</p>
+
+  <pre>diagnoses(
+  diagnosis_id  INT,
+  patient_id    INT,
+  icd10_code    TEXT,
+  primary_flag  INT,
+  dx_seq_num    INT,
+  poa_indicator CHAR(1),
+  dx_version    INT
+)</pre>
+
+  <p>A user asks: <em>"Find data about the main reason for each admission."</em> The answer is hidden in <code>primary_flag = 1</code> — but nothing in the schema text maps "main reason for admission" to <code>primary_flag</code>. The vocabulary gap kills retrieval.</p>
+
+  <div class="callout warning">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <div class="callout-body">
+      <strong>Why Embedding Raw Schema Fails</strong>
+      <p><code>primary_flag INT</code> embeds near other flags and integer columns. It does <em>not</em> embed near "principal diagnosis" or "primary reason for hospitalization" — the terms a clinician would use — because those phrases don't appear anywhere in the raw schema.</p>
+    </div>
+  </div>
+
+  <h3>Schema Narration — The Pneuma Solution</h3>
+  <p>Schema narration means using an LLM to generate a rich natural language description of each table and its columns, then embedding <em>that description</em> (not the raw DDL). The narrated version bridges the vocabulary gap.</p>
+
+  <div class="callout try-it">
+    <div class="callout-icon">&#x2728;</div>
+    <div class="callout-body">
+      <strong>Try It: Click "Narrate Schema" to see the transformation</strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="narrate-panel">
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:0.5rem;">Raw Schema (DDL)</div>
+        <div class="narrate-box narrate-raw">diagnoses(
+  diagnosis_id  INT,
+  patient_id    INT,
+  icd10_code    TEXT,
+  primary_flag  INT,
+  dx_seq_num    INT,
+  poa_indicator CHAR(1),
+  dx_version    INT
+)</div>
+      </div>
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);margin-bottom:0.5rem;">Narrated Description</div>
+        <div class="narrate-box narrate-output" id="narrateOutput">
+          Click "Narrate Schema" to reveal...
+        </div>
+      </div>
+    </div>
+    <div class="mt-2">
+      <button class="btn btn-amber" onclick="doNarrate()">&#x2728; Narrate Schema</button>
+      <button class="btn btn-outline" style="margin-left:0.5rem;" onclick="resetNarrate()">&#x21BA; Reset</button>
+    </div>
+  </div>
+
+  <div id="narrate-insight" style="display:none;">
+    <div class="callout insight">
+      <div class="callout-icon">&#x1F4A1;</div>
+      <div class="callout-body">
+        <strong>Key Insight: Vocabulary Gap Bridged</strong>
+        <p>After narration, the embedding of this description will cluster near queries like "principal diagnosis," "primary reason for hospitalization," "present on admission," and "ICD-10 billing codes" — all phrases that would never match the raw DDL. Schema narration is a form of <em>retrieval-time enrichment</em>.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>What Good Narration Covers</h3>
+  <div class="card">
+    <ul style="padding-left:1.2rem; font-size:0.93rem;">
+      <li class="mb-1"><strong>Table purpose:</strong> What does this table track? Why does it exist?</li>
+      <li class="mb-1"><strong>Grain:</strong> What does one row represent? (One diagnosis per admission? One medication per patient-day?)</li>
+      <li class="mb-1"><strong>Column semantics:</strong> What does each column mean in plain English? Include business rules.</li>
+      <li class="mb-1"><strong>Code mappings:</strong> What do coded values mean? (e.g., <code>poa_indicator = 'Y'</code> = present on admission)</li>
+      <li class="mb-1"><strong>Relationships:</strong> What foreign keys exist? What table does this join to?</li>
+      <li><strong>Domain aliases:</strong> What do clinicians, analysts, and compliance teams call this data?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 5: The Semantic Layer
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s5" data-section="5">
+  <div class="section-header">
+    <div class="section-number">5</div>
+    <div class="section-title-group">
+      <h2>The Semantic Layer</h2>
+      <p>Mapping business vocabulary to technical SQL expressions</p>
+    </div>
+  </div>
+
+  <p>Schema narration helps you find the right table. But even after finding the right table, natural language questions often use <strong>business concepts</strong> that have no direct mapping to a column name. This is where the semantic layer comes in.</p>
+
+  <p>A <strong>semantic layer</strong> is a repository of mappings from business terms to the SQL expressions that implement them. Without it, NL-to-SQL fails on precisely the questions that matter most in practice.</p>
+
+  <h3>Examples from a Hospital Data Environment</h3>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Business Term</th><th>SQL Implementation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Active medication</strong></td>
+          <td><code>end_date IS NULL OR end_date &gt;= date('now')</code></td>
+        </tr>
+        <tr>
+          <td><strong>Readmission</strong></td>
+          <td>Second admission within 30 days of a prior discharge to the same facility</td>
+        </tr>
+        <tr>
+          <td><strong>CKD Stage 3+</strong></td>
+          <td><code>icd10_code LIKE 'N18.3%' OR icd10_code LIKE 'N18.4%' OR icd10_code LIKE 'N18.5%' OR icd10_code = 'N18.6'</code></td>
+        </tr>
+        <tr>
+          <td><strong>Recent lab</strong></td>
+          <td><code>lab_date &gt;= date('now', '-90 days')</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout warning">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <div class="callout-body">
+      <strong>Without a Semantic Layer</strong>
+      <p>An LLM asked "find all readmissions this quarter" might write <code>WHERE admit_reason = 'readmission'</code> — which will return zero rows, because no column stores that label. The business rule (30-day window, same facility, same patient) must be made explicit.</p>
+    </div>
+  </div>
+
+  <h3>&#x1F9EA; Match the Term to Its SQL Translation</h3>
+  <p>Select a business term, then select its matching SQL translation. Complete all four pairs to finish.</p>
+
+  <div class="card" id="matchGame">
+    <div class="match-grid">
+      <div>
+        <div class="match-col-header terms">Business Terms</div>
+        <div id="termChips"></div>
+      </div>
+      <div>
+        <div class="match-col-header sql">SQL Translations</div>
+        <div id="sqlChips"></div>
+      </div>
+    </div>
+    <div class="match-score" id="matchScore">Pairs matched: 0 / 4</div>
+    <div class="mt-2">
+      <button class="btn btn-outline" onclick="resetMatch()">&#x21BA; Reset</button>
+    </div>
+  </div>
+
+  <div class="callout insight">
+    <div class="callout-icon">&#x1F4A1;</div>
+    <div class="callout-body">
+      <strong>Key Insight</strong>
+      <p>The semantic layer is the difference between a catalog agent that <em>finds</em> the right data and one that can also <em>use</em> it correctly. Pneuma proposes that semantic layer definitions should be stored as part of the catalog card, so the LLM can retrieve both the schema and the business rules in a single lookup.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 6: Latent Intent vs. Explicit Query
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s6" data-section="6">
+  <div class="section-header">
+    <div class="section-number">6</div>
+    <div class="section-title-group">
+      <h2>Latent Intent vs. Explicit Query</h2>
+      <p>What the user typed versus what they actually need</p>
+    </div>
+  </div>
+
+  <p>Users rarely type their full analytical intent into a search box. They express a surface query that is a compressed, imprecise representation of a deeper goal. A good catalog agent must surface datasets relevant to the <em>real analytical goal</em> — not just the keywords.</p>
+
+  <div class="concept-grid">
+    <div class="concept-card content-q" style="border-color: var(--navy);">
+      <h4 style="color:var(--navy);">Explicit Query</h4>
+      <p style="font-style:italic;">"Find readmission data for cancer patients"</p>
+      <p class="mt-1 text-muted">A naive RAG retrieves datasets mentioning "readmission" or "cancer." Done.</p>
+    </div>
+    <div class="concept-card context-q" style="border-color:#8b5cf6;">
+      <h4 style="color:#6d28d9;">Latent Intent</h4>
+      <p style="font-style:italic;">The analyst wants to run a Joint Commission quality improvement analysis on 30-day oncology readmissions.</p>
+      <p class="mt-1 text-muted">They also need: admissions, diagnoses, DRG codes, discharge timestamps, oncology-specific ICD codes, and possibly outpatient follow-up records.</p>
+    </div>
+  </div>
+
+  <p>The gap between explicit query and latent intent is where standard RAG fails silently — it returns something, but not everything needed. The analyst doesn't know they're missing data until downstream analysis breaks.</p>
+
+  <div class="callout info">
+    <div class="callout-icon">&#x1F9E0;</div>
+    <div class="callout-body">
+      <strong>How Pneuma Addresses This</strong>
+      <p>Pneuma proposes that after retrieval, an LLM should <em>explain</em> why each retrieved dataset is relevant and <em>flag</em> whether joins or additional datasets are needed. The agent becomes a partner in uncovering latent intent — not just a keyword matcher.</p>
+    </div>
+  </div>
+
+  <h3>&#x1F9EA; Try It: Uncover the Latent Intent</h3>
+  <p>Read the explicit query below. Think about what the analyst <em>really</em> needs, then reveal the latent intent and required datasets.</p>
+
+  <div class="card">
+    <p style="font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:0.5rem;">Explicit Query:</p>
+    <p style="font-style:italic; font-size:1.05rem; color:#444; padding:0.75rem; background:#f5f8fc; border-radius:8px; border-left:4px solid var(--teal);">"Which dataset has information about patient length of stay and discharge?"</p>
+
+    <div class="mt-2 mb-1">
+      <strong>Before clicking: think about what the analyst might be trying to do.</strong>
+      <ul style="font-size:0.9rem; padding-left:1.2rem; margin-top:0.4rem; color:var(--muted);">
+        <li>Why would someone ask about LOS and discharge?</li>
+        <li>What quality metric commonly uses both fields?</li>
+        <li>What else would they need to complete that analysis?</li>
+      </ul>
+    </div>
+
+    <button class="btn btn-navy mt-2" onclick="revealLatent()">Reveal Latent Intent &amp; Required Datasets</button>
+
+    <div id="latentReveal" class="latent-reveal mt-2">
+      <div class="callout info" style="margin:0;">
+        <div class="callout-icon">&#x1F9E0;</div>
+        <div class="callout-body">
+          <strong>Likely Latent Intent: CMS or TJC Quality Reporting on Efficient Care</strong>
+          <p>LOS + discharge disposition is the signature of efficiency and readmission risk analysis. The analyst is likely building a report for hospital leadership or a regulatory submission. They need far more than one table.</p>
+          <div class="dataset-chips">
+            <span class="dataset-chip">encounters (LOS, admit/discharge dates)</span>
+            <span class="dataset-chip">diagnoses (ICD-10, primary_flag, POA)</span>
+            <span class="dataset-chip">drg_assignments (DRG code, severity weight)</span>
+            <span class="dataset-chip">discharge_disposition (coded → plain English)</span>
+            <span class="dataset-chip">readmissions (30-day flag)</span>
+            <span class="dataset-chip">payers (insurance type for risk stratification)</span>
+          </div>
+          <p class="mt-1 text-muted" style="font-size:0.85rem;">A naive RAG returns only "encounters." A Pneuma-style catalog agent surfaces all six — and explains why each is needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout insight">
+    <div class="callout-icon">&#x1F4A1;</div>
+    <div class="callout-body">
+      <strong>Key Insight</strong>
+      <p>Resolving latent intent requires the system to model the <em>analytical goal</em>, not just match keywords. Catalog cards enriched with purpose, provenance, and relationships give the LLM the context to make those inferences. This is why metadata-rich catalog cards are more valuable than schema-only indexes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 7: The Data Catalog Discovery Pipeline
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s7" data-section="7">
+  <div class="section-header">
+    <div class="section-number">7</div>
+    <div class="section-title-group">
+      <h2>Putting It Together</h2>
+      <p>The complete Data Catalog Discovery Pipeline</p>
+    </div>
+  </div>
+
+  <p>Now that you understand each component, here is how Pneuma assembles them into a coherent pipeline. Each step addresses a specific failure mode of naive RAG.</p>
+
+  <div class="pipeline">
+
+    <div class="pipeline-step">
+      <div class="pipeline-num">1</div>
+      <div class="pipeline-content">
+        <h4>Ingest Catalog Cards with Schema Narration</h4>
+        <p>For each table or dataset in the enterprise, generate a rich catalog card: raw schema + narrated description + column-level annotations + semantic layer definitions + provenance (who owns it, what it's for, compliance tags). Embed the <em>narrated card</em>, not the DDL.</p>
+        <span class="tag">Schema Narration</span>
+        <span class="tag">Semantic Layer</span>
+        <span class="tag">Metadata Enrichment</span>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-num">2</div>
+      <div class="pipeline-content">
+        <h4>User Submits a Natural Language Question</h4>
+        <p>The user types a question in plain English — possibly content-oriented, context-oriented, or a mix. No query reformulation required from the user.</p>
+        <span class="tag">Content Question</span>
+        <span class="tag">Context Question</span>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-num">3</div>
+      <div class="pipeline-content">
+        <h4>Vector Search Retrieves Top-k Catalog Cards</h4>
+        <p>The user query is embedded and compared against all catalog card embeddings. Top-k most similar cards are retrieved. Because cards include narrated schema AND documentation, both content and context questions surface relevant results.</p>
+        <span class="tag">Dense Retrieval</span>
+        <span class="tag">ANN Search</span>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-num">4</div>
+      <div class="pipeline-content">
+        <h4>LLM Explains Relevance and Flags Joins</h4>
+        <p>The LLM receives the query + top-k cards and produces: (a) a relevance explanation for each card, (b) a flag if a join between datasets is needed, and (c) a ranked recommendation. This is where latent intent gets surfaced — the LLM can reason about what the analyst is <em>really</em> trying to do.</p>
+        <span class="tag">Reranking</span>
+        <span class="tag">Latent Intent</span>
+        <span class="tag">Join Detection</span>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-num">5</div>
+      <div class="pipeline-content">
+        <h4>(Optional) Agent Writes Join Plan and Generates SQL</h4>
+        <p>If the user confirms the dataset selection, an agentic layer can inspect the full schemas, resolve foreign keys, apply semantic layer definitions (business terms → SQL), and generate a complete query — including joins. This closes the loop from natural language to executable SQL.</p>
+        <span class="tag">Agentic Loop</span>
+        <span class="tag">NL-to-SQL</span>
+        <span class="tag">Semantic Layer Resolution</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="callout insight">
+    <div class="callout-icon">&#x1F4A1;</div>
+    <div class="callout-body">
+      <strong>How This Differs from Standard RAG</strong>
+      <ul>
+        <li><strong>Retrieval target:</strong> Catalog cards (metadata + narration) instead of raw content chunks</li>
+        <li><strong>Enrichment:</strong> Schema narration and semantic layer definitions embedded at ingest time</li>
+        <li><strong>Output:</strong> Dataset recommendations with explanations, not just retrieved text passages</li>
+        <li><strong>Latent intent:</strong> Explicit modeling step, not implicit keyword matching</li>
+        <li><strong>Agentic step:</strong> Optional deeper inspection, join planning, and SQL generation</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FINAL QUIZ
+═══════════════════════════════════════════════════════════════ -->
+<section class="section" id="sfinal">
+  <div class="section-header">
+    <div class="section-number" style="background:var(--amber); color:var(--navy);">&#x2605;</div>
+    <div class="section-title-group">
+      <h2>Final Quiz — All Concepts</h2>
+      <p>Test your understanding of all seven sections</p>
+    </div>
+  </div>
+
+  <p>Answer all five questions, then click <strong>Submit Quiz</strong> to see your score and explanations.</p>
+
+  <!-- Q1 -->
+  <div class="final-quiz-q" id="fq1">
+    <div class="q-text"><span class="q-number">1</span> You embed raw CSV rows (one row per chunk) and index them in a vector store. A user asks "Which dataset tracks patient diagnoses?" What is the most likely failure mode?</div>
+    <button class="quiz-option" onclick="selectFQ(1,'a')">A. The vector store returns too many results, causing context overflow</button>
+    <button class="quiz-option" onclick="selectFQ(1,'b')">B. The row embeddings don't carry semantic signal about the table's purpose, so retrieval returns wrong or irrelevant rows</button>
+    <button class="quiz-option" onclick="selectFQ(1,'c')">C. CSV files can't be embedded — only PDFs can</button>
+    <button class="quiz-option" onclick="selectFQ(1,'d')">D. The query is too short to produce a meaningful embedding</button>
+    <div class="quiz-feedback" id="fq1-fb"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="final-quiz-q" id="fq2">
+    <div class="q-text"><span class="q-number">2</span> A data analyst asks: "Which extract does the hospital submit to CMS for value-based purchasing?" This is best classified as a:</div>
+    <button class="quiz-option" onclick="selectFQ(2,'a')">A. Content question — it can be answered by scanning column names</button>
+    <button class="quiz-option" onclick="selectFQ(2,'b')">B. Context question — it requires documentation about the dataset's purpose and regulatory use</button>
+    <button class="quiz-option" onclick="selectFQ(2,'c')">C. SQL generation question — it needs a WHERE clause to filter the right rows</button>
+    <button class="quiz-option" onclick="selectFQ(2,'d')">D. Both content and context equally — schema and docs contribute equally</button>
+    <div class="quiz-feedback" id="fq2-fb"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="final-quiz-q" id="fq3">
+    <div class="q-text"><span class="q-number">3</span> Schema narration helps retrieval quality primarily by:</div>
+    <button class="quiz-option" onclick="selectFQ(3,'a')">A. Compressing column names to save vector store space</button>
+    <button class="quiz-option" onclick="selectFQ(3,'b')">B. Converting SQL DDL into a programming language the LLM understands better</button>
+    <button class="quiz-option" onclick="selectFQ(3,'c')">C. Generating natural language descriptions that bridge the vocabulary gap between user queries and technical column names</button>
+    <button class="quiz-option" onclick="selectFQ(3,'d')">D. Replacing the need for a vector store entirely</button>
+    <div class="quiz-feedback" id="fq3-fb"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="final-quiz-q" id="fq4">
+    <div class="q-text"><span class="q-number">4</span> An NL-to-SQL system correctly identifies the <code>medications</code> table but writes <code>WHERE status = 'active'</code>. The column doesn't exist — the correct logic is <code>end_date IS NULL OR end_date &gt;= date('now')</code>. What is missing?</div>
+    <button class="quiz-option" onclick="selectFQ(4,'a')">A. Schema narration — the column names weren't described clearly enough</button>
+    <button class="quiz-option" onclick="selectFQ(4,'b')">B. A semantic layer — the business term "active" was never mapped to its SQL implementation</button>
+    <button class="quiz-option" onclick="selectFQ(4,'c')">C. A larger context window — the LLM needs to see the whole table to infer the logic</button>
+    <button class="quiz-option" onclick="selectFQ(4,'d')">D. A better embedding model for the query</button>
+    <div class="quiz-feedback" id="fq4-fb"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="final-quiz-q" id="fq5">
+    <div class="q-text"><span class="q-number">5</span> In the Pneuma pipeline, what is the purpose of the LLM step <em>after</em> vector search retrieves the top-k catalog cards?</div>
+    <button class="quiz-option" onclick="selectFQ(5,'a')">A. To re-embed the catalog cards with a better model</button>
+    <button class="quiz-option" onclick="selectFQ(5,'b')">B. To execute the SQL query against the database</button>
+    <button class="quiz-option" onclick="selectFQ(5,'c')">C. To explain relevance, surface latent intent, and flag if joins between datasets are needed</button>
+    <button class="quiz-option" onclick="selectFQ(5,'d')">D. To filter out catalog cards that don't contain the user's exact keywords</button>
+    <div class="quiz-feedback" id="fq5-fb"></div>
+  </div>
+
+  <div style="text-align:center; margin-top:1.5rem;">
+    <button class="btn btn-primary" style="font-size:1rem; padding:0.75rem 2rem;" onclick="submitFinalQuiz()">Submit Quiz</button>
+    <button class="btn btn-outline" style="margin-left:0.75rem;" onclick="resetFinalQuiz()">&#x21BA; Reset</button>
+  </div>
+
+  <div id="final-score-banner">
+    <div id="score-display">0/5</div>
+    <h3 id="score-message">—</h3>
+    <p id="score-detail"></p>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <strong>MSADS Capstone — Research Methods</strong> &nbsp;|&nbsp; University of Chicago &nbsp;|&nbsp;
+  Based on the Pneuma paper: <em>Tabular Data Retrieval for Enterprise AI</em> &nbsp;|&nbsp;
+  Activity version: March 2026
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════════════ -->
+<script>
+/* ── Utility ─────────────────────────────────────────────────── */
+function $(id){ return document.getElementById(id); }
+
+/* ── Progress Tracking ───────────────────────────────────────── */
+const SECTIONS = ['s1','s2','s3','s4','s5','s6','s7'];
+const TOTAL = SECTIONS.length;
+let currentSection = 0;
+
+function buildNavDots(){
+  const container = $('navDots');
+  for(let i=0; i<TOTAL; i++){
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.title = 'Section ' + (i+1);
+    btn.onclick = () => { document.getElementById(SECTIONS[i]).scrollIntoView({behavior:'smooth'}); };
+    container.appendChild(btn);
+  }
+}
+
+function updateProgress(idx){
+  const pct = Math.round(((idx+1)/TOTAL)*100);
+  $('pFill').style.width = pct + '%';
+  $('progress-label').textContent = 'Section ' + (idx+1) + ' / ' + TOTAL;
+  const dots = document.querySelectorAll('.nav-dot');
+  dots.forEach((d,i)=>{
+    d.classList.remove('active','done');
+    if(i < idx) d.classList.add('done');
+    else if(i === idx) d.classList.add('active');
+  });
+  currentSection = idx;
+}
+
+function initScroll(){
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx = SECTIONS.indexOf(e.target.id);
+        if(idx !== -1) updateProgress(idx);
+      }
+    });
+  }, { threshold: 0.25 });
+  SECTIONS.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) observer.observe(el);
+  });
+}
+
+/* ── Section 1: chunk problem reveals ───────────────────────── */
+function revealProblem(btn, id){
+  const fb = $(id);
+  btn.classList.add('disabled');
+  if(fb.classList.contains('correct')){
+    btn.classList.add('correct');
+  } else {
+    btn.classList.add('incorrect');
+  }
+  fb.classList.add('show');
+}
+
+/* ── Section 2: Drag-and-Drop ───────────────────────────────── */
+let draggingId = null;
+let ddScore = 0;
+
+function initDD(){
+  document.querySelectorAll('.dd-item').forEach(item=>{
+    item.addEventListener('dragstart', e=>{
+      draggingId = item.dataset.id;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', e=>{
+      item.classList.remove('dragging');
+    });
+  });
+  document.querySelectorAll('.dd-zone').forEach(zone=>{
+    zone.addEventListener('dragover', e=>{
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', ()=>zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e=>{
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if(!draggingId) return;
+      const accepted = zone.dataset.accept.split(',');
+      const item = document.querySelector(`.dd-item[data-id="${draggingId}"]`);
+      if(!item) return;
+      if(accepted.includes(draggingId)){
+        zone.appendChild(item);
+        item.style.cursor = 'default';
+        item.setAttribute('draggable','false');
+        ddScore++;
+        showDDFeedback(true, draggingId);
+        if(ddScore >= 4) $('dd-global-feedback').textContent = '✓ All matched! Questions about which dataset or purpose → Catalog Discovery. Questions about specific values → Content Retrieval.';
+      } else {
+        showDDFeedback(false, draggingId);
+        item.classList.add('wrong');
+        setTimeout(()=>item.classList.remove('wrong'), 600);
+      }
+      draggingId = null;
+    });
+  });
+}
+
+function showDDFeedback(correct, id){
+  const fb = $('dd-global-feedback');
+  const msgs = {
+    a: { ok:'Correct — "Which dataset has diagnosis codes?" is a catalog discovery question.', bad:'Try again — this is asking about what a dataset contains, not querying rows.' },
+    b: { ok:'Correct — "Show all patients with DRG 291" queries specific rows — content retrieval.', bad:'Try again — this asks for specific patient rows, not which dataset to use.' },
+    c: { ok:'Correct — "Which dataset was built for Joint Commission reporting?" needs catalog context.', bad:'Try again — this asks about the purpose of a dataset, not its values.' },
+    d: { ok:'Correct — "Get the average LOS for Q4 2024" is a computation on data values — content retrieval.', bad:'Try again — this asks for a calculated value from rows, not which table to use.' },
+  };
+  const m = msgs[id];
+  fb.className = 'dd-feedback ' + (correct ? 'correct-msg' : 'incorrect-msg');
+  fb.textContent = correct ? m.ok : m.bad;
+}
+
+function resetDD(){
+  const bank = $('dd-bank');
+  document.querySelectorAll('.dd-item').forEach(item=>{
+    bank.appendChild(item);
+    item.style.cursor = 'grab';
+    item.setAttribute('draggable','true');
+    item.classList.remove('wrong');
+  });
+  ddScore = 0;
+  $('dd-global-feedback').textContent = '';
+  $('dd-global-feedback').className = 'dd-feedback';
+}
+
+/* ── Section 3: Classify Quiz ───────────────────────────────── */
+const classifyItems = [
+  { q: '"Which dataset contains ICD-10 diagnosis codes?"',           ans: 'content', hint: 'ICD-10 codes appear directly as column values — a schema embedding will surface this.' },
+  { q: '"Which table was built for Joint Commission TJC reporting?"', ans: 'context', hint: 'TJC reporting purpose is in documentation, not column names or values.' },
+  { q: '"Find a table that has patient age and body weight."',        ans: 'content', hint: 'Age and weight are column-level data — content retrieval works here.' },
+  { q: '"Which dataset was collected under HIPAA waiver #2021-04?"',  ans: 'context', hint: 'A HIPAA waiver number is a provenance/governance field, not a data column.' },
+  { q: '"Which table includes medication start and end dates?"',      ans: 'content', hint: 'Start/end dates are concrete column types — schema narration captures them.' },
+  { q: '"Which dataset supports the hospital readmission reduction program?"', ans: 'context', hint: 'This is about the intended use of a dataset — pure documentation/context.' },
+];
+let classifyCorrect = 0;
+
+function buildClassifyGrid(){
+  const grid = $('classifyGrid');
+  grid.innerHTML = '';
+  classifyItems.forEach((item, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'classify-item';
+    div.id = 'ci-' + idx;
+    div.innerHTML = `
+      <div class="question-text">${item.q}</div>
+      <div class="classify-buttons">
+        <button class="classify-btn content-btn" onclick="classifyAnswer(${idx},'content')">Content</button>
+        <button class="classify-btn context-btn" onclick="classifyAnswer(${idx},'context')">Context</button>
+      </div>
+      <div class="classify-result" id="cr-${idx}"></div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function classifyAnswer(idx, choice){
+  const item = classifyItems[idx];
+  const btns = document.querySelectorAll(`#ci-${idx} .classify-btn`);
+  const result = $('cr-' + idx);
+  btns.forEach(b=>b.style.pointerEvents='none');
+  if(choice === item.ans){
+    btns.forEach(b=>{ if(b.classList.contains(choice+'-btn')) b.classList.add('correct-pick'); });
+    result.innerHTML = '&#x2713; ' + item.hint;
+    result.style.color = 'var(--green)';
+    classifyCorrect++;
+  } else {
+    btns.forEach(b=>{ if(b.classList.contains(choice+'-btn')) b.classList.add('incorrect-pick'); });
+    result.innerHTML = '&#x2717; Not quite. ' + item.hint;
+    result.style.color = 'var(--red)';
+  }
+  updateClassifyScore();
+}
+
+function updateClassifyScore(){
+  const answered = document.querySelectorAll('.classify-btn[style*="none"]').length / 2;
+  $('classify-score').textContent = `${Math.round(answered)} / ${classifyItems.length} answered`;
+}
+
+function resetClassify(){
+  classifyCorrect = 0;
+  buildClassifyGrid();
+  $('classify-score').textContent = '';
+}
+
+/* ── Section 4: Schema Narration ────────────────────────────── */
+const narratedText = `The diagnoses table records every clinical diagnosis assigned to a patient during an encounter. Each row represents a single diagnosis linked to a specific patient.
+
+• diagnosis_id: Unique identifier for this diagnosis record.
+• patient_id: Links to the patient who received this diagnosis (foreign key → patients).
+• icd10_code: The ICD-10-CM code for the diagnosis (e.g., E11.9 = Type 2 Diabetes without complications; N18.3 = Chronic Kidney Disease Stage 3).
+• primary_flag: Indicates whether this is the principal diagnosis — the main reason for the hospital admission (1 = primary / principal; 0 = secondary or comorbidity).
+• dx_seq_num: The sequence number of this diagnosis in the encounter (1 = principal, 2+ = secondary), used for billing and DRG assignment.
+• poa_indicator: Present-on-Admission indicator (Y = condition existed at admission; N = hospital-acquired condition). Required for CMS quality reporting.
+• dx_version: Version of the ICD coding system (10 = ICD-10, legacy values may indicate ICD-9).
+
+Use this table to answer questions about principal diagnoses, comorbidity burden, hospital-acquired conditions, and ICD-10-based cohort identification.`;
+
+function doNarrate(){
+  const out = $('narrateOutput');
+  out.classList.add('revealed');
+  out.style.fontFamily = 'inherit';
+  out.style.fontSize = '0.85rem';
+  out.style.lineHeight = '1.55';
+  out.textContent = narratedText;
+  $('narrate-insight').style.display = 'block';
+}
+
+function resetNarrate(){
+  const out = $('narrateOutput');
+  out.classList.remove('revealed');
+  out.textContent = 'Click "Narrate Schema" to reveal...';
+  $('narrate-insight').style.display = 'none';
+}
+
+/* ── Section 5: Match Game ───────────────────────────────────── */
+const matchPairs = [
+  { term: 'Active medication',    sql: 'end_date IS NULL OR end_date >= date(\'now\')', id:'am' },
+  { term: 'Readmission',          sql: 'Second admission within 30 days of discharge', id:'ra' },
+  { term: 'CKD Stage 3+',         sql: 'icd10_code LIKE \'N18.3%\' OR N18.4%, N18.5%, N18.6', id:'ck' },
+  { term: 'Recent lab (90 days)', sql: 'lab_date >= date(\'now\', \'-90 days\')', id:'rl' },
+];
+
+let selectedTerm = null;
+let selectedSQL  = null;
+let matchedCount = 0;
+
+function buildMatchGame(){
+  const terms = $('termChips');
+  const sqls  = $('sqlChips');
+  terms.innerHTML = '';
+  sqls.innerHTML  = '';
+  const shuffledSQL = [...matchPairs].sort(()=>Math.random()-0.5);
+  matchPairs.forEach(p=>{
+    const t = document.createElement('div');
+    t.className = 'match-chip';
+    t.dataset.id = p.id;
+    t.dataset.role = 'term';
+    t.textContent = p.term;
+    t.onclick = () => selectMatchChip(t);
+    terms.appendChild(t);
+  });
+  shuffledSQL.forEach(p=>{
+    const s = document.createElement('div');
+    s.className = 'match-chip';
+    s.dataset.id = p.id;
+    s.dataset.role = 'sql';
+    s.textContent = p.sql;
+    s.onclick = () => selectMatchChip(s);
+    sqls.appendChild(s);
+  });
+}
+
+function selectMatchChip(chip){
+  if(chip.classList.contains('matched')) return;
+  if(chip.dataset.role === 'term'){
+    if(selectedTerm) selectedTerm.classList.remove('selected-term');
+    selectedTerm = chip;
+    chip.classList.add('selected-term');
+  } else {
+    if(selectedSQL) selectedSQL.classList.remove('selected-sql');
+    selectedSQL = chip;
+    chip.classList.add('selected-sql');
+  }
+  if(selectedTerm && selectedSQL){
+    if(selectedTerm.dataset.id === selectedSQL.dataset.id){
+      selectedTerm.classList.remove('selected-term');
+      selectedSQL.classList.remove('selected-sql');
+      selectedTerm.classList.add('matched');
+      selectedSQL.classList.add('matched');
+      matchedCount++;
+      $('matchScore').textContent = 'Pairs matched: ' + matchedCount + ' / 4';
+      selectedTerm = null; selectedSQL = null;
+      if(matchedCount === 4){
+        $('matchScore').textContent = '✓ All 4 pairs matched! Business terms mapped to SQL.';
+        $('matchScore').style.color = 'var(--green)';
+      }
+    } else {
+      selectedTerm.classList.add('wrong');
+      selectedSQL.classList.add('wrong');
+      setTimeout(()=>{
+        selectedTerm.classList.remove('wrong','selected-term');
+        selectedSQL.classList.remove('wrong','selected-sql');
+        selectedTerm = null; selectedSQL = null;
+      }, 700);
+    }
+  }
+}
+
+function resetMatch(){
+  selectedTerm = null; selectedSQL = null; matchedCount = 0;
+  $('matchScore').textContent = 'Pairs matched: 0 / 4';
+  $('matchScore').style.color = '';
+  buildMatchGame();
+}
+
+/* ── Section 6: Latent Intent ────────────────────────────────── */
+function revealLatent(){
+  $('latentReveal').classList.add('show');
+  event.target.style.display = 'none';
+}
+
+/* ── Final Quiz ─────────────────────────────────────────────── */
+const FQ_ANSWERS = { 1:'b', 2:'b', 3:'c', 4:'b', 5:'c' };
+const FQ_EXPLANATIONS = {
+  1: 'Row embeddings carry no signal about the table\'s purpose or schema. A vector search for "patient diagnoses" will not reliably surface rows from a diagnoses table — the embedding of a raw row looks nothing like the query embedding. Pneuma addresses this by embedding narrated catalog cards instead.',
+  2: 'This is a context question — the answer requires documentation about the dataset\'s regulatory purpose, not inspection of column names or values. A schema-only index will fail to retrieve the correct dataset.',
+  3: 'Schema narration generates natural language that uses the vocabulary clinicians and analysts use (e.g., "principal diagnosis," "present on admission") rather than technical column names like `primary_flag` or `poa_indicator`. This bridges the vocabulary gap at retrieval time.',
+  4: 'This is a semantic layer failure. The system correctly identified the table but didn\'t know how to translate the business term "active" into the correct SQL predicate. The semantic layer stores these mappings explicitly so the LLM doesn\'t have to infer them.',
+  5: 'The LLM\'s role after retrieval is to reason about relevance, surface what the analyst is really trying to accomplish (latent intent), and determine whether multiple datasets need to be joined. It is a reasoning/explanation step, not a re-embedding or SQL execution step.',
+};
+
+const fqSelections = {};
+
+function selectFQ(qNum, choice){
+  if(fqSelections[qNum]) return; // already answered in submit mode — no change
+  fqSelections[qNum] = choice;
+  const buttons = document.querySelectorAll(`#fq${qNum} .quiz-option`);
+  buttons.forEach(b=>{
+    b.classList.add('disabled');
+    b.style.pointerEvents = 'none';
+  });
+  // Highlight selected
+  buttons.forEach(b=>{
+    if(b.textContent.trim().startsWith(choice.toUpperCase() + '.')){
+      b.classList.add(choice === FQ_ANSWERS[qNum] ? 'correct' : 'incorrect');
+    }
+  });
+}
+
+function submitFinalQuiz(){
+  // Force any unselected to be acknowledged
+  let score = 0;
+  for(let i=1; i<=5; i++){
+    const sel = fqSelections[i];
+    const fb = $('fq' + i + '-fb');
+    const buttons = document.querySelectorAll(`#fq${i} .quiz-option`);
+    buttons.forEach(b=>{ b.style.pointerEvents='none'; b.classList.add('disabled'); });
+    // Highlight correct answer regardless
+    buttons.forEach(b=>{
+      if(b.textContent.trim().startsWith(FQ_ANSWERS[i].toUpperCase() + '.')){
+        b.classList.add('correct');
+      }
+    });
+    if(sel === FQ_ANSWERS[i]){
+      score++;
+      fb.className = 'quiz-feedback correct show';
+    } else {
+      fb.className = 'quiz-feedback incorrect show';
+    }
+    fb.innerHTML = '<strong>' + (sel === FQ_ANSWERS[i] ? '✓ Correct.' : '✗ Incorrect.') + '</strong> ' + FQ_EXPLANATIONS[i];
+  }
+  const banner = $('final-score-banner');
+  banner.style.display = 'block';
+  $('score-display').textContent = score + '/5';
+  const msgs = [
+    'Keep going — review the sections above!',
+    'Good start — a couple of concepts to revisit.',
+    'Solid understanding — review the misses.',
+    'Strong work — almost there!',
+    'Excellent — you\'ve mastered tabular retrieval fundamentals!',
+    'Perfect score — outstanding grasp of Pneuma concepts!'
+  ];
+  $('score-message').textContent = msgs[score];
+  $('score-detail').textContent = score >= 4
+    ? 'You have a strong command of the Pneuma framework. You are ready to apply these concepts in your capstone research.'
+    : 'Review the highlighted explanations above, then re-read the corresponding sections. The concepts build on each other.';
+  banner.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function resetFinalQuiz(){
+  for(let i=1; i<=5; i++){
+    delete fqSelections[i];
+    const buttons = document.querySelectorAll(`#fq${i} .quiz-option`);
+    buttons.forEach(b=>{
+      b.style.pointerEvents='';
+      b.classList.remove('correct','incorrect','disabled');
+    });
+    $('fq'+i+'-fb').className = 'quiz-feedback';
+    $('fq'+i+'-fb').innerHTML = '';
+  }
+  $('final-score-banner').style.display='none';
+}
+
+/* ── Init ──────────────────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', ()=>{
+  buildNavDots();
+  updateProgress(0);
+  initScroll();
+  initDD();
+  buildClassifyGrid();
+  buildMatchGame();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+GROUND OPERATIONS HANDBOOK
+Hub Operations Division | Revision 7.1
+Effective: March 1, 2025
+
+=============================================================
+SECTION 1: GATE MANAGEMENT OVERVIEW
+=============================================================
+
+Effective gate management is critical for on-time performance and smooth IROPS recovery. Each hub maintains a Gate Control Desk staffed 24/7 within the Operations Control Center (OCC). The Gate Control Supervisor is the single point of authority for all gate assignments and reassignments.
+
+Standard gate assignments are loaded in SABRE 72 hours before departure. Real-time gate changes are made via the Gate Management System (GMS), which synchronizes with SABRE, passenger display screens, and the airline app.
+
+=============================================================
+SECTION 2: STANDARD TURNAROUND PROCESS
+=============================================================
+
+Standard turnaround time by aircraft type:
+
+| Aircraft | Minimum Turnaround | Standard Turnaround |
+|----------|--------------------|---------------------|
+| B737-700 | 35 minutes         | 45 minutes          |
+| B737-800 | 40 minutes         | 50 minutes          |
+| B757-200 | 45 minutes         | 55 minutes          |
+| B767-300 | 55 minutes         | 70 minutes          |
+| B777-200 | 65 minutes         | 80 minutes          |
+| B787-8   | 60 minutes         | 75 minutes          |
+
+Minimum turnaround times assume: on-time aircraft arrival, full ground crew availability, no extraordinary cargo or catering requirements, and no maintenance items.
+
+A turnaround is considered "at risk" when the inbound aircraft is 15 minutes late and the remaining turnaround time falls below the minimum threshold. At-risk turnarounds must be flagged in GMS by the Ramp Lead.
+
+=============================================================
+SECTION 3: GATE REASSIGNMENT DURING IROPS
+=============================================================
+
+During IROPS events, gate availability is managed by the Gate Control Supervisor. The following priority order governs gate reassignment decisions:
+
+Priority 1: Inbound flight with a medical emergency or diversion from another carrier
+Priority 2: Flights with connecting passengers whose connection time is within 45 minutes of the minimum connection time (MCT)
+Priority 3: Outbound flights with the highest number of confirmed revenue passengers
+Priority 4: Flights where crew flight time regulations will be violated if departure is delayed more than 60 minutes
+Priority 5: Cargo-only operations or empty aircraft repositioning
+
+When two flights have equal priority ranking, the flight with the earlier scheduled departure (STD) takes precedence.
+
+Gate reassignment notifications are sent via ACARS to the flight crew and via the Gate Management System to the gate agent. Agents must update the airport display system (FIDS) within 5 minutes of a gate change confirmation.
+
+Passengers must be notified of gate changes via PA announcement, app push notification (automated), and physical gate signage update. For gate changes that occur after boarding has started, the boarding process must be paused and passengers must be directed to the new gate.
+
+=============================================================
+SECTION 4: GROUND HANDLING COORDINATION
+=============================================================
+
+4.1 Fueling
+
+Fueling is coordinated between the Captain (via fuel load request in the flight release) and the Fueling Supervisor. Fueling cannot begin until chocks are in and the jetbridge is connected.
+
+If a delay is anticipated, the Captain may request a "top-off" of fuel to reduce fuel stop probability on the next leg. All fueling above the flight-plan quantity requires Captain sign-off.
+
+4.2 Catering
+
+Catering carts are delivered 30 minutes before STD for domestic flights and 45 minutes before STD for international flights. If the catering delivery is delayed more than 15 minutes, the Catering Supervisor must notify the OCC. Catering delays exceeding 20 minutes are recorded as delay code 72 (Catering).
+
+4.3 Baggage Handling
+
+Inbound baggage delivery to baggage claim must occur within 20 minutes of aircraft block-in for domestic flights and 25 minutes for international. If these targets are missed, the Baggage Service Manager must file a Baggage Performance Report.
+
+During IROPS, baggage may be offloaded from cancelled flights and delivered to a designated IROPS Baggage Holding Area. Agents direct affected passengers to the baggage service desk, not to the standard carousel.
+
+4.4 Aircraft Towing
+
+All aircraft tows require a Tow Crew Lead, a wing-walker on each side, and radio clearance from the Ground Movement Controller (GMC). Tows from remote stands to gates during IROPS are a common recovery tool. The Gate Control Supervisor must approve all IROPS-related tow movements.
+
+=============================================================
+SECTION 5: CONNECTING PASSENGER MANAGEMENT
+=============================================================
+
+Connecting passengers are identified in the Passenger Connect system (accessed via Operations Portal). The system flags:
+- Passengers with less than 60 minutes to MCT
+- Passengers on irrops-impacted inbound flights
+- Passengers whose connecting gate is a long distance from the arrival gate (>15-minute walk)
+
+For misconnected passengers:
+Step 1: Gate agent on the departing flight checks the Passenger Connect list 20 minutes before scheduled departure.
+Step 2: If any connecting passengers are "at risk," the agent holds the flight a maximum of 8 minutes (domestic) or 12 minutes (international) if the inbound aircraft is on final approach.
+Step 3: Passengers who misconnect are directed to the Customer Service Desk, not rebooked at the departure gate.
+
+Holding a flight beyond the hold-time limits requires OCC Duty Manager approval and must be logged in SABRE with justification.
+
+=============================================================
+SECTION 6: RAMP SPEED AND SAFETY STANDARDS
+=============================================================
+
+All ground vehicles operating on the aircraft movement area must comply with the following speed limits:
+
+- Inside the ramp safety line: 5 mph maximum
+- On taxiway/tarmac roadways: 15 mph maximum
+- During active weather (rain, snow, fog): reduce all limits by 50%
+- At night or low-visibility conditions: maximum 5 mph regardless of location
+
+Vehicle operators must hold a valid Ramp Operations Certificate. Certificates require annual renewal, including a safety exam and practical test.
+
+Any ramp incident — vehicle contact with an aircraft, ground service equipment, or personnel — must be reported immediately to the Ramp Supervisor and documented in the Safety Management System (SMS) within 2 hours of the incident.

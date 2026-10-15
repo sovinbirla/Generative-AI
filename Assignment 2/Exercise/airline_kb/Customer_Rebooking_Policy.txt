@@ -1,0 +1,113 @@
+CUSTOMER REBOOKING POLICY
+Customer Experience Division | Revision 6.0
+Effective: February 1, 2025
+
+=============================================================
+SECTION 1: REBOOKING TRIGGERS
+=============================================================
+
+A passenger is eligible for automatic rebooking (at no charge, with fee waiver) under the following conditions:
+
+1. Flight is cancelled (any cause)
+2. Flight is delayed more than 3 hours from original departure time
+3. Passenger misses a connecting flight due to an inbound delay caused by the airline
+4. Weather Advisory (issued by OCC Weather Desk) covers the passenger's departure city and the flight delay is expected to exceed 2 hours
+
+For conditions 1 and 4, rebooking is initiated automatically by the SABRE Rebooking Engine within 30 minutes of the triggering event. Passengers receive an SMS and email with their new itinerary. They may accept or decline via the app or by contacting a gate agent.
+
+For conditions 2 and 3, gate agents initiate manual rebooking through the Customer Service Portal.
+
+=============================================================
+SECTION 2: ELITE STATUS TIERS AND REBOOKING BENEFITS
+=============================================================
+
+The airline's loyalty program has four tiers. Benefits during irregular operations differ significantly across tiers.
+
+---
+
+Tier 1 — Standard (No Status)
+
+Rebooking window: 24 hours from original departure
+Available flights: Any available seat in the same cabin class
+Seat upgrade on rebook: Not eligible
+Hotel accommodation: Not provided unless overnight delay is carrier-caused
+Meal voucher: $15 for delays 1–2 hours; $25 for delays 2–4 hours; $35 for delays >4 hours
+Change fee waiver: Yes, for the rebooked flight only
+Refund option: Full refund to original payment method if passenger chooses not to travel
+
+---
+
+Tier 2 — Silver Elite
+
+Rebooking window: 48 hours from original departure
+Available flights: Any available seat including next-day departures
+Seat upgrade on rebook: Eligible for complimentary upgrade to Preferred Seating (not First Class)
+Hotel accommodation: Provided for carrier-caused overnight delays (up to $150/night)
+Meal voucher: $25 for delays 1–2 hours; $40 for delays 2–4 hours; $50 for delays >4 hours
+Change fee waiver: Yes, for up to 3 future itinerary changes within 30 days
+Refund option: Full refund, plus 1,000 bonus miles as goodwill gesture (agent-issued)
+
+---
+
+Tier 3 — Gold Elite
+
+Rebooking window: 72 hours from original departure
+Available flights: Any available seat; may be rebooked on partner airline metal if no airline seats available within 4 hours
+Seat upgrade on rebook: Eligible for complimentary upgrade to First Class if inventory available (code: ELUP-GOLD)
+Hotel accommodation: Provided for any overnight delay regardless of cause (up to $200/night)
+Meal voucher: $40 for delays 1–2 hours; $60 for delays 2–4 hours; $75 for delays >4 hours
+Change fee waiver: Yes, unlimited changes for 60 days
+Refund option: Full refund plus 2,500 bonus miles and $50 travel credit
+
+---
+
+Tier 4 — Platinum Elite
+
+Rebooking window: 7 days from original departure
+Available flights: Any available seat on any carrier (including non-partner) if airline or partner cannot provide service within 3 hours
+Seat upgrade on rebook: Guaranteed First Class on rebooked flight if First Class operated (code: ELUP-PLAT); if not available, $150 travel credit issued
+Hotel accommodation: Provided for any overnight delay regardless of cause (up to $350/night; agent may approve up to $500 with Supervisor override)
+Meal voucher: $60 for delays 1–2 hours; $80 for delays 2–4 hours; $100 for delays >4 hours
+Change fee waiver: Yes, unlimited changes for 90 days plus partner itineraries
+Refund option: Full refund plus 5,000 bonus miles and $100 travel credit
+Dedicated service: Platinum Elite passengers are served by the Priority Service Desk; standard gate agents should not keep Platinum passengers waiting more than 3 minutes before directing to Priority Service
+
+=============================================================
+SECTION 3: WEATHER CANCELLATION SPECIFIC RULES
+=============================================================
+
+Weather cancellations are treated as uncontrollable events. The following rules apply:
+
+3.1 Automatic Rebooking
+
+All passengers are automatically rebooked on the next available flight regardless of status. The SABRE Rebooking Engine runs the following priority queue:
+  Priority 1: Platinum Elite passengers
+  Priority 2: Gold Elite passengers
+  Priority 3: Silver Elite passengers
+  Priority 4: Standard passengers (sorted by check-in time)
+
+3.2 Hotel Accommodation
+
+For weather cancellations, hotel accommodation is NOT required by DOT regulations and is NOT provided to Standard or Silver Elite passengers by default.
+
+Gold Elite and Platinum Elite passengers retain their hotel accommodation benefit even during weather events, as per their tier agreement.
+
+Gate agents must explain this distinction clearly and courteously. A suggested script is:
+"I understand this is frustrating. Unfortunately, weather events are outside our control, and FAA regulations don't require airlines to provide hotel accommodations in these cases. However, I can provide you with [applicable meal voucher] and help rebook you on our next available flight."
+
+3.3 Fee Waivers During Weather
+
+All change fees and fare differences are waived during weather cancellations for all passengers regardless of tier, as long as the rebooked travel is within 14 days of the original departure date.
+
+=============================================================
+SECTION 4: REBOOKING PROCESS — AGENT STEPS
+=============================================================
+
+Step 1: Verify passenger identity and booking reference.
+Step 2: Look up status tier in the Customer Service Portal (Status field under passenger profile).
+Step 3: Identify next available flights in the rebooking window for the passenger's tier.
+Step 4: Present options to the passenger (do not select without passenger agreement).
+Step 5: Apply applicable waiver codes: WXWVR (weather), MECHW (mechanical), ATCWVR (ATC).
+Step 6: Issue meal and hotel vouchers according to tier entitlements.
+Step 7: Document the interaction in the IROPS Passenger Log with timestamp.
+Step 8: Confirm new itinerary with passenger and send confirmation SMS.

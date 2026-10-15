@@ -1,0 +1,126 @@
+CREW REST AND DUTY TIME REGULATIONS
+Flight Operations — Crew Scheduling Division
+Reference: FAA Part 117 (Flightcrew Member Duty and Rest Requirements)
+Version 4.0 | Effective: January 1, 2025
+
+=============================================================
+SECTION 1: OVERVIEW AND REGULATORY BASIS
+=============================================================
+
+This document summarizes the airline's operational interpretation of FAA Part 117, which governs rest and duty requirements for all Part 121 flightcrew members (Captains and First Officers). These are federal minimums; this airline's CBA (Collective Bargaining Agreement) may impose additional restrictions for certain crew classifications.
+
+Violations of FAA Part 117 are federal regulatory violations subject to FAA enforcement action against both the crewmember and the airline. Crew Scheduling is responsible for ensuring all pairings are compliant at the time of creation and during IROPS recovery.
+
+=============================================================
+SECTION 2: MAXIMUM DUTY PERIODS
+=============================================================
+
+A "Flight Duty Period" (FDP) begins when a crewmember reports for duty and ends when the aircraft is blocked in at the final destination. The maximum FDP depends on the time of day at the start of duty (based on the crewmember's Physiological Night — 0000–0559 local time at the crew's acclimated time zone).
+
+For a 2-pilot crew with a single flight segment:
+
+| Report Time (Acclimated) | Max FDP   |
+|--------------------------|-----------|
+| 0000–0459                | 9 hours   |
+| 0500–0659                | 13 hours  |
+| 0700–1359                | 14 hours  |
+| 1400–2059                | 13 hours  |
+| 2100–2359                | 12 hours  |
+
+For 2-pilot crews operating multiple flight segments, the maximum FDP is reduced by 30 minutes for each segment beyond the first, up to a maximum reduction of 2 hours.
+
+For 3-pilot or 4-pilot (augmented) crews operating with a rest facility onboard, the maximum FDP may be extended:
+- 3-pilot crew: Maximum FDP extended to 17 hours
+- 4-pilot crew: Maximum FDP extended to 19 hours
+
+Augmented crew rules apply only when the rest facility meets FAA standards (bunk rest facility, not a passenger seat).
+
+=============================================================
+SECTION 3: MANDATORY REST REQUIREMENTS
+=============================================================
+
+3.1 Minimum Rest Between Duty Periods
+
+After any flight duty period, a crewmember must receive a minimum rest period before the next FDP. Rest is measured from off-duty time (block-in plus transit time to rest facility) to report time.
+
+- Minimum rest at home base: 10 hours
+- Minimum rest away from home base: 10 hours
+- Rest must include 8 consecutive hours of sleep opportunity (rest period minus 2 hours for pre/post-sleep activity)
+- If the previous FDP extended beyond 12 hours, the next rest period must be at least equal to the duration of the preceding FDP
+
+3.2 Reduced Rest Authorization
+
+Reduced rest (minimum 9 hours) may be granted in operational necessity situations, but only under ALL of the following conditions:
+- The rest period occurs at a layover hotel designated as an approved rest facility
+- The crewmember is not in their physiological night at the start of the reduced rest period
+- The airline provides transportation to and from the rest facility
+- No more than 2 consecutive reduced-rest periods are scheduled in a pairing
+
+The Crew Scheduling Supervisor (not a line scheduler) must personally approve any reduced-rest authorization and document it in CrewTrac.
+
+=============================================================
+SECTION 4: CUMULATIVE FLIGHT TIME LIMITS
+=============================================================
+
+FAA Part 117 sets the following limits on cumulative flight time (block hours):
+
+- 100 hours in any 672 consecutive hours (28 days)
+- 1,000 hours in any 365 consecutive calendar days
+
+Crews approaching 90 hours in a 28-day window are flagged in CrewTrac with a "soft limit" alert. Schedulers may not assign flights that would push the crewmember beyond 100 hours.
+
+=============================================================
+SECTION 5: IROPS RECOVERY AND CREW REST COMPLIANCE
+=============================================================
+
+During an IROPS event, crew rest compliance is frequently the binding constraint on recovery planning. Crewmembers who have reached or are close to their maximum FDP cannot be assigned additional flying, even if the aircraft is ready.
+
+5.1 Impact on Hub Recovery
+
+During a major hub disruption (IROPS Level 3), crew rest violations are a common reason flights cannot be recovered:
+- If inbound crew has been delayed by weather for 4+ hours, their FDP clock may already be close to maximum, leaving no time for the return or onward flight.
+- Reserve crew must be activated. Reserve pools are maintained at each hub.
+- If local reserve is exhausted, the OCC Crew Desk contacts regional crew bases for reassignment. Positioning flights may be required to bring crew to the disrupted hub.
+
+5.2 Planning Guidance for Schedulers
+
+When building IROPS recovery pairings, Crew Scheduling must check ALL of the following in CrewTrac:
+  1. Remaining FDP availability for each crew at the disrupted station
+  2. Rest period status (is any crew currently "in rest"?)
+  3. Cumulative 28-day and 365-day flight time tracking
+  4. Reserve crew availability by crew base and equipment type
+
+A crew member currently "in rest" cannot be called for duty regardless of operational need unless the full minimum rest period has elapsed. Interrupting crew rest is a federal violation.
+
+5.3 Communication to Operations
+
+When crew rest limits prevent a scheduled flight, the Crew Scheduling Supervisor notifies the OCC Duty Manager with:
+- Affected flight(s)
+- Earliest time any available crew can be legal (factoring rest requirements)
+- Whether reserve crew can cover the flight and ETD (Estimated Time of Departure)
+
+This notification allows the OCC to determine if the flight should be delayed, swapped to a different aircraft, or cancelled. The decision authority rests with the OCC Duty Manager in consultation with the Hub Station Manager.
+
+5.4 Cascading Effects
+
+In a hub meltdown scenario (IROPS Level 3), crew rest constraints cascade:
+- Early morning disruptions create afternoon rest violations
+- Crew who rest during the day cannot be used for night operations
+- Recovery often requires 24–36 hours for the schedule to fully normalize as crew rest cycles reset
+
+This is why IROPS recovery planning for crew begins as soon as a disruption is detected, not after it peaks. Proactive rest management — protecting certain crews from early FDP consumption — is the most effective tool for minimizing the schedule impact of major hub disruptions.
+
+=============================================================
+SECTION 6: CREW NOTIFICATION REQUIREMENTS
+=============================================================
+
+Crew Scheduling must notify crewmembers of schedule changes using the following hierarchy:
+1. Push notification via CrewTrac mobile app
+2. Phone call to personal contact number on file
+3. ACARS message if crew is already on an aircraft
+
+For IROPS-related schedule changes, notification must occur at least:
+- 2 hours before required report time for domestic pairings
+- 4 hours before required report time for international pairings
+
+Crewmembers who cannot be reached within 30 minutes of the required notification window must be considered unavailable for that assignment.
