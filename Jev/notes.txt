@@ -1,0 +1,21 @@
+JEV - System 1
+
+
+It comes Typesafe AI.
+
+Two types of human thinking: System 1 and 2 from Kahneman from Thinking Fast and Slow
+
+System 1 = 2 X 2 = 4, quick and fast
+
+System 2 = 17 X 24, slow and delibrate. But 17 * 24 = 408.
+
+Uses RLCD (Reinforcement Learning for Calibrted Desicions)
+
+"Gives up on string generation and optimized for structured outputs and cant hallucinate"
+
+Jev outputs all probabilities in parallel instead of autoregressively generating by token.
+
+Uses states
+
+Workflow evals are represented in code and corrects the compute graph.
+

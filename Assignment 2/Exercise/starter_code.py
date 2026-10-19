@@ -15,7 +15,7 @@ from pathlib import Path
 # pip install langchain langchain-openai langchain-community chromadb tiktoken
 
 # ── Set your API key ──────────────────────────────────────────────────────────
-os.environ["OPENAI_API_KEY"] = "YOUR_API_KEY_HERE"
+os.environ["OPENAI_API_KEY"] = "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"
 
 # =============================================================================
 # STAGE 1: DOCUMENT LOADING
@@ -35,9 +35,13 @@ def load_documents(kb_dir: str = "airline_kb"):
     """
     from langchain_community.document_loaders import DirectoryLoader, TextLoader
 
-    # TODO: Create a DirectoryLoader and load the documents
-    loader = None  # replace with your DirectoryLoader
-    docs = []      # replace with loader.load()
+    loader = DirectoryLoader(
+        kb_dir,
+        glob="*.txt",
+        loader_cls=TextLoader,
+        loader_kwargs={"encoding": "utf-8"},
+    )
+    docs = loader.load()
 
     # ── Checkpoint 1 ──────────────────────────────────────────────────────────
     print(f"\n[Checkpoint 1] Loaded {len(docs)} documents")
@@ -56,7 +60,7 @@ def load_documents(kb_dir: str = "airline_kb"):
 
 def chunk_documents(docs, chunk_size: int = 800, chunk_overlap: int = 150):
     """
-    Split documents into chunks.
+    Split documents into overlapping chunks measured in tokens.
 
     Hint: Use RecursiveCharacterTextSplitter. Make sure source metadata
     is preserved in each chunk (LangChain does this automatically).
@@ -64,13 +68,23 @@ def chunk_documents(docs, chunk_size: int = 800, chunk_overlap: int = 150):
     Returns:
         List of LangChain Document chunks
     """
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-    # TODO: Create a RecursiveCharacterTextSplitter with the parameters above
-    splitter = None  # replace with your splitter
+    splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        separators=[
+            r"\n\s*\n",        # Paragraph boundaries
+            r"(?<=[.!?])\s+",  # Whitespace after sentence-ending punctuation
+            r"\n",            # Line boundaries
+            r"\s+",           # Word boundaries
+            "",               # Character fallback for oversized text
+        ],
+        is_separator_regex=True,
+        keep_separator="end",
+    )
 
-    # TODO: Split the documents
-    chunks = []  # replace with splitter.split_documents(docs)
+    chunks = splitter.split_documents(docs)
 
     # ── Checkpoint 2 ──────────────────────────────────────────────────────────
     print(f"\n[Checkpoint 2] Created {len(chunks)} chunks")
@@ -105,12 +119,13 @@ def build_vector_store(chunks, persist_dir: str = CHROMA_DIR):
         Chroma vector store object
     """
     from langchain_community.vectorstores import Chroma
+    from langchain_openai import OpenAIEmbeddings
 
     # TODO: Choose and instantiate your embedding model
-    embeddings = None  # replace with your embedding model
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")  # replace with your embedding model
 
     # TODO: Create the Chroma vector store from chunks
-    vectorstore = None  # replace with Chroma.from_documents(...)
+    vectorstore = Chroma.from_documents(documents=chunks, embedding=embeddings, persist_directory=persist_dir)  # replace with Chroma.from_documents(...)
 
     # ── Checkpoint 3 ──────────────────────────────────────────────────────────
     count = vectorstore._collection.count()
@@ -124,9 +139,10 @@ def build_vector_store(chunks, persist_dir: str = CHROMA_DIR):
 def load_vector_store(persist_dir: str = CHROMA_DIR):
     """Load an existing Chroma vector store (avoids re-embedding on repeat runs)."""
     from langchain_community.vectorstores import Chroma
+    from langchain_openai import OpenAIEmbeddings
 
     # TODO: Choose the SAME embedding model you used in build_vector_store
-    embeddings = None  # replace with your embedding model
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")  # replace with your embedding model
 
     return Chroma(persist_directory=persist_dir, embedding_function=embeddings)
 
@@ -159,17 +175,18 @@ def build_rag_chain(vectorstore, top_k: int = 4):
     from langchain.chains import RetrievalQAWithSourcesChain
     from langchain.prompts import PromptTemplate
 
-    # TODO: Create a retriever from vectorstore
-    retriever = None  # replace with vectorstore.as_retriever(...)
+    retriever = vectorstore.as_retriever(
+        search_type="similarity",
+        search_kwargs={"k": top_k},
+    )
 
-    # TODO: Create the LLM
-    llm = None  # replace with ChatOpenAI(...)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
-    # TODO: Write your system prompt
     prompt_template = """
     You are an expert airline operations assistant.
     Use only the context below to answer the question.
-    At the end of your answer, cite the source document(s).
+    At the end of your answer, cite the source document(s) on a separate
+    line beginning with "SOURCES:".
     If the answer is not in the context, say:
     "This information is not available in the operational documents."
 
@@ -185,8 +202,12 @@ def build_rag_chain(vectorstore, top_k: int = 4):
         input_variables=["summaries", "question"]
     )
 
-    # TODO: Build the chain
-    chain = None  # replace with RetrievalQAWithSourcesChain.from_chain_type(...)
+    chain = RetrievalQAWithSourcesChain.from_chain_type(
+        llm=llm,
+        chain_type="stuff",
+        retriever=retriever,
+        chain_type_kwargs={"prompt": prompt},
+    )
 
     # ── Checkpoint 4: Retrieval Test ──────────────────────────────────────────
     test_query = "What happens when a flight is mechanically delayed?"
