@@ -8,6 +8,7 @@ Instructions:
 - Do not modify the checkpoint print statements — they are used for grading
 """
 
+import os
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -16,6 +17,7 @@ from dotenv import load_dotenv
 
 # ── Load your local API key (the .env file is ignored by Git) ─────────────────
 load_dotenv(Path(__file__).with_name(".env"))
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
 # =============================================================================
 # STAGE 1: DOCUMENT LOADING
@@ -122,7 +124,9 @@ def build_vector_store(chunks, persist_dir: str = CHROMA_DIR):
     from langchain_openai import OpenAIEmbeddings
 
     # TODO: Choose and instantiate your embedding model
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")  # replace with your embedding model
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small", api_key=OPENAI_API_KEY
+    )
 
     # TODO: Create the Chroma vector store from chunks
     vectorstore = Chroma.from_documents(documents=chunks, embedding=embeddings, persist_directory=persist_dir)  # replace with Chroma.from_documents(...)
@@ -142,7 +146,9 @@ def load_vector_store(persist_dir: str = CHROMA_DIR):
     from langchain_openai import OpenAIEmbeddings
 
     # TODO: Choose the SAME embedding model you used in build_vector_store
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")  # replace with your embedding model
+    embeddings = OpenAIEmbeddings(
+        model="text-embedding-3-small", api_key=OPENAI_API_KEY
+    )
 
     return Chroma(persist_directory=persist_dir, embedding_function=embeddings)
 
@@ -180,7 +186,7 @@ def build_rag_chain(vectorstore, top_k: int = 4):
         search_kwargs={"k": top_k},
     )
 
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, api_key=OPENAI_API_KEY)
 
     prompt_template = """
     You are an expert airline operations assistant.
