@@ -8,14 +8,14 @@ Instructions:
 - Do not modify the checkpoint print statements — they are used for grading
 """
 
-import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # ── Install required packages (run once in terminal) ──────────────────────────
-# pip install langchain langchain-openai langchain-community chromadb tiktoken
+# pip install langchain langchain-openai langchain-community chromadb tiktoken python-dotenv
 
-# ── Set your API key ──────────────────────────────────────────────────────────
-os.environ["OPENAI_API_KEY"] = "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"
+# ── Load your local API key (the .env file is ignored by Git) ─────────────────
+load_dotenv(Path(__file__).with_name(".env"))
 
 # =============================================================================
 # STAGE 1: DOCUMENT LOADING
