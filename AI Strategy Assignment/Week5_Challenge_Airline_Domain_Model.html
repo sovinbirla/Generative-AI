@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In-Class Challenge: "Just Fine-Tune It on Our Manuals" — ADSP 32027</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1e3a5f;--blue:#2563eb;--blue-light:#dbeafe;
+  --teal:#0d9488;--teal-light:#ccfbf1;
+  --orange:#ea580c;--orange-light:#ffedd5;
+  --purple:#7c3aed;--purple-light:#ede9fe;
+  --yellow:#ca8a04;--yellow-light:#fef9c3;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-600:#475569;--gray-700:#334155;--gray-900:#0f172a;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-700);line-height:1.65}
+.container{max-width:960px;margin:0 auto;padding:0 2rem}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#1d4ed8 100%);color:white;padding:3.2rem 2rem;text-align:center}
+.hero-course{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;opacity:.75;margin-bottom:.7rem}
+.hero h1{font-size:2.3rem;font-weight:800;line-height:1.2;margin-bottom:.8rem}
+.hero-sub{font-size:1.05rem;opacity:.9;max-width:680px;margin:0 auto 1.4rem}
+.hero-tags{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.hero-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:100px;padding:.28rem .85rem;font-size:.8rem}
+section{padding:2.6rem 0}
+section.alt{background:white}
+.sec-label{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:.3rem}
+h2{font-size:1.6rem;font-weight:800;color:var(--gray-900);margin-bottom:.8rem}
+h3{font-size:1.1rem;font-weight:700;color:var(--navy);margin:1.2rem 0 .5rem}
+p{margin-bottom:.8rem}
+ul,ol{padding-left:1.3rem;margin-bottom:.8rem}
+li{margin-bottom:.3rem}
+.quote{background:white;border-left:5px solid var(--orange);border-radius:0 12px 12px 0;padding:1.3rem 1.6rem;font-size:1.15rem;color:var(--gray-900);font-style:italic;box-shadow:0 1px 3px rgba(0,0,0,.06);margin:1rem 0 1.2rem}
+.quote .who{display:block;font-style:normal;font-size:.85rem;color:var(--gray-600);margin-top:.5rem}
+.data-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.9rem;margin:1rem 0}
+.data-card{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:1rem 1.1rem;font-size:.9rem}
+.data-card b{display:block;color:var(--navy);margin-bottom:.2rem}
+.task{background:white;border:1px solid var(--gray-200);border-radius:12px;padding:1.5rem 1.6rem;margin-bottom:1.3rem;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.task-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.6rem}
+.num{background:var(--blue);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.task h3{margin:0;font-size:1.2rem;color:var(--gray-900)}
+.time{margin-left:auto;background:var(--yellow-light);color:var(--yellow);border-radius:100px;padding:.15rem .65rem;font-size:.75rem;font-weight:700;white-space:nowrap}
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.9rem}
+th{background:var(--navy);color:white;padding:.6rem .8rem;text-align:left;font-weight:600}
+td{padding:.65rem .8rem;border-bottom:1px solid var(--gray-200);vertical-align:top}
+tr:nth-child(even) td{background:var(--gray-50)}
+td.blank{min-width:150px;border-left:1px dashed var(--gray-200)}
+.req{font-family:'SF Mono','Fira Code',monospace;font-size:.85rem;background:var(--gray-100);padding:.05rem .35rem;border-radius:4px}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:.6rem 0 .2rem}
+.chip{background:var(--purple-light);color:var(--purple);border-radius:100px;padding:.2rem .75rem;font-size:.82rem;font-weight:600}
+.numbers{background:var(--gray-900);color:#e2e8f0;border-radius:10px;padding:1.1rem 1.4rem;font-family:'SF Mono','Fira Code',monospace;font-size:.88rem;line-height:1.9;margin:.8rem 0;white-space:pre;overflow-x:auto}
+.numbers .c{color:#94a3b8}
+.hint{background:var(--teal-light);border-left:4px solid var(--teal);border-radius:0 8px 8px 0;padding:.75rem 1.1rem;font-size:.9rem;margin-top:.8rem}
+.hint b{color:var(--teal)}
+.deliver{background:var(--blue-light);border-left:4px solid var(--blue);border-radius:0 10px 10px 0;padding:1.1rem 1.4rem}
+.deliver b{color:var(--navy)}
+.glossary{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.8rem}
+.gl{background:white;border:1px solid var(--gray-200);border-radius:10px;padding:.9rem 1.1rem;font-size:.88rem}
+.gl b{color:var(--navy)}
+footer{text-align:center;font-size:.8rem;color:var(--gray-600);padding:2rem}
+@media(max-width:700px){.hero h1{font-size:1.7rem}}
+@media print{.hero{padding:1.4rem}section{padding:1rem 0}.task,.quote{break-inside:avoid;box-shadow:none}body{background:white}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-course">ADSP 32027 · Generative AI Principles · Week 5 · In-Class Challenge</div>
+  <h1>"Just Fine-Tune It on Our Manuals"</h1>
+  <p class="hero-sub">How do you actually build a domain-specific language model? A real problem from the airline industry, in four tasks.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">Teams of 3–4</span>
+    <span class="hero-tag">35–40 minutes</span>
+    <span class="hero-tag">Deliverable: one-page recommendation</span>
+  </div>
+</header>
+
+<section class="alt">
+  <div class="container">
+    <div class="sec-label">The scenario</div>
+    <h2>The VP's request</h2>
+    <p>A major U.S. airline wants a language model that "knows the airline". General-purpose LLMs don't know its fleet, its procedures, or how its mechanics write logbook entries. The VP of Engineering has a plan:</p>
+    <div class="quote">"Take an 8-billion-parameter open model, fine-tune it on our 10 GB of maintenance manuals, logbooks, and operating procedures, and it will know our airline."<span class="who">— VP of Engineering</span></div>
+    <p>You are the airline's Gen AI team. The VP wants your recommendation by the end of the meeting. Is the plan right, partly right, or wrong? What would you build instead?</p>
+    <div class="hint" style="margin-bottom:1rem"><b>Before you start:</b> read the <a href="Week5_Lecture_Note_Domain_Models.html">Week 5 lecture note</a> (training stages, the Chinchilla rule, the 6ND compute rule). Everything you need for this challenge is there.</div>
+
+    <h3>What's in the 10 GB</h3>
+    <div class="data-grid">
+      <div class="data-card"><b>Maintenance manuals</b>Step-by-step procedures, organized by ATA chapter (e.g., 32 = landing gear, 49 = APU). Many are PDFs, some scanned.</div>
+      <div class="data-card"><b>Aircraft logbooks</b>Millions of short, abbreviation-heavy defect and repair entries, with dates, tail numbers, and part numbers.</div>
+      <div class="data-card"><b>Operating procedures</b>Dispatch, flight operations, and the MEL (the list of what may be inoperative on a flight). Revised on a regular schedule.</div>
+      <div class="data-card"><b>Safety &amp; irregular-ops reports</b>Free-text narratives written by crews, dispatchers, and station staff.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="sec-label">Your tasks</div>
+    <h2>Four tasks</h2>
+
+    <div class="task">
+      <div class="task-head"><span class="num">1</span><h3>Match each requirement to a technique</h3><span class="time">~12 min</span></div>
+      <p>The airline needs the model to do the six things below. For each one, pick the technique (or combination) that fits best, and justify it in one sentence. More than one technique can be right. Explain your choice.</p>
+      <div class="chips">
+        <span class="chip">Continued pretraining</span>
+        <span class="chip">Instruction fine-tuning</span>
+        <span class="chip">Classification fine-tuning</span>
+        <span class="chip">Preference alignment (DPO)</span>
+        <span class="chip">RAG</span>
+        <span class="chip">NL-to-SQL</span>
+        <span class="chip">Prompting only</span>
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>Requirement</th><th>Technique</th><th>Why (one sentence)</th></tr></thead>
+        <tbody>
+          <tr><td>a</td><td>Understand logbook shorthand such as <span class="req">L/H MLG TIRE WORN TO LIMITS, REPLACED IAW AMM 32-xx</span></td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>b</td><td>Answer "What is the current MEL relief for an inoperative APU on our 737 fleet?" and cite the source document</td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>c</td><td>Route each new defect write-up to the correct ATA chapter</td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>d</td><td>Summarize a shift's irregular-operations reports in the dispatch team's standard format</td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>e</td><td>"How many tire replacements did the 787 fleet have last quarter?"</td><td class="blank"></td><td class="blank"></td></tr>
+          <tr><td>f</td><td>Never imply it can sign off on maintenance; say "I don't know" when it isn't sure</td><td class="blank"></td><td class="blank"></td></tr>
+        </tbody>
+      </table>
+      <div class="hint"><b>Think about:</b> Is the requirement about <em>language</em> (vocabulary, style), <em>facts</em> (which may change), a <em>task</em> (a fixed input→output behavior), <em>behavior</em> (what it refuses), or <em>data that lives in tables</em>?</div>
+    </div>
+
+    <div class="task">
+      <div class="task-head"><span class="num">2</span><h3>Do the math</h3><span class="time">~8 min</span></div>
+      <ol>
+        <li>Roughly how many tokens is 10 GB of clean English text? Why might 10 GB of <em>files</em> contain much less text than that?</li>
+        <li>Could you pretrain a 3B-parameter model <em>from scratch</em> on this data? Use the Chinchilla rule of thumb.</li>
+        <li>Roughly how many GPU-hours would one epoch of continued pretraining of an 8B model on this data take?</li>
+        <li>Based on your answers, where is the real cost of this project: compute, or something else?</li>
+      </ol>
+      <div class="numbers"><span class="c"># Useful numbers</span>
+English text (BPE)          ≈ 4 bytes per token
+Chinchilla rule of thumb    ≈ 20 training tokens per parameter
+Training compute            ≈ 6 × N (parameters) × D (tokens) FLOPs
+One H100, realistic speed   ≈ 4 × 10¹⁴ FLOP/s (about 40% of peak)</div>
+    </div>
+
+    <div class="task">
+      <div class="task-head"><span class="num">3</span><h3>Design the evaluation first</h3><span class="time">~8 min</span></div>
+      <p>Before anyone trains anything, how will you know whether a trained model is better than what the airline could get without training?</p>
+      <ul>
+        <li>What goes into your test set, and who writes it?</li>
+        <li>Which <strong>baselines</strong> would you compare against? Name at least three.</li>
+        <li>What result would make you <strong>stop</strong> and not train a model at all?</li>
+      </ul>
+    </div>
+
+    <div class="task">
+      <div class="task-head"><span class="num">4</span><h3>Name the biggest risk</h3><span class="time">~5 min</span></div>
+      <p>This is a safety-regulated industry, and procedures are revised regularly. What is the biggest risk of putting procedures <em>into the model's weights</em>, and how would you design around it? Name one more risk that has nothing to do with the model (think about the data itself).</p>
+    </div>
+
+    <div class="deliver">
+      <b>Deliverable (one page per team):</b> your Task 1 table, your numbers from Task 2, your evaluation plan, your top risk, and a <b>one-sentence recommendation to the VP</b>. Be ready to defend it in 2 minutes.
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="container">
+    <div class="sec-label">Reference</div>
+    <h2>The techniques, in one line each</h2>
+    <div class="glossary">
+      <div class="gl"><b>Continued pretraining</b>: keep training a pretrained model on raw domain text with the same next-token objective. No labels needed.</div>
+      <div class="gl"><b>Instruction fine-tuning</b>: train on (instruction, response) pairs so the model performs tasks in a desired format.</div>
+      <div class="gl"><b>Classification fine-tuning</b>: replace the output layer with a small head and train it to predict a fixed set of labels.</div>
+      <div class="gl"><b>Preference alignment (DPO)</b>: train on pairs of preferred vs. rejected answers to shape behavior.</div>
+      <div class="gl"><b>RAG</b>: retrieve relevant documents at question time and put them in the prompt. The model's weights don't change.</div>
+      <div class="gl"><b>NL-to-SQL</b>: translate a natural-language question into a database query and run it.</div>
+    </div>
+  </div>
+</section>
+
+<footer>ADSP 32027 · Generative AI Principles · Autumn 2026 · Dr. Utku Pamuksuz</footer>
+</body>
+</html>

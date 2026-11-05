@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture Note: Building a Domain-Specific Language Model — ADSP 32027 Week 5</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1e3a5f;--blue:#2563eb;--blue-light:#dbeafe;
+  --teal:#0d9488;--teal-light:#ccfbf1;
+  --orange:#ea580c;--orange-light:#ffedd5;
+  --purple:#7c3aed;--purple-light:#ede9fe;
+  --green:#16a34a;--green-light:#dcfce7;
+  --yellow:#ca8a04;--yellow-light:#fef9c3;
+  --red:#dc2626;--red-light:#fee2e2;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-600:#475569;--gray-700:#334155;--gray-900:#0f172a;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-700);line-height:1.7}
+.container{max-width:1000px;margin:0 auto;padding:0 2rem}
+.hero{background:linear-gradient(135deg,var(--navy) 0%,#1d4ed8 100%);color:white;padding:3.4rem 2rem;text-align:center}
+.hero-course{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;opacity:.75;margin-bottom:.7rem}
+.hero h1{font-size:2.3rem;font-weight:800;line-height:1.2;margin-bottom:.8rem}
+.hero-sub{font-size:1.05rem;opacity:.9;max-width:720px;margin:0 auto 1.4rem}
+.hero-tags{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.hero-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:100px;padding:.28rem .85rem;font-size:.8rem}
+nav{position:sticky;top:0;background:white;border-bottom:1px solid var(--gray-200);z-index:100;padding:.6rem 2rem}
+.nav-inner{max-width:1000px;margin:0 auto;display:flex;gap:1.3rem;overflow-x:auto}
+.nav-link{font-size:.8rem;font-weight:600;color:var(--gray-600);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;padding:.15rem 0}
+.nav-link:hover{color:var(--blue);border-bottom-color:var(--blue)}
+section{padding:2.8rem 0}
+section.alt{background:white}
+.sec-label{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:.3rem}
+h2{font-size:1.7rem;font-weight:800;color:var(--gray-900);margin-bottom:.8rem}
+h3{font-size:1.15rem;font-weight:700;color:var(--navy);margin:1.5rem 0 .5rem}
+p{margin-bottom:.85rem}
+ul,ol{padding-left:1.3rem;margin-bottom:.85rem}
+li{margin-bottom:.35rem}
+code{font-family:'SF Mono','Fira Code',monospace;font-size:.85em;background:var(--gray-100);padding:.05rem .35rem;border-radius:4px}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem;background:white}
+th{background:var(--navy);color:white;padding:.6rem .8rem;text-align:left;font-weight:600}
+td{padding:.6rem .8rem;border-bottom:1px solid var(--gray-200);vertical-align:top}
+tr:nth-child(even) td{background:var(--gray-50)}
+.insight{border-left:4px solid var(--blue);background:var(--blue-light);border-radius:0 8px 8px 0;padding:.9rem 1.2rem;margin:1.2rem 0}
+.insight b{color:var(--navy)}
+.insight.orange{border-left-color:var(--orange);background:var(--orange-light)}.insight.orange b{color:var(--orange)}
+.insight.teal{border-left-color:var(--teal);background:var(--teal-light)}.insight.teal b{color:var(--teal)}
+.insight.green{border-left-color:var(--green);background:var(--green-light)}.insight.green b{color:var(--green)}
+.formula{background:var(--gray-900);color:#e2e8f0;border-radius:10px;padding:1.1rem 1.4rem;font-family:'SF Mono','Fira Code',monospace;font-size:.88rem;line-height:1.9;margin:1rem 0;white-space:pre;overflow-x:auto}
+.formula .c{color:#94a3b8}
+.formula .v{color:#fbbf24}
+.formula .g{color:#4ade80}
+.pipeline{display:flex;gap:.4rem;align-items:stretch;flex-wrap:wrap;margin:1.2rem 0}
+.stage{flex:1;min-width:150px;border-radius:10px;padding:.9rem;color:white;font-size:.82rem;line-height:1.45}
+.stage b{display:block;font-size:.95rem;margin-bottom:.25rem}
+.arrow{display:flex;align-items:center;color:var(--gray-600);font-weight:800}
+.s1{background:#475569}.s2{background:var(--blue)}.s3{background:var(--teal)}.s4{background:var(--purple)}.s5{background:var(--orange)}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1rem 0}
+.ex{background:white;border:1px solid var(--gray-200);border-radius:12px;padding:1.1rem 1.2rem;font-size:.88rem}
+.ex h4{font-size:.95rem;margin-bottom:.4rem}
+.ex pre{background:var(--gray-100);border-radius:8px;padding:.7rem .8rem;font-family:'SF Mono','Fira Code',monospace;font-size:.76rem;line-height:1.55;white-space:pre-wrap;margin:.5rem 0}
+.ex .learns{font-size:.82rem;color:var(--gray-600)}
+.ex.cpt{border-top:4px solid var(--blue)}.ex.cpt h4{color:var(--blue)}
+.ex.ift{border-top:4px solid var(--teal)}.ex.ift h4{color:var(--teal)}
+.ex.cft{border-top:4px solid var(--purple)}.ex.cft h4{color:var(--purple)}
+.ex.dpo{border-top:4px solid var(--orange)}.ex.dpo h4{color:var(--orange)}
+.ex.rag{border-top:4px solid var(--green)}.ex.rag h4{color:var(--green)}
+.game{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.9rem;margin:1rem 0}
+.card{background:white;border:1px solid var(--gray-200);border-radius:12px;padding:1rem 1.1rem}
+.card .q{font-size:.92rem;color:var(--gray-900);margin-bottom:.6rem}
+.card .opts{display:flex;flex-wrap:wrap;gap:.35rem}
+.card button{border:1px solid var(--gray-200);background:var(--gray-50);border-radius:100px;padding:.25rem .7rem;font-size:.78rem;font-weight:600;cursor:pointer;color:var(--gray-700)}
+.card button:hover{border-color:var(--blue);color:var(--blue)}
+.card button.right{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.card button.wrong{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.card .why{display:none;margin-top:.6rem;font-size:.84rem;background:var(--gray-50);border-radius:8px;padding:.55rem .75rem}
+.card.done .why{display:block}
+.score{font-weight:700;color:var(--navy)}
+.steps{counter-reset:step;list-style:none;padding:0}
+.steps li{counter-increment:step;display:flex;gap:.9rem;margin-bottom:1rem;align-items:flex-start}
+.steps li::before{content:counter(step);background:var(--blue);color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0;margin-top:.15rem}
+.gate{display:inline-block;background:var(--yellow-light);color:var(--yellow);border-radius:100px;padding:.05rem .55rem;font-size:.74rem;font-weight:700;margin-left:.3rem}
+footer{text-align:center;font-size:.8rem;color:var(--gray-600);padding:2rem}
+@media(max-width:720px){.hero h1{font-size:1.7rem}.arrow{display:none}}
+@media print{nav{display:none}.hero{padding:1.4rem}section{padding:1rem 0}.ex,.card,table{break-inside:avoid}body{background:white}.card .why{display:block}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-course">ADSP 32027 · Generative AI Principles · Week 5 · Lecture Note</div>
+  <h1>Building a Domain-Specific Language Model</h1>
+  <p class="hero-sub">Continued pretraining, instruction fine-tuning, classification fine-tuning, and when to use none of them. One airline example from start to finish, plus the math to size a project.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">Read before the in-class challenge</span>
+    <span class="hero-tag">~30 min read</span>
+    <span class="hero-tag">Builds on Raschka Ch. 5–7</span>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a class="nav-link" href="#problem">1 · The problem</a>
+    <a class="nav-link" href="#lifecycle">2 · Training stages</a>
+    <a class="nav-link" href="#airline">3 · Same airline, five jobs</a>
+    <a class="nav-link" href="#why">4 · Why raw docs aren't enough</a>
+    <a class="nav-link" href="#math">5 · The math</a>
+    <a class="nav-link" href="#decide">6 · Choosing a technique</a>
+    <a class="nav-link" href="#game">7 · Spot the technique</a>
+    <a class="nav-link" href="#recipe">8 · The recipe</a>
+    <a class="nav-link" href="#readings">Readings</a>
+  </div>
+</nav>
+
+<section id="problem" class="alt">
+  <div class="container">
+    <div class="sec-label">1 · The problem</div>
+    <h2>"Fine-tune it on our documents"</h2>
+    <p>Every company with a large document archive eventually asks the same question. An airline has gigabytes of maintenance manuals, aircraft logbooks, operating procedures, and safety reports. General-purpose LLMs have never seen any of it. The intuitive plan is to take an open model and "fine-tune it on everything".</p>
+    <p>The intuition is half right. There <em>is</em> a training stage that consumes raw, unlabeled domain text, but it isn't what most people mean by fine-tuning, and on its own it doesn't produce a model that reliably answers questions about the domain. To see why, we need to separate the training stages precisely.</p>
+    <div class="insight"><b>The one-line takeaway:</b> training teaches a model to <em>speak</em> the domain; retrieval tells it what is <em>true today</em>. Most domain projects need both, and retrieval usually comes first.</div>
+  </div>
+</section>
+
+<section id="lifecycle">
+  <div class="container">
+    <div class="sec-label">2 · The training stages</div>
+    <h2>Five ways to change what a model does</h2>
+    <p>Four of these change the model's weights. The fifth (retrieval) changes only what the model sees at question time.</p>
+
+    <div class="pipeline">
+      <div class="stage s1"><b>Pretraining</b>Trillions of tokens of general text. Next-token prediction. Done once, by the model provider.</div>
+      <div class="arrow">→</div>
+      <div class="stage s2"><b>Continued pretraining (CPT)</b>Your raw domain text. Same next-token objective. No labels.</div>
+      <div class="arrow">→</div>
+      <div class="stage s3"><b>Supervised fine-tuning</b>Labeled pairs: instructions → responses (IFT), or text → class (CFT).</div>
+      <div class="arrow">→</div>
+      <div class="stage s4"><b>Preference alignment</b>Preferred vs. rejected answers (DPO, RLHF).</div>
+    </div>
+    <div class="pipeline">
+      <div class="stage s5" style="flex:none;width:100%"><b>Retrieval-augmented generation (RAG): no training</b>Search your documents at question time and place the relevant passages in the prompt. Works with any of the models above.</div>
+    </div>
+
+    <h3>What each stage optimizes</h3>
+    <p>The differences are easiest to see in the loss functions. Let <code>x</code> be a sequence of tokens, <code>θ</code> the model's parameters.</p>
+<div class="formula"><span class="c"># Pretraining and continued pretraining (CPT): every token is a target</span>
+L<sub>CPT</sub>(θ) = − Σ<sub>t</sub> log p<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>)              <span class="c">over ALL tokens of the raw document</span>
+
+<span class="c"># Instruction fine-tuning (IFT): same loss, but only on the response tokens</span>
+L<sub>IFT</sub>(θ) = − Σ<sub>t ∈ <span class="v">response</span></sub> log p<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>)     <span class="c">instruction tokens are context, not targets</span>
+
+<span class="c"># Classification fine-tuning (CFT): new head W ∈ ℝ<sup>d×K</sup> on the last token's hidden state h</span>
+L<sub>CFT</sub>(θ, W) = − log softmax(h<sub>last</sub> W)<sub><span class="v">y</span></sub>              <span class="c">K classes instead of a 50k+ vocabulary</span>
+
+<span class="c"># Preference alignment (DPO): push up the chosen answer y<sub>w</sub>, push down the rejected y<sub>l</sub></span>
+L<sub>DPO</sub>(θ) = − log σ( β [ log π<sub>θ</sub>(y<sub>w</sub>|x)/π<sub>ref</sub>(y<sub>w</sub>|x) − log π<sub>θ</sub>(y<sub>l</sub>|x)/π<sub>ref</sub>(y<sub>l</sub>|x) ] )</div>
+
+    <table>
+      <thead><tr><th>Stage</th><th>Data you need</th><th>What it changes</th><th>What it does <em>not</em> do well</th></tr></thead>
+      <tbody>
+        <tr><td><b>CPT</b></td><td>Raw domain text, ideally billions of tokens. No labels.</td><td>Vocabulary, phrasing, domain fluency. Lowers perplexity on domain text.</td><td>Doesn't teach the model to answer questions or follow instructions; can erode both.</td></tr>
+        <tr><td><b>IFT</b></td><td>Thousands of (instruction, response) pairs.</td><td>Task behavior, output format, tone.</td><td>A weak and risky way to add new facts.</td></tr>
+        <tr><td><b>CFT</b></td><td>Thousands of (text, label) pairs over a fixed label set.</td><td>One narrow skill, done reliably and cheaply.</td><td>Can only ever output its classes.</td></tr>
+        <tr><td><b>DPO</b></td><td>(prompt, chosen, rejected) triples, often from experts.</td><td>What the model refuses, how it handles uncertainty, whether it cites sources.</td><td>Adds no knowledge.</td></tr>
+        <tr><td><b>RAG</b></td><td>The documents themselves, indexed for search.</td><td>Which facts the model sees for each question. Current and citable.</td><td>Only as good as retrieval; can't count or aggregate across thousands of records.</td></tr>
+      </tbody>
+    </table>
+    <div class="insight teal"><b>Connection to the book:</b> Raschka Ch. 5 is pretraining (the CPT loss), Ch. 6 is classification fine-tuning (replacing the 50,257-way output head with a 2-way head), and Ch. 7 is instruction fine-tuning (masking the instruction tokens out of the loss). CPT is Ch. 5's training loop pointed at a new corpus.</div>
+  </div>
+</section>
+
+<section id="airline" class="alt">
+  <div class="container">
+    <div class="sec-label">3 · Same airline, five jobs</div>
+    <h2>What the training data looks like at each stage</h2>
+    <p>All examples below are fictional, but written the way airline documents are. The point is that <b>the same company needs different data for each stage</b>, and only one stage can use the raw documents as they are.</p>
+    <div class="ex-grid">
+      <div class="ex cpt">
+        <h4>Continued pretraining: raw text, as-is</h4>
+<pre>TASK 32-41-00-200-801
+Brake Wear Inspection
+(1) Set the parking brake.
+(2) Measure the wear-pin extension.
+    If the pin is flush with the housing,
+    replace the brake assembly ...
+
+LOG 14-MAR  L/H MLG TIRE WORN TO LIMITS,
+REPLACED IAW AMM. OPS CK GOOD.</pre>
+        <p class="learns">Learns: how manuals and logbooks are written, what "IAW", "MLG", and "OPS CK" mean in context.</p>
+      </div>
+      <div class="ex ift">
+        <h4>Instruction fine-tuning: (instruction, response)</h4>
+<pre>{"instruction": "Summarize this delay report for the
+   duty manager in three bullets.",
+ "input": "Flt 1234 ORD-SFO delayed 2h10m. APU
+   inop, ground power unavailable at gate ...",
+ "response": "• 2h10m delay, ORD-SFO\n• Cause: APU
+   inoperative, no ground power at gate\n• Action:
+   aircraft swap at 14:20"}</pre>
+        <p class="learns">Learns: to perform a task in a required format. Usually written by experts, often expanded with synthetic examples.</p>
+      </div>
+      <div class="ex cft">
+        <h4>Classification fine-tuning: (text, label)</h4>
+<pre>("L/H MLG TIRE WORN TO LIMITS, REPLACED",   32)
+("APU WILL NOT START, FAULT CODE 0472",      49)
+("AFT LAV FAUCET LEAKING",                  38)
+("CAPT WINDSHIELD HEAT INOP",               30)</pre>
+        <p class="learns">Learns: map a defect write-up to its ATA chapter (32 landing gear, 49 APU, 38 water/waste, 30 ice and rain protection). Logbooks often already contain these labels.</p>
+      </div>
+      <div class="ex dpo">
+        <h4>Preference alignment: (prompt, chosen, rejected)</h4>
+<pre>prompt:   "Can I dispatch with the APU inop?"
+chosen:   "Possibly, under the MEL. The current
+           revision says ... [source: MEL 49-1,
+           rev. 12]. Confirm with Maintenance Control."
+rejected: "Yes, that's fine."</pre>
+        <p class="learns">Learns: cite sources, defer to the right authority, don't sound certain when it isn't.</p>
+      </div>
+      <div class="ex rag">
+        <h4>RAG: no training data at all</h4>
+<pre>question → search index (filtered to
+           fleet = 737, revision = current)
+         → top passages from MEL 49-1, rev. 12
+         → prompt = question + passages
+         → answer with citation</pre>
+        <p class="learns">Gives: facts that are current, citable, and change the day the document changes. Nothing is stored in the weights.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="container">
+    <div class="sec-label">4 · Why raw documents aren't enough</div>
+    <h2>Five reasons "just CPT on the manuals" falls short</h2>
+    <ol>
+      <li><b>Facts seen once are stored but hard to retrieve from the weights.</b> Allen-Zhu &amp; Li (2023) trained models on synthetic biographies: when each fact appeared in only one phrasing, the model memorized the text but couldn't answer questions about it. When facts appeared in many paraphrases, it could. A manual states each procedure once.</li>
+      <li><b>Raw CPT can erode instruction following.</b> Cheng et al. (2023) found that continued pretraining on raw domain text improved domain knowledge but hurt the model's ability to answer prompts. Converting the raw text into reading-comprehension tasks fixed it.</li>
+      <li><b>Fine-tuning on new facts encourages hallucination.</b> Gekhman et al. (2024): examples containing facts the model didn't already know are learned slowly, and once learned, they make the model more likely to hallucinate. For injecting knowledge, retrieval beat fine-tuning (Ovadia et al., 2023).</li>
+      <li><b>Regulated content changes, and weights can't cite.</b> Procedures, minimum equipment lists, and airworthiness directives are revised on a schedule. Whatever was in the training data is frozen into the weights, without a revision number or a source. In aviation, quoting a superseded procedure is a safety issue.</li>
+      <li><b>Much of the corpus is really a database.</b> Logbook entries and work orders are records with dates, tail numbers, and part numbers. "How many tire changes last quarter?" is a query, not something to memorize.</li>
+    </ol>
+    <div class="insight orange"><b>Cautionary tale: BloombergGPT (Wu et al., 2023).</b> A 50B-parameter model trained from scratch on ~363B tokens of financial text plus ~345B general tokens. It beat open models of its time on finance benchmarks, but later evaluations found GPT-4 outperformed it on many finance tasks with no finance-specific training. Training from scratch is rarely the best use of a domain budget.</div>
+  </div>
+</section>
+
+<section id="math" class="alt">
+  <div class="container">
+    <div class="sec-label">5 · The math</div>
+    <h2>Sizing a domain-model project on one page</h2>
+
+    <h3>5.1 From bytes to tokens</h3>
+    <p>English text under a BPE tokenizer averages about <b>4 bytes (≈ 0.75 words) per token</b>. Two warnings:</p>
+    <ul>
+      <li><b>Files are not text.</b> A folder of scanned PDFs, images, and spreadsheets yields far less clean text than its size suggests. Measure after extraction and deduplication.</li>
+      <li><b>Domain shorthand costs extra tokens.</b> With the GPT-2 tokenizer, the 9-word logbook entry <code>L/H MLG TIRE WORN TO LIMITS, REPLACED IAW AMM</code> takes <b>19 tokens</b> (<code>TIRE</code> → <code>TI</code> + <code>RE</code>), while the 15-word plain-English version takes 16. That's one reason CPT helps on jargon-heavy text.</li>
+    </ul>
+<div class="formula">tokens ≈ bytes of clean text / 4
+<span class="c"># 1 GB of clean text ≈ 250M tokens</span></div>
+
+    <h3>5.2 The Chinchilla rule: how much data a model "wants"</h3>
+    <p>Hoffmann et al. (2022) found that for a fixed compute budget, loss is minimized when training tokens scale with parameters, at roughly <b>20 tokens per parameter</b>.</p>
+<div class="formula">D<sub>opt</sub> ≈ 20 × N
+<span class="c">#  N = 1B  →  ~20B tokens</span>
+<span class="c">#  N = 3B  →  ~60B tokens</span>
+<span class="c">#  N = 8B  →  ~160B tokens</span>
+<span class="c">#  N = 70B →  ~1.4T tokens   (Chinchilla itself: 70B params, 1.4T tokens)</span></div>
+    <p>Modern open models train far past this point (Llama 3 8B saw ~15T tokens, about 1,900 per parameter), because a smaller model that was trained longer is cheaper to serve on every future query. Either way, the consequence for a company is the same: <b>a company corpus is orders of magnitude too small to pretrain from scratch</b>. CPT works precisely because it starts from a model that has already seen trillions of tokens.</p>
+
+    <h3>5.3 Compute: the 6ND rule</h3>
+    <p>Training a transformer costs about <b>6 FLOPs per parameter per token</b>: 2 for the forward pass and 4 for the backward pass.</p>
+<div class="formula">C ≈ 6 × N × D                         <span class="c"># total training FLOPs</span>
+GPU-seconds ≈ C / (peak FLOP/s × utilization)
+<span class="c"># H100, BF16 dense peak ≈ 9.9 × 10¹⁴ FLOP/s; realistic utilization 30–50%</span>
+<span class="c"># → use ≈ 4 × 10¹⁴ FLOP/s per GPU for estimates</span></div>
+
+    <h3>5.4 Worked example (a different corpus from the challenge)</h3>
+    <p>A regional airline has <b>2 GB of clean text</b> and wants to adapt a <b>1B-parameter</b> open model.</p>
+<div class="formula">Tokens:        2 × 10⁹ bytes / 4           = <span class="g">5 × 10⁸ tokens (500M)</span>
+From scratch:  Chinchilla wants 20 × 1B   = 20B tokens → corpus is <span class="v">40× too small</span>
+CPT compute:   6 × 10⁹ × 5 × 10⁸         = <span class="g">3 × 10¹⁸ FLOPs per epoch</span>
+GPU time:      3 × 10¹⁸ / 4 × 10¹⁴       = 7,500 s ≈ <span class="g">2 GPU-hours per epoch</span></div>
+    <div class="insight green"><b>The lesson of the arithmetic:</b> CPT compute for a company-sized corpus is cheap: hours to days of GPU time. The expensive parts are getting clean, permitted data, expert-written evaluation sets, and keeping the result current.</div>
+
+    <h3>5.5 Memory: will it fit?</h3>
+<div class="formula"><span class="c"># Full fine-tuning with Adam, mixed precision ≈ 16 bytes per parameter (+ activations)</span>
+<span class="c">#   2 (BF16 weights) + 2 (BF16 gradients) + 12 (FP32 master weights + Adam m and v)</span>
+1B model  →  ~16 GB      <span class="c"># one GPU</span>
+8B model  →  ~128 GB     <span class="c"># several GPUs (sharded, e.g. DeepSpeed ZeRO / FSDP)</span>
+
+<span class="c"># Inference (weights only)</span>
+8B in BF16   →  ~16 GB
+8B in 4-bit  →  ~4–5 GB  <span class="c"># fits a laptop GPU; this is what QLoRA trains on</span></div>
+    <p>LoRA and QLoRA cut training memory sharply by freezing the base weights. They work well for IFT. For CPT, where the goal is absorbing a lot of new text, Biderman et al. (2024) found LoRA learns noticeably less than full fine-tuning (and forgets less of what the model already knew). Full fine-tuning is the usual choice for CPT.</p>
+
+    <h3>5.6 Rules of thumb</h3>
+    <table>
+      <thead><tr><th>Quantity</th><th>Rule of thumb</th></tr></thead>
+      <tbody>
+        <tr><td>Tokens in English text</td><td>≈ bytes / 4 ≈ words / 0.75</td></tr>
+        <tr><td>Compute-optimal data (Chinchilla)</td><td>≈ 20 tokens per parameter</td></tr>
+        <tr><td>Training compute</td><td>≈ 6 × parameters × tokens FLOPs</td></tr>
+        <tr><td>Realistic H100 throughput</td><td>≈ 4 × 10¹⁴ FLOP/s (≈ 40% of BF16 peak)</td></tr>
+        <tr><td>Full fine-tuning memory (Adam)</td><td>≈ 16 bytes per parameter, plus activations</td></tr>
+        <tr><td>Inference memory</td><td>≈ 2 bytes/param in BF16, ≈ 0.5–0.6 in 4-bit</td></tr>
+        <tr><td>CPT epochs</td><td>usually 1–2; more risks memorization and forgetting</td></tr>
+        <tr><td>Forgetting control</td><td>mix some general text ("replay") into the CPT data, use a lower learning rate</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="decide">
+  <div class="container">
+    <div class="sec-label">6 · Choosing a technique</div>
+    <h2>First ask: what kind of gap is it?</h2>
+    <p>"The model doesn't know our domain" is really several different gaps. Each one has a different fix.</p>
+    <table>
+      <thead><tr><th>Type of gap</th><th>How to recognize it</th><th>Usual fix</th><th>Try first</th></tr></thead>
+      <tbody>
+        <tr><td><b>Language</b></td><td>The model misreads jargon, abbreviations, shorthand</td><td>CPT</td><td>A glossary in the prompt; test a strong general model</td></tr>
+        <tr><td><b>Facts</b></td><td>The answer lives in a document, may change, must be cited</td><td>RAG (optionally RAFT)</td><td>—</td></tr>
+        <tr><td><b>Task / format</b></td><td>A repeated job with a required output format</td><td>IFT</td><td>Few-shot prompting</td></tr>
+        <tr><td><b>Fixed label set</b></td><td>Route, tag, or triage into known categories</td><td>CFT</td><td>Zero-shot prompting to get a baseline</td></tr>
+        <tr><td><b>Behavior</b></td><td>Refusals, deferring to authority, expressing uncertainty</td><td>DPO, plus guardrails</td><td>A system prompt</td></tr>
+        <tr><td><b>Records</b></td><td>Counting, filtering, or aggregating many rows</td><td>NL-to-SQL / Gen BI</td><td>—</td></tr>
+        <tr><td><b>Public knowledge</b></td><td>Anything a well-read person outside the company knows</td><td>Nothing; prompting</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="game" class="alt">
+  <div class="container">
+    <div class="sec-label">7 · Practice</div>
+    <h2>Spot the technique</h2>
+    <p>Eight airline requests. Click the technique you would reach for <em>first</em>. <span class="score" id="score"></span></p>
+    <div class="game" id="game"></div>
+  </div>
+</section>
+
+<section id="recipe">
+  <div class="container">
+    <div class="sec-label">8 · The recipe</div>
+    <h2>Building a domain model, in order</h2>
+    <p>Each step has a <span class="gate" style="margin:0">gate</span>: if the evaluation shows the gap is closed, stop there.</p>
+    <ol class="steps">
+      <li><div><b>Define the tasks and build the evaluation first.</b> A golden set of a few hundred questions written by domain experts, with correct answers and source citations. Measure baselines: a strong general model with no context; the same model with RAG; a small open model with RAG.<span class="gate">gate</span></div></li>
+      <li><div><b>Build strong retrieval.</b> Combine keyword search (BM25) with dense embeddings, since exact strings like part numbers and ATA codes are where dense search is weakest. Filter by metadata such as fleet type and revision. Send record-level questions to NL-to-SQL. Fine-tuning the embedding model and reranker is often the best value here.<span class="gate">gate</span></div></li>
+      <li><div><b>Prepare the corpus.</b> Extract and OCR, deduplicate, remove personal data, keep revision dates, and confirm you are allowed to train on each source (licenses on manufacturer manuals, export-controlled technical data).</div></li>
+      <li><div><b>Make the corpus learnable.</b> Turn raw text into reading-comprehension and Q&amp;A tasks (Cheng et al., 2023), and generate diverse paraphrases about each entity (synthetic continued pretraining, Yang et al., 2024).</div></li>
+      <li><div><b>Continued pretraining.</b> Full fine-tuning of a 1–8B base model for 1–2 epochs, with general-text replay and a reduced learning rate. Track domain perplexity (should fall) and general benchmarks (should not drop).<span class="gate">gate</span></div></li>
+      <li><div><b>Instruction and classification fine-tuning.</b> Expert-written and expert-verified synthetic instruction data, mixed with general instructions (LoRA is fine here). Classification heads for narrow routing tasks. RAFT so the model learns to answer from retrieved passages and ignore irrelevant ones.<span class="gate">gate</span></div></li>
+      <li><div><b>Preference alignment and deployment.</b> DPO on expert preferences (cite sources, defer, say "I don't know"). Quantize for on-premise serving. Re-run the golden set after every change.</div></li>
+    </ol>
+    <div class="insight"><b>When is CPT actually worth it?</b> When a strong model with good retrieval still misreads dense domain language, <em>or</em> a hard constraint (on-premise or air-gapped deployment, latency, cost per query) forces you onto a small model that must do more on its own.</div>
+  </div>
+</section>
+
+<section id="readings" class="alt">
+  <div class="container">
+    <div class="sec-label">Readings</div>
+    <h2>Papers referenced in this note</h2>
+    <ul>
+      <li>Gururangan et al. (2020). <em>Don't Stop Pretraining: Adapt Language Models to Domains and Tasks.</em> ACL.</li>
+      <li>Kaplan et al. (2020). <em>Scaling Laws for Neural Language Models.</em></li>
+      <li>Hoffmann et al. (2022). <em>Training Compute-Optimal Large Language Models</em> (Chinchilla).</li>
+      <li>Wu et al. (2023). <em>BloombergGPT: A Large Language Model for Finance.</em></li>
+      <li>Allen-Zhu &amp; Li (2023). <em>Physics of Language Models: Part 3.1, Knowledge Storage and Extraction.</em></li>
+      <li>Cheng, Huang &amp; Wei (2023). <em>Adapting Large Language Models via Reading Comprehension.</em> ICLR 2024.</li>
+      <li>Ovadia et al. (2023). <em>Fine-Tuning or Retrieval? Comparing Knowledge Injection in LLMs.</em></li>
+      <li>Rafailov et al. (2023). <em>Direct Preference Optimization.</em></li>
+      <li>Gekhman et al. (2024). <em>Does Fine-Tuning LLMs on New Knowledge Encourage Hallucinations?</em></li>
+      <li>Biderman et al. (2024). <em>LoRA Learns Less and Forgets Less.</em></li>
+      <li>Yang et al. (2024). <em>Synthetic Continued Pretraining.</em></li>
+      <li>Zhang et al. (2024). <em>RAFT: Adapting Language Model to Domain Specific RAG.</em></li>
+      <li>Raschka, <em>Build a Large Language Model (From Scratch)</em>, Ch. 5 (pretraining), 6 (classification fine-tuning), 7 (instruction fine-tuning).</li>
+    </ul>
+    <p><b>Next:</b> apply this in the <a href="Week5_Challenge_Airline_Domain_Model.html">in-class challenge</a>.</p>
+  </div>
+</section>
+
+<footer>ADSP 32027 · Generative AI Principles · Autumn 2026 · Dr. Utku Pamuksuz</footer>
+
+<script>
+const OPTS = ["CPT", "IFT", "CFT", "DPO", "RAG", "NL-to-SQL", "Prompting"];
+const CARDS = [
+  ["Flag each pilot report that mentions a bird strike (yes/no).", "CFT", "A fixed label set (yes/no) over short texts is a classification head's job: cheap, fast, and measurable with precision and recall."],
+  ["What is the maximum demonstrated crosswind for our A320 fleet, per the current flight operations manual?", "RAG", "A specific fact that lives in a document, must be current, and should be cited. Retrieve it; don't memorize it."],
+  ["Make the model comfortable reading 20 years of abbreviation-heavy logbook entries.", "CPT", "This is a language gap: vocabulary and shorthand. Raw logbook text with the next-token objective is exactly what CPT is for (after checking whether a glossary in the prompt is enough)."],
+  ["Draft replies to delay complaints in the airline's customer-service voice and template.", "IFT", "A repeated task with a required format and tone. Start with few-shot prompting; move to instruction fine-tuning if you need consistency at volume."],
+  ["Which ten stations had the most delays over three hours in September?", "NL-to-SQL", "Counting and ranking over thousands of records is a database query. RAG retrieves a few passages; it can't aggregate."],
+  ["Whenever a question asks for a dispatch decision, refer to the dispatcher and cite the governing document.", "DPO", "This is behavior, not knowledge: preference pairs (deferring + citing = chosen; a confident yes/no = rejected), backed by guardrails."],
+  ["Explain to a new hire what ETOPS means.", "Prompting", "ETOPS is public aviation knowledge that a strong general model already has. Training would add cost and nothing else."],
+  ["Answer questions about the de-icing procedure that was revised yesterday.", "RAG", "Revised yesterday: no training run can keep up with that. Index the new revision and retrieve it."],
+];
+const game = document.getElementById("game"); let answered = 0, correct = 0;
+CARDS.forEach(([q, ans, why]) => {
+  const card = document.createElement("div"); card.className = "card";
+  card.innerHTML = `<div class="q">${q}</div><div class="opts"></div><div class="why"><b>${ans}.</b> ${why}</div>`;
+  const opts = card.querySelector(".opts");
+  OPTS.forEach(o => {
+    const b = document.createElement("button"); b.textContent = o;
+    b.onclick = () => {
+      if (card.classList.contains("done")) return;
+      card.classList.add("done"); answered++;
+      if (o === ans) { b.classList.add("right"); correct++; }
+      else { b.classList.add("wrong"); [...opts.children].find(x => x.textContent === ans).classList.add("right"); }
+      document.getElementById("score").textContent = `Score: ${correct} / ${answered}`;
+    };
+    opts.appendChild(b);
+  });
+  game.appendChild(card);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description"
+        content="Week 5 homework solutions: feature fusion, model learning and an offline maintenance assistant.">
+    <title>Week 5 Homework Solutions | ADSP 32027</title>
+    <style>
+        :root {
+            --navy: #18384d;
+            --teal: #126456;
+            --ink: #233d4e;
+            --muted: #607482;
+            --line: #dbe4e9;
+            --paper: #fff;
+            --bg: #f3f5f6
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 30px
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 16px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif
+        }
+
+        a {
+            color: var(--teal);
+            text-underline-offset: 3px
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer
+        }
+
+        .wrap {
+            max-width: 1460px;
+            margin: auto;
+            padding: 44px 44px 80px
+        }
+
+        .hero {
+            background: var(--navy);
+            color: white;
+            padding: 46px 50px;
+            border-radius: 20px;
+            margin-bottom: 28px;
+            position: relative
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .17em;
+            text-transform: uppercase;
+            opacity: .75
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 4vw, 48px);
+            line-height: 1.15;
+            letter-spacing: -.035em;
+            margin: 14px 0 16px;
+            max-width: 850px
+        }
+
+        .hero p {
+            max-width: 760px;
+            line-height: 1.6;
+            color: #d4e4eb;
+            margin: 0
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 24px
+        }
+
+        .pill {
+            font-size: 12px;
+            border: 1px solid #658091;
+            border-radius: 30px;
+            padding: 5px 13px;
+            color: #e5eff3
+        }
+
+        .print {
+            position: absolute;
+            right: 32px;
+            top: 28px;
+            background: transparent;
+            border: 1px solid #78909e;
+            border-radius: 8px;
+            color: #fff;
+            padding: 7px 13px;
+            font-size: 13px
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 216px minmax(0, 1fr);
+            gap: 30px;
+            align-items: start
+        }
+
+        .toc {
+            position: sticky;
+            top: 28px;
+            padding: 20px 0
+        }
+
+        .toc-label {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .15em;
+            color: var(--muted);
+            margin: 0 12px 18px
+        }
+
+        .toc a {
+            display: block;
+            color: #536b7b;
+            text-decoration: none;
+            padding: 10px 12px;
+            border-left: 2px solid #d5dee5;
+            font-size: 13px;
+            line-height: 1.5
+        }
+
+        .toc a:hover,
+        .toc a:focus {
+            color: var(--teal);
+            border-color: var(--teal);
+            background: #e8f1ef
+        }
+
+        .toc small {
+            display: block;
+            line-height: 1.7;
+            font-size: 12px;
+            color: var(--muted);
+            margin: 24px 12px
+        }
+
+        .solutions {
+            min-width: 0
+        }
+
+        .document-section {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 38px 42px;
+            margin: 0 0 24px;
+            scroll-margin-top: 24px
+        }
+
+        .section-number {
+            display: block;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .14em;
+            color: var(--teal);
+            text-transform: uppercase;
+            margin-bottom: 9px
+        }
+
+        .document-section>h2 {
+            font-size: 29px;
+            letter-spacing: -.025em;
+            line-height: 1.22;
+            margin: 0 0 12px;
+            color: var(--navy)
+        }
+
+        .document-section h3 {
+            font-size: 18px;
+            line-height: 1.4;
+            color: var(--teal);
+            margin: 30px 0 10px
+        }
+
+        .document-section p {
+            margin: 0 0 18px
+        }
+
+        .document-section p.subtitle {
+            color: var(--muted);
+            font-size: 15px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 24px
+        }
+
+        .document-section p.source-note {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.65
+        }
+
+        strong {
+            font-weight: 650;
+            color: #17384b
+        }
+
+        .table-scroll {
+            overflow-x: auto;
+            margin: 22px 0 26px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            line-height: 1.6
+        }
+
+        th {
+            background: var(--navy);
+            color: white;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 650
+        }
+
+        th,
+        td {
+            padding: 13px 15px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--line)
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f4f8fa
+        }
+
+        td:first-child {
+            font-weight: 600;
+            min-width: 100px
+        }
+
+        th:first-child {
+            border-radius: 7px 0 0 0
+        }
+
+        th:last-child {
+            border-radius: 0 7px 0 0
+        }
+
+        .equation {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            font: 14px/1.7 ui-monospace, SFMono-Regular, Consolas, monospace;
+            background: #eef4f7;
+            border-left: 3px solid #7d9bab;
+            border-radius: 0 8px 8px 0;
+            padding: 16px 20px;
+            margin: 18px 0 22px;
+            color: var(--navy)
+        }
+
+        figure {
+            margin: 26px -14px 30px;
+            padding: 18px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: #fff;
+            break-inside: avoid
+        }
+
+        figure .figure-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--navy);
+            margin: 0 0 12px
+        }
+
+        figure svg {
+            display: block;
+            width: 100%;
+            height: auto
+        }
+
+        figcaption {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.7;
+            margin: 14px 4px 0
+        }
+
+        .diagram-scroll {
+            overflow-x: auto
+        }
+
+        .diagram-scroll svg {
+            min-width: 680px
+        }
+
+        .diagram-legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--muted);
+            margin: 0 4px 12px
+        }
+
+        .key:before {
+            content: "";
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 3px;
+            background: #b8cff3;
+            margin-right: 7px
+        }
+
+        .key.data:before {
+            background: #edc99e
+        }
+
+        .key.fusion:before {
+            background: #a4d5c9
+        }
+
+        footer {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 32px 0 0;
+            text-align: center
+        }
+
+        pre {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere
+        }
+
+        sup,
+        sub {
+            font-size: .72em;
+            line-height: 0
+        }
+
+        @media(min-width:1300px) {
+            .wrap {
+                padding-left: 52px;
+                padding-right: 52px
+            }
+
+            .document-section {
+                padding: 44px 48px
+            }
+        }
+
+        @media(max-width:980px) {
+            .wrap {
+                padding: 24px
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+                gap: 12px
+            }
+
+            .toc {
+                position: static;
+                display: flex;
+                gap: 8px;
+                overflow-x: auto;
+                padding: 0 0 12px
+            }
+
+            .toc-label,
+            .toc small {
+                display: none
+            }
+
+            .toc a {
+                flex-shrink: 0;
+                border: 1px solid var(--line);
+                border-radius: 7px;
+                padding: 8px 12px;
+                background: white;
+                font-size: 12px
+            }
+
+            .hero {
+                padding: 38px 30px
+            }
+
+            .document-section {
+                padding: 30px
+            }
+
+            .print {
+                position: static;
+                margin-top: 22px
+            }
+        }
+
+        @media(max-width:540px) {
+            body {
+                font-size: 15px
+            }
+
+            .wrap {
+                padding: 14px
+            }
+
+            .hero {
+                padding: 28px 24px;
+                border-radius: 14px
+            }
+
+            .document-section {
+                padding: 26px 20px
+            }
+
+            .document-section>h2 {
+                font-size: 25px
+            }
+
+            .document-section h3 {
+                font-size: 17px
+            }
+
+            figure {
+                margin-left: -8px;
+                margin-right: -8px;
+                padding: 12px
+            }
+
+            .table-scroll table {
+                min-width: 600px
+            }
+        }
+
+        @page {
+            size: letter;
+            margin: 16mm 14mm
+        }
+
+        @media print {
+            html {
+                scroll-behavior: auto
+            }
+
+            body {
+                background: white;
+                color: #172f40;
+                font-size: 10pt;
+                line-height: 1.5;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact
+            }
+
+            .wrap {
+                padding: 0;
+                max-width: none
+            }
+
+            .hero {
+                padding: 18px 22px;
+                margin: 0 0 20px;
+                border-radius: 8px
+            }
+
+            .hero h1 {
+                font-size: 26pt
+            }
+
+            .hero p {
+                font-size: 10pt
+            }
+
+            .hero-meta {
+                margin-top: 12px
+            }
+
+            .pill {
+                font-size: 8pt
+            }
+
+            .toc,
+            .print {
+                display: none
+            }
+
+            .layout {
+                display: block
+            }
+
+            .document-section {
+                border: 0;
+                border-radius: 0;
+                padding: 0;
+                margin: 0;
+                break-before: page
+            }
+
+            .document-section:first-child {
+                break-before: auto
+            }
+
+            .document-section>h2 {
+                font-size: 22pt
+            }
+
+            .document-section h3 {
+                font-size: 12pt;
+                margin-top: 17px;
+                break-after: avoid
+            }
+
+            .document-section p {
+                margin-bottom: 10px;
+                orphans: 3;
+                widows: 3
+            }
+
+            .document-section p.subtitle {
+                padding-bottom: 12px;
+                margin-bottom: 14px
+            }
+
+            .section-number {
+                font-size: 8pt
+            }
+
+            .table-scroll {
+                overflow: visible;
+                margin: 12px 0 17px
+            }
+
+            table {
+                font-size: 8.5pt
+            }
+
+            th,
+            td {
+                padding: 7px 9px
+            }
+
+            tr,
+            figure {
+                break-inside: avoid
+            }
+
+            thead {
+                display: table-header-group
+            }
+
+            .equation {
+                font-size: 9pt;
+                padding: 10px 14px
+            }
+
+            figure {
+                margin: 15px 0 18px;
+                padding: 10px
+            }
+
+            .diagram-scroll {
+                overflow: visible
+            }
+
+            .diagram-scroll svg {
+                min-width: 0
+            }
+
+            .figure-title {
+                font-size: 11pt !important
+            }
+
+            .diagram-legend,
+            figcaption {
+                font-size: 8pt
+            }
+
+            footer {
+                font-size: 8pt
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="hero">
+            <div class="eyebrow">ADSP 32027 / Generative AI / Autumn 2026</div>
+            <h1>Week 5<br>Homework solutions</h1>
+            <h2>Sovin Birla</h2>
+            <p>Representations, model learning, and offline domain AI. The in-class challenge is followed by individual
+                answers to Questions 1–3.</p>
+            <div class="hero-meta"><span class="pill">Text + structured features</span><span class="pill">Learning &amp;
+                    parameters</span><span class="pill">Offline domain AI</span></div><button type="button"
+                class="print" onclick="window.print()">Print / Save PDF</button>
+        </header>
+        <div class="layout">
+            <nav class="toc" aria-label="Solutions contents">
+                <div class="toc-label">CONTENTS</div><a href="#challenge">In-class challenge</a><a href="#question-1">Q1
+                    · Combination of features</a><a href="#question-2">Q2 · Learning & parameters</a><a
+                    href="#question-3">Q3 · Offline
+                    architecture</a><a href="#question-3-justification">Q3 · Design justification</a><small>Diagrams are
+                    embedded.<br>This document works offline.</small>
+            </nav>
+            <main class="solutions">
+                <section class="document-section" id="challenge" aria-labelledby="heading-challenge"><span
+                        class="section-number">Part 01</span>
+                    <h2 id="heading-challenge">Week 5 | In-class challenge</h2>
+                    <p class="subtitle">Proposed solution prepared from the prompt; no completed team response was
+                        supplied. [1, 2]</p>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Need</th>
+                                    <th>Technique</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>a. Logbook shorthand</td>
+                                    <td>CPT, if needed</td>
+                                    <td>CPT learns domain phrasing; first test a glossary plus a pretrained model.</td>
+                                </tr>
+                                <tr>
+                                    <td>b. Current APU MEL + citation</td>
+                                    <td>RAG</td>
+                                    <td>Retrieve the approved revision filtered by fleet and aircraft applicability, and
+                                        cite it.</td>
+                                </tr>
+                                <tr>
+                                    <td>c. Route defect to ATA chapter</td>
+                                    <td>CFT</td>
+                                    <td>A supervised classification head maps the write-up to a fixed ATA label set.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>d. Standard shift summary</td>
+                                    <td>Prompting, then IFT</td>
+                                    <td>Try a template with examples; use IFT only if format or coverage remains
+                                        inconsistent.</td>
+                                </tr>
+                                <tr>
+                                    <td>e. Tire replacements last quarter</td>
+                                    <td>NL-to-SQL</td>
+                                    <td>Query dated fleet records with validated definitions; document retrieval cannot
+                                        reliably count events.</td>
+                                </tr>
+                                <tr>
+                                    <td>f. No sign-off; uncertainty</td>
+                                    <td>DPO + guardrails</td>
+                                    <td>Expert preferences teach deferral; explicit application rules block sign-off
+                                        claims and unsupported answers.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3>2. Do the math</h3>
+                    <p class="body-note">Assume <strong>decimal GB</strong> and the lecture's averages: 10 x
+                        10<sup>9</sup> / 4 = <strong>2.5B tokens</strong>. Scans, images, tables, duplicates and
+                        boilerplate reduce usable text; measure tokens after OCR, cleaning and deduplication. A 3B model
+                        wants roughly 20 x 3B = <strong>60B tokens</strong> under Chinchilla: this corpus is <strong>24x
+                            too small</strong> (4.17% of the rule-of-thumb target). Scratch training is technically
+                        possible, but is a poor data-efficient choice; repeating the same corpus does not add that much
+                        distinct information.</p>
+                    <p class="body-note">One 8B CPT epoch: C = 6 x 8 x 10<sup>9</sup> x 2.5 x 10<sup>9</sup> =
+                        <strong>1.2 x 10<sup>20</sup> FLOPs</strong>. At 4 x 10<sup>14</sup> FLOP/s: 300,000 GPU-seconds
+                        = <strong>83.3 H100 GPU-hours</strong>. This is aggregate compute, before overhead or extra
+                        data; mixed-precision Adam also needs about <strong>128 GB + activations</strong>, so sharding
+                        may be needed. Real cost: clean, permitted data, expert labels/evaluation, integration and
+                        revision control as well as compute.
+                    </p>
+                    <h3>3. Design the evaluation first</h3>
+                    <p class="body-note">Maintenance engineers, technicians and dispatch SMEs write a held-out golden
+                        set with source revisions, correct answers and rubric scores. Include shorthand, aircraft
+                        applicability, updated/superseded procedures, unanswerable questions, ATA routing, summaries and
+                        SQL counts. Split by time and aircraft/work-order groups; keep related records and paraphrases
+                        out of training. Baselines: <strong>(1)</strong> general model + prompt/glossary,
+                        <strong>(2)</strong> that model + hybrid RAG, <strong>(3)</strong> small open model + the same
+                        RAG. Score evidence-supported correctness, citation validity, harmful errors, abstention,
+                        routing macro-F1, summary fidelity, exact counts and latency. Stop without training if an
+                        untrained baseline meets agreed quality, reliability and deployment targets and training offers
+                        no material held-out gain.
+                    </p>
+                    <h3>4. Name the biggest risk</h3>
+                    <p class="body-note"><strong>Largest weights risk:</strong> confidently recalling a superseded
+                        procedure without traceable revision evidence. Keep authoritative procedures in versioned
+                        retrieval; validate applicability/citations and abstain on gaps. <strong>Data risk:</strong> OCR
+                        can corrupt part numbers, units or limits; review critical tables against approved originals.
+                    </p>
+                    <strong>Recommendation to the VP:</strong> start with evaluated hybrid RAG and database queries,
+                    add task-specific CFT/IFT where needed, and use CPT only for a demonstrated language gap.
+                </section>
+                <section class="document-section" id="question-1" aria-labelledby="heading-question-1"><span
+                        class="section-number">Part 02</span>
+                    <h2 id="heading-question-1">Question 1 | Combine the features</h2>
+                    <p class="subtitle">Recommendation: a small two-branch classifier, tested against a strong
+                        770-dimensional baseline.</p>
+                    <p>Let <strong>e</strong> be the supplied 768-dimensional text embedding and <strong>s</strong>
+                        contain amount and account age. Assume all features are available at transaction decision time
+                        and the target is a binary fraud label. Freeze the text encoder initially so the comparison
+                        tests the fusion design.</p>
+                    <figure id="q1-diagram">
+                        <p class="figure-title">Text + structured data: two fusion designs</p>
+                        <div class="diagram-legend"><span class="key">Text features</span><span
+                                class="key data">Structured features</span><span class="key fusion">Fusion</span></div>
+                        <div class="diagram-scroll"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 730"
+                                role="img" aria-labelledby="fusion-title fusion-desc"
+                                style="font-family:Arial,Helvetica,sans-serif">
+                                <title id="fusion-title">Two architectures for text and structured features</title>
+                                <desc id="fusion-desc">A: normalize a 768-dimensional text embedding and transform two
+                                    numeric features, concatenate to 770, then train a 64-unit MLP and sigmoid. B:
+                                    project text to 64 dimensions and numeric features to 16, concatenate to 80, then
+                                    train an 80-to-32-to-1 fusion head and sigmoid. Both use training-set preprocessing
+                                    and labels.</desc>
+                                <defs>
+                                    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+                                        markerHeight="7" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b8598" />
+                                    </marker>
+                                </defs>
+                                <rect width="1120" height="730" rx="16" fill="#ffffff" />
+                                <rect x="18" y="18" width="1084" height="312" rx="16" fill="#f8fafc" stroke="#dce5ec" />
+                                <circle cx="52" cy="52" r="17" fill="#18384d" /><text x="52" y="58" text-anchor="middle"
+                                    fill="white" font-size="17" font-weight="700">A</text><text x="82" y="50"
+                                    fill="#18384d" font-size="20" font-weight="700">Early concatenation</text><text
+                                    x="82" y="73" fill="#526c7d" font-size="14">Baseline: combine features before the
+                                    learned classifier</text>
+                                <rect x="42" y="106" width="172" height="78" rx="12" fill="#edf4ff" stroke="#b8cff3" />
+                                <text x="128.0" y="141.0" text-anchor="middle" fill="#2459a5" font-size="16"
+                                    font-weight="700">Text embedding</text><text x="128.0" y="165.0"
+                                    text-anchor="middle" fill="#2459a5" font-size="14">768 dimensions</text>
+                                <rect x="42" y="228" width="172" height="78" rx="12" fill="#fff4e9" stroke="#edc99e" />
+                                <text x="128.0" y="263.0" text-anchor="middle" fill="#914d16" font-size="16"
+                                    font-weight="700">Amount + age</text><text x="128.0" y="287.0" text-anchor="middle"
+                                    fill="#914d16" font-size="14">2 numeric features</text>
+                                <rect x="248" y="106" width="210" height="78" rx="12" fill="#edf4ff" stroke="#b8cff3" />
+                                <text x="353.0" y="141.0" text-anchor="middle" fill="#2459a5" font-size="16"
+                                    font-weight="700">Normalize text</text><text x="353.0" y="165.0"
+                                    text-anchor="middle" fill="#2459a5" font-size="14">LayerNorm</text>
+                                <rect x="248" y="228" width="210" height="78" rx="12" fill="#fff4e9" stroke="#edc99e" />
+                                <text x="353.0" y="263.0" text-anchor="middle" fill="#914d16" font-size="16"
+                                    font-weight="700">Transform numbers</text><text x="353.0" y="287.0"
+                                    text-anchor="middle" fill="#914d16" font-size="14">log1p + train-set scaling</text>
+                                <rect x="508" y="166" width="146" height="82" rx="12" fill="#e9f6f3" stroke="#a4d5c9" />
+                                <text x="581.0" y="203.0" text-anchor="middle" fill="#126456" font-size="16"
+                                    font-weight="700">Concatenate</text><text x="581.0" y="227.0" text-anchor="middle"
+                                    fill="#126456" font-size="14">770 = 768 + 2</text>
+                                <rect x="694" y="166" width="172" height="82" rx="12" fill="#ffffff" stroke="#cdd8e1" />
+                                <text x="780.0" y="203.0" text-anchor="middle" fill="#213c51" font-size="16"
+                                    font-weight="700">Learned MLP</text><text x="780.0" y="227.0" text-anchor="middle"
+                                    fill="#213c51" font-size="14">770 → 64 → ReLU → 1</text>
+                                <rect x="906" y="166" width="172" height="82" rx="12" fill="#18384d" stroke="#18384d" />
+                                <text x="992.0" y="192.5" text-anchor="middle" fill="#ffffff" font-size="16"
+                                    font-weight="700">Fraud probability</text><text x="992.0" y="216.5"
+                                    text-anchor="middle" fill="#ffffff" font-size="14">1 logit → sigmoid</text><text
+                                    x="992.0" y="237.5" text-anchor="middle" fill="#ffffff" font-size="14">P(fraud |
+                                    inputs)</text>
+                                <path d="M214 145 H248" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M214 267 H248" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M458 145 H482 V191 H508" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M458 267 H482 V224 H508" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M654 207 H694" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M866 207 H906" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <rect x="18" y="350" width="1084" height="312" rx="16" fill="#f8fafc"
+                                    stroke="#dce5ec" />
+                                <circle cx="52" cy="384" r="17" fill="#18384d" /><text x="52" y="390"
+                                    text-anchor="middle" fill="white" font-size="17" font-weight="700">B</text><text
+                                    x="82" y="382" fill="#18384d" font-size="20" font-weight="700">Separate branches,
+                                    then fusion</text><text x="82" y="405" fill="#526c7d" font-size="14">Recommended
+                                    candidate: learn a representation for each input type</text>
+                                <rect x="42" y="438" width="172" height="78" rx="12" fill="#edf4ff" stroke="#b8cff3" />
+                                <text x="128.0" y="473.0" text-anchor="middle" fill="#2459a5" font-size="16"
+                                    font-weight="700">Text embedding</text><text x="128.0" y="497.0"
+                                    text-anchor="middle" fill="#2459a5" font-size="14">768 dimensions</text>
+                                <rect x="42" y="560" width="172" height="78" rx="12" fill="#fff4e9" stroke="#edc99e" />
+                                <text x="128.0" y="595.0" text-anchor="middle" fill="#914d16" font-size="16"
+                                    font-weight="700">Amount + age</text><text x="128.0" y="619.0" text-anchor="middle"
+                                    fill="#914d16" font-size="14">2 numeric features</text>
+                                <rect x="248" y="438" width="210" height="78" rx="12" fill="#edf4ff" stroke="#b8cff3" />
+                                <text x="353.0" y="473.0" text-anchor="middle" fill="#2459a5" font-size="16"
+                                    font-weight="700">Text branch → 64</text><text x="353.0" y="497.0"
+                                    text-anchor="middle" fill="#2459a5" font-size="14">LayerNorm → Linear → ReLU</text>
+                                <rect x="248" y="560" width="210" height="78" rx="12" fill="#fff4e9" stroke="#edc99e" />
+                                <text x="353.0" y="584.5" text-anchor="middle" fill="#914d16" font-size="16"
+                                    font-weight="700">Numeric branch → 16</text><text x="353.0" y="608.5"
+                                    text-anchor="middle" fill="#914d16" font-size="14">log1p + train-set
+                                    scaling</text><text x="353.0" y="629.5" text-anchor="middle" fill="#914d16"
+                                    font-size="14">Linear → ReLU</text>
+                                <rect x="508" y="498" width="146" height="82" rx="12" fill="#e9f6f3" stroke="#a4d5c9" />
+                                <text x="581.0" y="535.0" text-anchor="middle" fill="#126456" font-size="16"
+                                    font-weight="700">Concatenate</text><text x="581.0" y="559.0" text-anchor="middle"
+                                    fill="#126456" font-size="14">80 = 64 + 16</text>
+                                <rect x="694" y="498" width="172" height="82" rx="12" fill="#ffffff" stroke="#cdd8e1" />
+                                <text x="780.0" y="535.0" text-anchor="middle" fill="#213c51" font-size="16"
+                                    font-weight="700">Learned MLP</text><text x="780.0" y="559.0" text-anchor="middle"
+                                    fill="#213c51" font-size="14">80 → 32 → ReLU → 1</text>
+                                <rect x="906" y="498" width="172" height="82" rx="12" fill="#18384d" stroke="#18384d" />
+                                <text x="992.0" y="524.5" text-anchor="middle" fill="#ffffff" font-size="16"
+                                    font-weight="700">Fraud probability</text><text x="992.0" y="548.5"
+                                    text-anchor="middle" fill="#ffffff" font-size="14">1 logit → sigmoid</text><text
+                                    x="992.0" y="569.5" text-anchor="middle" fill="#ffffff" font-size="14">P(token |
+                                    inputs)</text>
+                                <path d="M214 477 H248" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M214 599 H248" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M458 477 H482 V523 H508" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M458 599 H482 V556 H508" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M654 539 H694" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" />
+                                <path d="M866 539 H906" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#arrow)" /><text x="34" y="696"
+                                    fill="#526c7d" font-size="15">Training: token labels + binary cross-entropy on
+                                    logits. Apply sigmoid at inference.</text><text x="34" y="720" fill="#526c7d"
+                                    font-size="15">Fit preprocessing on training data only. More dimensions do not
+                                    automatically mean more influence.</text>
+                            </svg></div>
+                        <figcaption>Figure 1. Both designs learn the contribution of the text and numeric features. The
+                            two-branch design learns modality-specific projections; held-out results determine whether
+                            its added flexibility helps.</figcaption>
+                    </figure>
+                    <h3>A. Concatenate first</h3>
+                    <p>Yes: concatenate the two variables to obtain <strong>770 features</strong>, then train logistic
+                        regression or an MLP using fraud labels. A learned layer has a separate coefficient for each
+                        input; an MLP can also learn interactions between text and numbers. This is a reasonable,
+                        inexpensive baseline. A linear model alone cannot learn nonlinear interactions without explicit
+                        feature engineering.</p>
+                    <h3>B. Process separately, then fuse</h3>
+                    <p>Use LayerNorm(e) -&gt; Linear(768, 64) -&gt; ReLU for text, and scaled s -&gt; Linear(2, 16)
+                        -&gt; ReLU for structured features. Concatenate the resulting <strong>80-dimensional
+                            representation</strong>, then use Linear(80, 32) -&gt; ReLU -&gt; Linear(32, 1). Train both
+                        branches and the fusion head jointly with binary cross-entropy on logits; apply sigmoid for
+                        inference. Separate branches permit modality-specific preprocessing, capacity and
+                        regularization, while the fusion MLP learns cross-modal interactions.</p>
+                    <h3>C. Separate Branches or Fusion Representation</h3>
+                    <p>I recommend two branches with a modest fusion head because the features differ in scale and
+                        structure, and amount/age may interact with textual patterns. Keep early concatenation as the
+                        control and select it instead if held-out results are equivalent. Match tuning effort and
+                        regularization; do not infer superiority from the diagram.</p>
+                    <h3>D. Variability in Importance of the Structured Variables</h3>
+                    <p>
+                        The two numeric coefficients can be large while most text coefficients are small or zero. For
+                        example, set all 768 text coefficients to zero and use z = 3s_amount - 2s_age. Holding age and
+                        text fixed, changing standardized amount from 0 to 1 changes sigmoid(z) from 0.500 to 0.953. The
+                        two structured variables determine the decision despite having fewer dimensions. This is a just
+                        an example of how we can place vary the importance through activation functions. </p>
+                </section>
+
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Architecture</th>
+                                <th>Benefit</th>
+                                <th>Limitation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Early concatenation</td>
+                                <td>Simple; few design choices; useful low-variance baseline.</td>
+                                <td>One shared stack must handle both modalities; poorly scaled inputs can impair
+                                    training.</td>
+                            </tr>
+                            <tr>
+                                <td>Two branches + fusion</td>
+                                <td>Separate transforms and capacity; joint nonlinear interactions.</td>
+                                <td>More tuning; bottlenecks may discard signal; extra capacity can overfit.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <section class="document-section" id="question-2" aria-labelledby="heading-question-2">
+                    <span class="section-number">Part 04</span>
+                    <h2 id="heading-question-2">Question 2 | What learning changes</h2>
+                    <p class="subtitle"><strong>No. Learning a new skill does not necessarily make a model
+                            larger.</strong> [2, 4, 5]</p>
+                    <p>Training can change the values of existing parameters while keeping the architecture and
+                        parameter count unchanged. Adding a new component introduces new parameters and may increase the
+                        model's size.</p>
+                    <h3>A. What is a model parameter, and what happens to its value during training?</h3>
+                    <p>A model parameter is a learned numerical value, such as an entry in a weight matrix, a bias, or
+                        an embedding table. These values determine how the model converts inputs into predictions.</p>
+                    <p>During training, the model computes a loss, backpropagation calculates gradients, and an
+                        optimizer updates the trainable parameter values to reduce that loss. <strong>Changing these
+                            values does not require adding parameters.</strong></p>
+                    <h3>B. Can the same architecture behave differently after training without changing its parameter
+                        count?</h3>
+                    <p><strong>Yes.</strong> The same architecture can produce different outputs because its existing
+                        weights have changed. For example, updating attention projection matrices changes which input
+                        information the model emphasizes, even when the matrices retain exactly the same dimensions and
+                        number of parameters.</p>
+                    <h3>C. How do techniques discussed in class support this explanation?</h3>
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Technique</th>
+                                    <th>What changes during training?</th>
+                                    <th>Must the model become larger?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>CPT</strong></td>
+                                    <td>Existing language-model weights are updated using domain text, helping the model
+                                        learn specialized terminology and patterns.</td>
+                                    <td><strong>No.</strong> The architecture can remain unchanged.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IFT</strong></td>
+                                    <td>Existing weights are updated using instruction-response examples, helping the
+                                        model follow instructions and produce desired formats.</td>
+                                    <td><strong>No.</strong> New behavior can come from changing existing values.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>DPO</strong></td>
+                                    <td>Existing policy weights are updated using preferred and rejected responses.</td>
+                                    <td><strong>No.</strong> A reference model used during training does not have to
+                                        become part of the deployed model.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3>D. When might adaptation introduce an additional set of parameters?</h3>
+                    <p><strong>Classification Fine-Tuning (CFT)</strong> can introduce a new classification head. For
+                        example, routing maintenance reports to ATA chapters requires a head that maps a hidden
+                        representation of size <strong>d</strong> to <strong>K</strong> class scores.</p>
+                    <p>A linear head with a bias introduces <strong>dK + K parameters</strong>. If it is added while
+                        retaining all existing components, the total parameter count increases. If it replaces the
+                        original vocabulary output head, it introduces a new parameter set, but the total model size may
+                        decrease because the classification head can be smaller.</p>
+                </section>
+                <section class="document-section" id="question-3" aria-labelledby="heading-question-3"><span
+                        class="section-number">Part 05</span>
+                    <h2 id="heading-question-3">Question 3 | Offline architecture</h2>
+                    <figure id="q3-diagram">
+                        <p class="figure-title">Versioned knowledge, local inference</p>
+                        <div class="diagram-scroll"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 930"
+                                role="img" aria-labelledby="offline-title offline-desc"
+                                style="font-family:Arial,Helvetica,sans-serif">
+                                <title id="offline-title">Offline maintenance assistant architecture</title>
+                                <desc id="offline-desc">Central preparation produces a signed package of models,
+                                    approved manuals and retrieval indexes. On the iPad, aircraft applicability and
+                                    package validity checks precede local retrieval, a small generator, evidence checks
+                                    and cited answers. Unsupported or expired advice is withheld.</desc>
+                                <defs>
+                                    <marker id="offline-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7"
+                                        markerHeight="7" orient="auto-start-reverse">
+                                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b8598" />
+                                    </marker>
+                                </defs>
+                                <rect width="1120" height="930" rx="16" fill="#ffffff" />
+                                <rect x="18" y="18" width="1084" height="340" rx="16" fill="#f8fafc" stroke="#dce5ec" />
+                                <text x="42" y="54" fill="#18384d" font-size="19" font-weight="700">01 / CENTRAL
+                                    PREPARATION</text>
+                                <rect x="42" y="88" width="286" height="100" rx="12" fill="#edf4ff" stroke="#b8cff3" />
+                                <text x="185.0" y="123.5" text-anchor="middle" fill="#2459a5" font-size="16"
+                                    font-weight="700">Approved 10 GB corpus</text><text x="185.0" y="147.5"
+                                    text-anchor="middle" fill="#2459a5" font-size="14">OCR, tables,
+                                    revisions</text><text x="185.0" y="168.5" text-anchor="middle" fill="#2459a5"
+                                    font-size="14">Aircraft applicability</text>
+                                <rect x="416" y="88" width="286" height="100" rx="12" fill="#e9f6f3" stroke="#a4d5c9" />
+                                <text x="559.0" y="123.5" text-anchor="middle" fill="#126456" font-size="16"
+                                    font-weight="700">Prepare retrieval</text><text x="559.0" y="147.5"
+                                    text-anchor="middle" fill="#126456" font-size="14">Chunks + BM25 +
+                                    embeddings</text><text x="559.0" y="168.5" text-anchor="middle" fill="#126456"
+                                    font-size="14">Source-page links</text>
+                                <rect x="790" y="88" width="286" height="100" rx="12" fill="#ffffff" stroke="#cdd8e1" />
+                                <text x="933.0" y="123.5" text-anchor="middle" fill="#213c51" font-size="16"
+                                    font-weight="700">Prepare local models</text><text x="933.0" y="147.5"
+                                    text-anchor="middle" fill="#213c51" font-size="14">Small generator +
+                                    encoder</text><text x="933.0" y="168.5" text-anchor="middle" fill="#213c51"
+                                    font-size="14">Optional IFT; 4-bit export</text>
+                                <rect x="300" y="244" width="520" height="84" rx="12" fill="#18384d" stroke="#18384d" />
+                                <text x="560.0" y="282.0" text-anchor="middle" fill="#ffffff" font-size="16"
+                                    font-weight="700">Validated, signed package</text><text x="560.0" y="306.0"
+                                    text-anchor="middle" fill="#ffffff" font-size="14">Models + manuals + index +
+                                    version / expiry manifest</text>
+                                <path d="M328 138 H416" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M559 188 V216 H470 V244" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M933 188 V216 H650 V244" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M18 389 H1102" stroke="#b0bdc8" stroke-dasharray="6 6" />
+                                <rect x="344" y="373" width="432" height="32" fill="white" /><text x="560" y="394"
+                                    text-anchor="middle" fill="#526c7d" font-size="14">Install the package while
+                                    connected</text><text x="42" y="438" fill="#126456" font-size="19"
+                                    font-weight="700">02 / ON THE IPAD · ALL INFERENCE IS OFFLINE</text>
+                                <rect x="42" y="470" width="286" height="96" rx="12" fill="#edf4ff" stroke="#b8cff3" />
+                                <text x="185.0" y="503.5" text-anchor="middle" fill="#2459a5" font-size="16"
+                                    font-weight="700">Technician’s question</text><text x="185.0" y="527.5"
+                                    text-anchor="middle" fill="#2459a5" font-size="14">Aircraft / tail, task</text><text
+                                    x="185.0" y="548.5" text-anchor="middle" fill="#2459a5" font-size="14">Observed
+                                    symptoms</text>
+                                <rect x="416" y="470" width="286" height="96" rx="12" fill="#e9f6f3" stroke="#a4d5c9" />
+                                <text x="559.0" y="503.5" text-anchor="middle" fill="#126456" font-size="16"
+                                    font-weight="700">Applicability + validity</text><text x="559.0" y="527.5"
+                                    text-anchor="middle" fill="#126456" font-size="14">Package expiry; fleet /
+                                    tail</text><text x="559.0" y="548.5" text-anchor="middle" fill="#126456"
+                                    font-size="14">Approved revision filters</text>
+                                <rect x="790" y="470" width="286" height="96" rx="12" fill="#e9f6f3" stroke="#a4d5c9" />
+                                <text x="933.0" y="503.5" text-anchor="middle" fill="#126456" font-size="16"
+                                    font-weight="700">Local hybrid retrieval</text><text x="933.0" y="527.5"
+                                    text-anchor="middle" fill="#126456" font-size="14">BM25 + small query
+                                    encoder</text><text x="933.0" y="548.5" text-anchor="middle" fill="#126456"
+                                    font-size="14">Select relevant evidence</text>
+                                <rect x="790" y="636" width="286" height="104" rx="12" fill="#ffffff"
+                                    stroke="#cdd8e1" /><text x="933.0" y="673.5" text-anchor="middle" fill="#213c51"
+                                    font-size="16" font-weight="700">Local retrieval store</text><text x="933.0"
+                                    y="697.5" text-anchor="middle" fill="#213c51" font-size="14">Chunks + metadata +
+                                    index</text><text x="933.0" y="718.5" text-anchor="middle" fill="#213c51"
+                                    font-size="14">Approved original pages</text>
+                                <rect x="416" y="636" width="286" height="104" rx="12" fill="#ffffff"
+                                    stroke="#cdd8e1" /><text x="559.0" y="673.5" text-anchor="middle" fill="#213c51"
+                                    font-size="16" font-weight="700">Small local generator</text><text x="559.0"
+                                    y="697.5" text-anchor="middle" fill="#213c51" font-size="14">Question + source
+                                    excerpts</text><text x="559.0" y="718.5" text-anchor="middle" fill="#213c51"
+                                    font-size="14">Grounded draft; short context</text>
+                                <rect x="42" y="636" width="286" height="104" rx="12" fill="#e9f6f3" stroke="#a4d5c9" />
+                                <text x="185.0" y="673.5" text-anchor="middle" fill="#126456" font-size="16"
+                                    font-weight="700">Evidence checks</text><text x="185.0" y="697.5"
+                                    text-anchor="middle" fill="#126456" font-size="14">Verify sources and
+                                    support</text><text x="185.0" y="718.5" text-anchor="middle" fill="#126456"
+                                    font-size="14">Conflicts / gaps → abstain</text>
+                                <rect x="42" y="806" width="660" height="90" rx="12" fill="#18384d" stroke="#18384d" />
+                                <text x="372.0" y="836.5" text-anchor="middle" fill="#ffffff" font-size="16"
+                                    font-weight="700">Answer + local source viewer</text><text x="372.0" y="860.5"
+                                    text-anchor="middle" fill="#ffffff" font-size="14">Document, revision, page / task
+                                    links</text><text x="372.0" y="881.5" text-anchor="middle" fill="#ffffff"
+                                    font-size="14">Expired or unsupported → withhold advice; Maintenance Control</text>
+                                <path d="M328 518 H416" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M702 518 H790" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M933 636 V566" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M790 546 H746 V606 H559 V636" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M416 688 H328" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M185 740 V806" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" />
+                                <path d="M933 740 V851 H702" fill="none" stroke="#6b8598" stroke-width="2"
+                                    stroke-linejoin="round" marker-end="url(#offline-arrow)" stroke-dasharray="6 5" />
+                            </svg></div>
+                        <figcaption>Figure 2. Solid arrows show preparation and local processing. The dashed arrow opens
+                            the original local source page. Every inference component below the boundary runs on the
+                            iPad.</figcaption>
+                    </figure>
+                    <p class="body-note">Weights supply language and task behavior. The installed retrieval package
+                        supplies the authoritative, versioned maintenance evidence. The following page addresses the
+                        four requested design questions.</p>
+                </section>
+                <section class="document-section" id="question-3-justification"
+                    aria-labelledby="heading-question-3-justification"><span class="section-number">Part 06</span>
+                    <h2 id="heading-question-3-justification">Question 3 | Design justification</h2>
+                    <p class="subtitle">One-page justification - four requested decisions. [2, 3]</p>
+                    <h3>A. What models would run on the iPad, and how would they fit its memory and compute limits?</h3>
+                    <p>Run an instruction-tuned <strong>small language model, initially about 1B parameters</strong>,
+                        plus a compact text embedding encoder and local BM25 search. Quantize generator weights to
+                        4-bit, use an iPad-compatible accelerated runtime, generate one answer at a time, and cap
+                        context length and output length to bound KV-cache and activation memory.
+                    </p>
+                    <h3>B. Where would the knowledge from the 10 GB corpus live?</h3>
+                    <p>Keep the 10 GB corpus <strong>primarily in local storage</strong>: approved originals, extracted
+                        procedure chunks, revision/applicability metadata, and a hybrid retrieval index. Weights provide
+                        general language ability and optional task training, rather than serving as the source of
+                        current procedures. Disk capacity and RAM are different constraints: keep documents and indexes
+                        on disk and load bounded search results.
+                    </p>
+                    <h3>C. Which techniques would you use, and what role would each play?</h3>
+                    <p>Use <strong>local RAG</strong> for current, citable facts; keyword search preserves exact part
+                        numbers and ATA codes, while a local encoder retrieves semantic matches. Filter by aircraft
+                        configuration, task and approved revision, then feed a few complete, relevant procedure passages
+                        to the small generator. The answer must link to local document pages and task IDs. Start with
+                        prompting; add <strong>IFT</strong> centrally on expert-verified, retrieval-grounded examples if
+                        the small model needs help with citations, format or abstention. <strong>Quantization</strong>
+                        reduces inference memory. Reserve <strong>CPT</strong> for demonstrated shorthand errors after
+                        glossary/retrieval improvements; it is not the update channel for procedures.
+                        <strong>CFT</strong> is unnecessary for this initial question-answering workflow; a routing head
+                        is optional if later evaluation justifies one.
+                    </p>
+                    <h3>D. How would you keep the system reliable as manuals and procedures change?</h3>
+                    <p>Centrally ingest approved revisions, verify OCR/tables and aircraft applicability, rebuild
+                        affected chunks/index entries, and remove superseded entries from active search. Ship a signed
+                        package containing matching documents, index, models and a version/expiry manifest; install it
+                        atomically after integrity checks when connected, with a validated rollback copy. Test retrieval
+                        recall, citation support, revised facts, conflicting sources and unanswerable cases with
+                        maintenance SMEs after every package or model change. At inference, validate cited IDs and
+                        evidence support; use direct excerpts or abstain when support is weak. Display revision dates
+                        and offline freshness. An offline device cannot discover unseen revisions: after package expiry
+                        or a known applicability conflict, withhold current procedural advice and direct the technician
+                        to Maintenance Control. The assistant supplies cited support; it cannot authorize dispatch or
+                        sign off maintenance.</p>
+                </section>
+            </main>
+        </div>
+        <footer>ADSP 32027 · Week 5 homework solutions · Generated from the editable Markdown source</footer>
+    </div>
+</body>
+
+</html>
