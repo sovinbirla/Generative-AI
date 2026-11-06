@@ -1,0 +1,11 @@
+# Installable application dependencies. The supplied ../deliverables.txt contains assignment guidance.
+streamlit>=1.50,<2
+beautifulsoup4>=4.12,<5
+requests>=2.32,<3
+numpy>=1.26,<3
+sentence-transformers>=3,<7
+chromadb>=1.0,<2
+langchain-core>=0.3,<2
+langchain-openai>=0.2,<2
+langchain-text-splitters>=0.3,<2
+python-dotenv>=1.0,<2

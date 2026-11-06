@@ -1,0 +1,236 @@
+[
+  {
+    "question": "What is tuition cost for the program?",
+    "text": "Tuition and course fees displayed are for Summer 2026, Autumn 2026, Winter 2027, and Spring 2027 [4](https://datascience.uchicago.edu/education/tuition-fees-aid/). The tuition for the MS in Applied Data Science program is:\n\n*   **12 courses:** $6,830 per course*, totaling $81,960+^ [4](https://datascience.uchicago.edu/education/tuition-fees-aid/)\n*   **18 courses:** $6,830 per course*, totaling $122,940+^ [4](https://datascience.uchicago.edu/education/tuition-fees-aid/)\n\nAdditionally, there is a non-refundable Program Enrollment Deposit of $1,500, which is credited toward your first quarter’s tuition balance [4](https://datascience.uchicago.edu/education/tuition-fees-aid/).\n\nPlease note that tuition is expected to increase 3-7% per fiscal year, and those completing the program over 2 fiscal years will be subject to an increased tuition rate in the second fiscal year [2](https://datascience.uchicago.edu/education/tuition-fees-aid/). For a full list of direct and indirect expenses, please visit the Cost of Attendance page [2](https://datascience.uchicago.edu/education/tuition-fees-aid/).",
+    "sources": [
+      {
+        "id": "ea52124952c670aa75d000e6",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/faqs/",
+        "title": "FAQs",
+        "heading": "International Students › What is the total cost of tuition for the Master's in Applied Data Science program?",
+        "text": "Please refer to the Tuition, Fees, and Aid (https://datascience.uchicago.edu/education/tuition-fees-aid/) webpage.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01639,
+        "bm25": 20.245,
+        "cosine": null
+      },
+      {
+        "id": "13f5dbad8eca4c5ec5cde7f2",
+        "url": "https://datascience.uchicago.edu/education/tuition-fees-aid/",
+        "title": "Tuition, Fees, & Aid",
+        "heading": "Program Tuition",
+        "text": "Program Enrollment Deposit (non-refundable): $1,500 (credited toward your first quarter’s tuition balance)\n* Enrolling in a program of study includes additional costs beyond the tuition listed here. For a full list of direct and indirect expenses associated with the cost of attendance, please visit the Cost of Attendance (https://financialaid.uchicago.edu/graduate/costs/cost-of-attendance/) page of the Graduate Financial Aid Office website.\nTuition is expected to increase 3-7% per fiscal year (a fiscal year runs from summer through spring quarter). Those who complete the program over 2 fiscal years are subject to an increased tuition rate in fiscal year 2 of their program.\nNote: *The program awards partial tuition merit-based scholarships.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01613,
+        "bm25": 16.947,
+        "cosine": null
+      },
+      {
+        "id": "299febcfb2b5503806a3c2e7",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/how-to-apply/",
+        "title": "How to Apply",
+        "heading": "Tuition, Fees, & Aid",
+        "text": "The program awards merit-based scholarships. Read more about Tuition, Fees, & Aid (https://datascience.uchicago.edu/education/tuition-fees-aid/) .",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01587,
+        "bm25": 14.431,
+        "cosine": null
+      },
+      {
+        "id": "44a2e875716750a4386a2244",
+        "url": "https://datascience.uchicago.edu/education/tuition-fees-aid/",
+        "title": "Tuition, Fees, & Aid",
+        "heading": "Program Tuition",
+        "text": "Tuition and course fees displayed are for Summer 2026, Autumn 2026, Winter 2027, and Spring 2027. Visit the Office of the University Bursar website (https://bursar.uchicago.edu/tuition-and-fees/tuition-and-fees-2025-26/tuition-and-fees-2025-26-physical-sciences-division) for information on quarterly and occasional fees, as well as information about tuition rates.\nTuition for the 12- and 18-course MS in Applied Data Science program: $6,830 per course*\n12 courses: $81,960+^\n18 courses: $122,940+^\nProgram Enrollment Deposit (non-refundable): $1,500 (credited toward your first quarter’s tuition balance)",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01562,
+        "bm25": 14.144,
+        "cosine": null
+      },
+      {
+        "id": "d8374ab37bf0d2180dfae2e3",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/course-progressions/",
+        "title": "Course Progressions",
+        "heading": "Flexible Formats",
+        "text": "Please note: Courses offerings are subject to change. The Pass/Fail, Career Seminar is a degree requirement for all students unless eligible to waive. There is no tuition or fees for the Career Seminar. Similarly, the optional Foundational noncredit courses are available at no additional cost.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01538,
+        "bm25": 13.103,
+        "cosine": null
+      },
+      {
+        "id": "89671e39b209e8bfc4446203",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/in-person-program/",
+        "title": "In-Person Program",
+        "heading": "Your Engagement",
+        "text": ". This allows you to work in an internship and/or job during the program. Select courses are offered during the day. Learn more about Tuition, Fees, & Aid (https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/tuition-fees-aid/) .",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01515,
+        "bm25": 12.179,
+        "cosine": null
+      }
+    ],
+    "mode": "Ollama",
+    "retrieval_mode": "Keyword · BM25",
+    "latency_seconds": 68.75,
+    "notice": "",
+    "pii_redacted": false,
+    "abstained": false
+  },
+  {
+    "question": "Does the online program provide visa sponsorship?",
+    "text": "No, the Online Program does not provide visa sponsorship [1](https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/how-to-apply/) [2](https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/international-students/) [4](https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/faqs/).",
+    "sources": [
+      {
+        "id": "8406e387b288180e565b4aff",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/how-to-apply/",
+        "title": "How to Apply",
+        "heading": "International Students",
+        "text": "Only the full-time, in-person program is visa-eligible.\nInternational students are also welcome to apply to our Master’s in Applied Data Science Online program, which does not require citizenship or permanent resident status and does not provide visa sponsorship.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01639,
+        "bm25": 22.305,
+        "cosine": null
+      },
+      {
+        "id": "059585586999c22908109e7f",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/international-students/",
+        "title": "International Students",
+        "heading": "Applying as an International Student",
+        "text": "International students are an important part of the MS in Applied Data Science community, bringing global perspectives into every classroom.\nThe program offers different formats:\nOnly the full-time, in-person program is eligible for student visa sponsorship\nThe online program is open to international students worldwide, but it does not provide visa sponsorship\nNot sure which option is right for you? Our admissions team can help you think through your next steps.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01613,
+        "bm25": 21.334,
+        "cosine": null
+      },
+      {
+        "id": "dd7348c9c715670d62e126a9",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/faqs/",
+        "title": "FAQs",
+        "heading": "International Students › Which Master's in Applied Data Science provides students with visas?",
+        "text": "The full-time, In-Person (https://datascience.uchicago.edu/education/masters-programs/in-person-program/) 1-Year 12-Course Program & 2-Year Thesis Track 18-Course Program are visa eligible.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01587,
+        "bm25": 15.904,
+        "cosine": null
+      },
+      {
+        "id": "697f49a27616feb86c4ed897",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/faqs/",
+        "title": "FAQs",
+        "heading": "Online Program › Do I need to be a US citizen or permanent resident to apply to Master's in Applied Data Science Online Program?",
+        "text": "No, students do not have to be US citizen or resident to partake in the Online Program (https://datascience.uchicago.edu/education/masters-programs/online-program/) . Please note that the Online Program (https://datascience.uchicago.edu/education/masters-programs/online-program/) is not eligible for visa sponsorship.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01562,
+        "bm25": 12.443,
+        "cosine": null
+      },
+      {
+        "id": "4f6df8d9a1a9d3621673c6a5",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/international-students/",
+        "title": "International Students",
+        "heading": "Information for International Applicants",
+        "text": "Application timing depends on your visa status.\nIf you require a new student visa (F-1): You must apply by the international application deadline. For the Autumn 2026 entry, that deadline has passed. Applicants who require a new visa should plan to apply for a future term.\nIf you are currently studying in the U.S. and transferring your SEVIS record: You may still be eligible to apply by the final application deadline.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01538,
+        "bm25": 11.602,
+        "cosine": null
+      },
+      {
+        "id": "c5a4732cb240190bb6c1b1f7",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/how-to-apply/",
+        "title": "How to Apply",
+        "heading": "Next Application Deadlines:",
+        "text": "November 9, 2026 – First Priority Application Deadline\nDecember 7, 2026 – Second Priority Application Deadline\nJanuary 26, 2027 – International Application Deadline (requiring visa sponsorship from UChicago)\nMarch 4, 2027 – Third Priority Application Deadline\nMay 6, 2027 – Fourth Priority Application Deadline\nJune 23, 2027 – Final Application Deadline\nIn-Person application decisions are released approximately 1 to 2 months after each respected deadline.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01515,
+        "bm25": 11.015,
+        "cosine": null
+      }
+    ],
+    "mode": "Ollama",
+    "retrieval_mode": "Keyword · BM25",
+    "latency_seconds": 29.2,
+    "notice": "",
+    "pii_redacted": false,
+    "abstained": false
+  },
+  {
+    "question": "What are the minimum TOEFL and IELTS scores?",
+    "text": "For the Master’s in Applied Data Science program, the minimum English language proficiency scores are: TOEFL: 102 (prior requirement) or 5 (current requirement; no subscore requirement); and IELTS, 7 (no subscore requirement) [1](https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/how-to-apply/) [2](https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/international-students/).",
+    "sources": [
+      {
+        "id": "06fe481c4b2063db25dd3ed2",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/how-to-apply/",
+        "title": "How to Apply",
+        "heading": "English Language Requirement",
+        "text": "Applicants to the Master’s in Applied Data Science program who do not meet the English Language Proficiency criteria must submit proof of English language proficiency.\nMinimum scores for the Master’s in Applied Data Science program: TOEFL: 102 (prior requirement) or 5 (current requirement; no subscore requirement); IELTS, 7 (no subscore requirement).\nPlease review our waiver policy here (https://grad.uchicago.edu/admissions/apply/english-language-requirements/) .",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01613,
+        "bm25": 28.042,
+        "cosine": null
+      },
+      {
+        "id": "7a364f3e5a59325ee77eae95",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/international-students/",
+        "title": "International Students",
+        "heading": "Application Requirements",
+        "text": "English language proficiency\nApplicants to the Master’s in Applied Data Science program who do not meet the English Language Proficiency criteria must submit proof of English language proficiency.\nMinimum scores for the Master’s in Applied Data Science program: TOEFL: 102 (prior requirement) or 5 (current requirement; no subscore requirement); IELTS, 7 (no subscore requirement).\nPlease review our waiver policy here (https://grad.uchicago.edu/admissions/apply/english-language-requirements/) .\nAll academic transcripts must be submitted in English. If your transcripts were originally issued in a language other than English, you must provide an English translation when applying.\nThree-year bachelor’s degree",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01538,
+        "bm25": 25.368,
+        "cosine": null
+      },
+      {
+        "id": "3d04ac09f6823560623a04ff",
+        "url": "https://grad.uchicago.edu/admissions/apply/english-language-requirements/",
+        "title": "Proof of English Proficiency",
+        "heading": "Who Must Provide Proof of English Proficiency",
+        "text": "Applicants to the graduate schools and divisions of the University of Chicago, regardless of citizenship, must either meet one of our waiver criteria (below) or submit proof of English language proficiency. This policy applies to all* graduate programs; the score level required for admission varies by program. Only the TOEFL iBT or IELTS Academic tests are accepted as proof of proficiency.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01515,
+        "bm25": 22.64,
+        "cosine": null
+      },
+      {
+        "id": "ab63efcfa304f9cb298f9f71",
+        "url": "https://grad.uchicago.edu/admissions/apply/english-language-requirements/",
+        "title": "Proof of English Proficiency",
+        "heading": "Other Resources",
+        "text": "Official TOEFL Website (http://www.ets.org/toefl)\nOfficial IELTS Website (https://www.ielts.org/)\nUniversity English Language Institute (https://esl.uchicago.edu/)",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01493,
+        "bm25": 22.491,
+        "cosine": null
+      },
+      {
+        "id": "032587ffaeb322befa05c5f4",
+        "url": "https://grad.uchicago.edu/admissions/apply/english-language-requirements/",
+        "title": "Proof of English Proficiency",
+        "heading": "Acceptable Tests",
+        "text": "In order to meet the proof of proficiency requirement, students may submit either:\nTest of English as a Foreign Language (TOEFL) internet-based test (iBT), including tests taken online at-home, or in a testing center\nApplicants who submit the IELTS One Skill Retake are also required to submit the original IELTS score report.\nOnly the Academic versions of IELTS are accepted, not the General Training Reading/Writing test.\nWe do not accept any other proficiency tests, exams, equivalent coursework, certificate/certifications, endorsement from faculty, and/or other measurement other than the TOEFL iBT or IELTS Academic. This includes the IELTS “Indicator” test, the TOEFL ITP Plus, Duolingo, or any other test.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01471,
+        "bm25": 22.091,
+        "cosine": null
+      },
+      {
+        "id": "ef1401ce3f90eb10a4f00db2",
+        "url": "https://datascience.uchicago.edu/education/masters-programs/ms-in-applied-data-science/faqs/",
+        "title": "FAQs",
+        "heading": "International Students › I have worked in the U.S. for more than two years. Does that mean that I am exempt from the TOEFL/IELTS requirement?",
+        "text": "Please refer to the English Language Proficiency (https://grad.uchicago.edu/admissions/apply/english-language-%20requirements/) guidelines.",
+        "fetched_at": "2026-11-06T18:50:14.968504+00:00",
+        "score": 0.01429,
+        "bm25": 21.508,
+        "cosine": null
+      }
+    ],
+    "mode": "Ollama",
+    "retrieval_mode": "Keyword · BM25",
+    "latency_seconds": 26.27,
+    "notice": "",
+    "pii_redacted": false,
+    "abstained": false
+  }
+]
