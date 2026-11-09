@@ -1,0 +1,82 @@
+We require two main items for this submission (please ignore midterm project doc submission requirements):
+
+A user-friendly interface (provide url for the UI) that enables DSI staff to interact with your bot for a short evaluation period. Please use the example evaluation set provided at the end of this announcement, along with the ground truth answers, to tune your solution.
+
+ 
+This presentation should be recorded via Zoom by team members. Note that we won’t conduct in-class presentations; instead, solutions will be graded offline through these recorded presentations and by assessing response quality via the provided URL. 
+
+       After grading and assessment, the top projects will have the opportunity to present online on the last lecture to share their work with the class.
+
+       To summarize, please submit the URL link, your presentation deck, and a 10-minute recorded video of the deck.
+
+ 
+
+Sample Questions for Testing
+
+Evaluation Set (All the answers are sample, may be different based on recent changes applied on website) :
+
+What is tuition cost for the program?
+
+What scholarships are available for the program?
+
+Sample Answer: The Data Science Institute Scholarship, MS in Applied Data Science Alumni Scholarship etc
+ 
+
+What are the minimum scores for the TOEFL and IELTS English Language Requirement?
+
+Sample Answer: Minimum scores for the Master’s in Applied Data Science program: TOEFL, 102 (no subscore requirement); IELTS, 7 (no subscore requirement).
+ 
+
+Is there an application fee waiver?
+
+Answer: For questions regarding an application fee waiver, please refer to the Physical Sciences Division fee waiver policy.
+ 
+
+What are the deadlines for the in-person program?
+
+Answer:
+
+... – Priority Application Deadline
+...– Scholarship Priority Deadline
+...– International Application Deadline (requiring visa sponsorship from UChicago)
+... – Second Priority Application Deadline
+....– Third Priority Application Deadline
+...– Final Application Deadline
+ 
+
+How long will it take for me to receive a decision on my application?
+
+Sample Answer: In-Person application decisions are released approximately 1 to 2 months after each respected deadline. Online application decisions are released on a rolling basis
+ 
+
+Can I set up an advising appointment with the enrollment management team?
+
+Sample Answer: Yes, meet your admissions counselor by scheduling an appointment https://apply-psd.uchicago.edu/portal/applied-data-science
+ 
+
+Where can I mail my official transcripts?
+
+Sample Answer: The University of Chicago
+Attention: MS in Applied Data Science Admissions
+455 N Cityfront Plaza Dr., Suite 950
+Chicago, Illinois 60611
+ 
+
+Does the Master’s in Applied Data Science Online program provide visa sponsorship?
+
+Sample Answer: Only our In-Person, Full-Time program is Visa eligible
+ 
+
+How do I apply to the MBA/MS program?
+
+Sample Answer: Applicants interested in the Joint MBA/MS degree will apply through Booth’s centralized, joint-application processLinks to an external site.. Applicants should complete the Chicago Booth Full-Time MBA applicationLinks to an external site. and select the MBA/MS in Applied Data Science as their program of interest
+ 
+
+Is the MS in Applied Data Science program STEM/OPT eligible?
+
+Sample Answer: The MS in Applied Data Science program is STEM/OPT eligible
+ 
+
+How many courses must you complete to earn UChicago’s Master’s in Applied Data Science?
+
+Sample Answer: To earn the MS-ADS degree students must successfully complete 12 courses (6 core, 4 elective, 2 Capstone) and our tailored Career Seminar
