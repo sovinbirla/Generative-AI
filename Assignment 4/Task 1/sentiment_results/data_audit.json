@@ -1,0 +1,45 @@
+{
+  "original": [
+    {
+      "split": "train",
+      "rows": 35000,
+      "negative": 17502,
+      "positive": 17498,
+      "duplicate_extra_rows": 208
+    },
+    {
+      "split": "validation",
+      "rows": 5000,
+      "negative": 2507,
+      "positive": 2493,
+      "duplicate_extra_rows": 2
+    },
+    {
+      "split": "test",
+      "rows": 10000,
+      "negative": 4991,
+      "positive": 5009,
+      "duplicate_extra_rows": 21
+    }
+  ],
+  "cross_split_shared_unique_reviews": {
+    "train_validation": 44,
+    "train_test": 120,
+    "validation_test": 28
+  },
+  "effective_rows": {
+    "train": 34629,
+    "validation": 4970,
+    "test": 10000
+  },
+  "removed_rows": {
+    "train": 371,
+    "validation": 30
+  },
+  "csv_sha256": {
+    "train": "fa56e3ac15fcd768f9819fea6ffb15325a230cbab3101531ddcd41095c670479",
+    "validation": "d0cc4fd482f29f07ddcb72b025498e739e10664ec03f62319c2cfbe2813955eb",
+    "test": "083b6973772e0c600bd4923a93cf217d50199e7c9bf1966484b887eef0dcea52"
+  },
+  "normalization": "html.unescape, HTML-tag removal, whitespace collapse, preserve case and punctuation"
+}
