@@ -1,0 +1,17 @@
+{
+  "raw_rows": 10002,
+  "unique_valid": 9929,
+  "selected": 240,
+  "seed": 42,
+  "field_present": {
+    "brand": 0,
+    "price": 236,
+    "category": 221,
+    "features": 231,
+    "description": 0,
+    "model": 195,
+    "color": 0,
+    "dimensions": 7
+  },
+  "listed_image_urls": 240
+}

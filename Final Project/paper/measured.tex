@@ -1,0 +1,38 @@
+\newcommand{\RawRows}{10,002}
+\newcommand{\UniqueRows}{9,929}
+\newcommand{\CoverageRows}{Selling price & 236 \\
+Category & 221 \\
+Features & 231 \\
+Model number & 195 \\
+Dimensions & 7 \\
+Brand & 0 \\
+Color & 0 \\
+Stand-alone description & 0 \\
+Indexed primary photo & 240 \\}
+\newcommand{\AbstractResults}{Visual search reached 100.0\% Recall@1 on 60 transformed primary photos and 61.0\% on 41 alternate listing photos. Category-text fusion reached 31.7\% on the alternate slice.}
+\newcommand{\AbstractQA}{Across 18 answer cases per prompt, exact-price and abstention checks passed on 38.9\%, 33.3\%, and 38.9\% of cases, respectively.}
+\newcommand{\RetrievalDiscussion}{TF-IDF attained 100.0\% Recall@1 on the title-derived queries. Enriching titles moved CLIP Recall@1 from 87.5\% to 85.0\%, while improving Recall@10 from 97.5\% to 98.8\%. Direct visual indexing improved transformed-photo Recall@1 from 75.0\% to 100.0\%. With alternate photos, direct visual and cross-modal retrieval attained 61.0\% and 58.5\% Recall@1, respectively. Fusion with a category cue attained 31.7\%. The descriptive 95\% Wilson interval for alternate-photo visual Recall@1 was 45.7--74.3\%. The interval describes binomial uncertainty on this slice and does not address dataset shift.}
+\newcommand{\QADiscussion}{The cumulative correctness proxy was 38.9\% for zero shots, 33.3\% for two shots, and 38.9\% for four shots. For photo price questions the corresponding rates were 16.7\%, 0.0\%, and 16.7\%. The reference listing reached the prompt in 50.0\% of photo price cases, limiting what prompt examples could recover.}
+\newcommand{\CaseDiscussion}{On an alternate-photo price query for B00U1KXZU6, the reference price was \$22.51. The zero-shot model answered with the excerpt \emph{The listed price for the product is \$56.02.}. The target listing was absent from the supplied evidence. For B073XJZKBW, the target was among the supplied records and listed at \$56.34. The two-shot response included \emph{The listed price of this product is \$79.99.} and failed the exact-price check.}
+\newcommand{\ConclusionResults}{Indexed photos worked well on modified copies but showed a substantial drop on alternate views. On the benchmark, broad category-text fusion further reduced top-1 alternate-view accuracy.}
+\newcommand{\RetrievalRows}{Title-derived & TF-IDF rich & 80 & 100.0 & 100.0 & 100.0 & 100.0 & 1.5 \\
+Title-derived & CLIP title & 80 & 87.5 & 96.2 & 97.5 & 90.2 & 43.7 \\
+Title-derived & CLIP rich & 80 & 85.0 & 97.5 & 98.8 & 89.7 & 40.2 \\
+Transformed photo & CLIP cross-modal & 60 & 75.0 & 96.7 & 100.0 & 83.9 & 65.3 \\
+Transformed photo & CLIP visual & 60 & 100.0 & 100.0 & 100.0 & 100.0 & 65.8 \\
+Alternate photo & CLIP cross-modal & 41 & 58.5 & 82.9 & 87.8 & 69.7 & 68.9 \\
+Alternate photo & CLIP visual & 41 & 61.0 & 78.0 & 85.4 & 68.9 & 67.5 \\
+Alternate photo & CLIP category text & 41 & 2.4 & 7.3 & 17.1 & 5.3 & 22.9 \\
+Alternate photo & CLIP fused & 41 & 31.7 & 75.6 & 82.9 & 49.6 & 85.8 \\}
+\newcommand{\QARows}{All & Zero-shot & 18 & 94.4 & 38.9 & 83.3 & 0.0 & 6.8 \\
+All & Two-shot & 18 & 100.0 & 33.3 & 83.3 & 0.0 & 8.3 \\
+All & Four-shot & 18 & 100.0 & 38.9 & 83.3 & 58.3 & 8.5 \\
+Title price & Zero-shot & 6 & 100.0 & 100.0 & 100.0 & 0.0 & 6.7 \\
+Title price & Two-shot & 6 & 100.0 & 100.0 & 100.0 & 0.0 & 6.5 \\
+Title price & Four-shot & 6 & 100.0 & 100.0 & 100.0 & 100.0 & 7.1 \\
+Photo price & Zero-shot & 6 & 100.0 & 16.7 & 50.0 & 0.0 & 5.6 \\
+Photo price & Two-shot & 6 & 100.0 & 0.0 & 50.0 & 0.0 & 7.4 \\
+Photo price & Four-shot & 6 & 100.0 & 16.7 & 50.0 & 16.7 & 8.5 \\
+Missing warranty & Zero-shot & 6 & 83.3 & 0.0 & 100.0 & -- & 10.7 \\
+Missing warranty & Two-shot & 6 & 100.0 & 0.0 & 100.0 & -- & 11.6 \\
+Missing warranty & Four-shot & 6 & 100.0 & 0.0 & 100.0 & -- & 8.6 \\}

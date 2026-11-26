@@ -1,0 +1,16 @@
+__pycache__/
+.venv/
+.streamlit/
+models/
+data/amazon.csv
+data/images/
+data/catalog.sqlite
+data/catalog.building*
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.log
+paper/*.out
+paper/*.synctex.gz

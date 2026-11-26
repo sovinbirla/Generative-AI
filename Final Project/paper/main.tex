@@ -1,0 +1,200 @@
+\documentclass{article}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{xurl}
+\usepackage[hypertexnames=false,hyperfootnotes=false]{hyperref}
+\usepackage[accepted]{icml2025}
+\icmltitlerunning{Multimodal Catalog Retrieval and Grounded Product QA}
+\input{measured.tex}
+
+\begin{document}
+\twocolumn[
+\icmltitle{Multimodal Conversational AI for E-commerce\texorpdfstring{\\}{ }
+A Study of Catalog Retrieval and Grounded Product QA}
+\begin{icmlauthorlist}
+\icmlauthor{Sovin Birla}{uchicago}
+\icmlauthor{Mateo Santini}{uchicago}
+\end{icmlauthorlist}
+\icmlaffiliation{uchicago}{University of Chicago}
+\icmlkeywords{multimodal retrieval, CLIP, grounded generation, e-commerce}
+\vskip 0.3in
+]
+\makeatletter
+\def\Notice@String{GEN AI Principles, Course Project II. November 2026.}
+\def\icmlcorrespondingauthor@text{Sovin Birla}
+\makeatother
+\printAffiliationsAndNotice{}
+
+\begin{abstract}
+A retail support assistant must identify a listing from a photo or a short query before it can answer accurately from catalog metadata. We build a local multimodal retrieval-augmented chatbot using frozen CLIP embeddings, an exact SQLite-backed vector index, Qwen2.5-0.5B-Instruct, and Streamlit. On a seeded 240-product sample of the Amazon Product Dataset 2020, we compare sparse and dense text search, cross-modal image-to-text search, visual indexing, and rank fusion. \AbstractResults{} We also evaluate zero-, two-, and four-shot prompting on historical price lookup and missing-warranty queries. \AbstractQA{} The study separates listing identification from answer quality and exposes the risk of attaching plausible answers to the wrong listing.
+\end{abstract}
+
+\section{Introduction}
+A customer may know a product's name, upload a package photo, or ask a question about an item identified earlier in a conversation. These interactions require evidence of two kinds. Visual or textual similarity locates a candidate listing. Catalog attributes then support claims about the listing, such as its price and stated features. Errors in the first step can produce fluent but irrelevant answers in the second.
+
+We ask three questions. Does adding catalog fields improve title-derived search? How much do indexed photos help when the query is a modified copy or a different image from the same listing? How do prompt demonstrations affect verifiable product answers under the same retrieved context? We deliver a working prototype and a benchmark that records rankings, generated text, and per-case scores.
+
+\section{Background}
+CLIP learns aligned image and text representations from paired data \citep{clip}. Its shared space supports image-to-text matching, while indexed photos support direct visual similarity. Retrieval-augmented generation supplies external evidence at inference time \citep{rag}. We use a frozen dual encoder and a separate text decoder with prompt-time conditioning. The retriever selects records, and the generator sees their text and source identifiers. The compact open-weight Qwen model \citep{qwen} keeps inference local.
+
+\section{Catalog and Preprocessing}
+The source is the January 2020 product snapshot published by PromptCloud \citep{data}. It contains \RawRows{} rows. We extract the supplied ASIN when present, recover it from the listing URL when possible, and otherwise use the source unique identifier. After removing invalid identifiers, blank titles, and repeats by identifier or case-folded title, \UniqueRows{} records remain. We shuffle with Python seed 42 before selecting the first 240 unique products. Title deduplication can merge genuinely distinct variants with identical titles, while differently named variants can remain.
+
+Whitespace is collapsed, conventional placeholders become empty strings, and a recurring fit-check preamble is removed from feature text. The enriched representation concatenates title, brand, historical selling price, model, color, features, description, category, and dimensions when present, in that order. Long fields can exhaust CLIP's 77-token window. The generator receives selected evidence fields with a separate 400-character cap per field. Feature text carries most of the descriptive information in this sample.
+
+\begin{table}[t]
+\centering
+\caption{Availability in the 240-product sample. A structured field is present when its normalized value is nonempty.}
+\label{tab:coverage}
+\begin{tabular}{lr}
+\toprule
+Field & Products \\
+\midrule
+\CoverageRows
+\bottomrule
+\end{tabular}
+\end{table}
+
+We retain up to two distinct image URLs per product after filtering to Amazon image paths and excluding placeholder routes. The cache stores RGB photos at up to 768 pixels per side while preserving aspect ratio. The first URL alone supplies visual index entries. The second image, when available, is reserved for alternate-view queries. Table~\ref{tab:coverage} reports field and primary-photo coverage. The catalog provides historical snapshots and has substantial gaps in structured metadata.
+
+\section{System Design}
+\begin{figure}[t]
+\centering
+\begin{tabular}{c}
+\fbox{\strut Text query or uploaded product photo} \\
+$\downarrow$ \\
+\fbox{\strut CLIP encoding and catalog vector search} \\
+$\downarrow$ \\
+\fbox{\strut Ranked listings and structured evidence} \\
+$\downarrow$ \\
+\fbox{\strut Qwen answer and Streamlit source cards}
+\end{tabular}
+\caption{Online pipeline. Offline, normalized catalog titles, descriptions, and primary photos are encoded and written to SQLite.}
+\label{fig:pipeline}
+\end{figure}
+Figure~\ref{fig:pipeline} shows the online data flow.
+
+\subsection{Embedding and persistence}
+The CLIP ViT-B/32 checkpoint produces 512-dimensional image and text embeddings. Its text encoder processes tokenized descriptions and queries. Its vision encoder processes resized and normalized RGB inputs according to the checkpoint's image processor. Each projected vector is normalized to unit length. SQLite stores one row per listing with product metadata, title and enriched text vectors, and an optional primary image vector. At service start the application loads vectors into NumPy arrays and performs exact cosine search by taking dot products. The similarity scan takes $O(Nd)$ operations for $N$ listings and dimension $d$. A managed approximate vector index would be an option at a larger scale.
+
+\subsection{Ranking}
+Text queries are compared with the text index. Image queries are compared with primary photos when available, with text similarity as a fallback for listings without a cached photo. The cross-modal baseline uses text vectors for every candidate. Given both text and image, we use weighted reciprocal rank fusion:
+\begin{equation}
+s(p)=\frac{0.35}{20+r_t(p)}+\frac{0.65}{20+r_v(p)}.
+\end{equation}
+Here $r_t$ and $r_v$ are one-based ranks from the text and visual searches. Rank fusion avoids comparing uncalibrated cosine scales directly. The weights and offset are fixed heuristics. Stable sorting uses product identifiers to break ties.
+
+\subsection{Grounded answers and interaction}
+The system passes the top three listings to Qwen with turn-local source labels such as \texttt{[P1]}. The instruction asks for one or two sentences, evidence-supported claims, exact historical prices when requested, and an explicit indication of missing evidence. Greedy decoding generates up to 96 tokens. We test three versions of the same prompt with zero, two, or four demonstrations. These fictional examples cover citing a feature, abstaining, disambiguating products, and quoting a price.
+
+Streamlit accepts text alone, a photo alone, or both. It displays generated responses with expandable evidence cards, cached photos, observed prices, and original listing links. Requests for a picture open the leading source card. For a comparison phrased as compare A with B, the interface retrieves one listing per named product. An explicit follow-up control reuses the last set of matches. The generator receives up to three prior user questions for conversational references, while the current evidence supplies listing facts.
+
+\begin{table*}[t]
+\centering
+\caption{Retrieval across 240 candidates. Recall and MRR are percentages. Methods within each slice use the same target listings.}
+\label{tab:retrieval}
+\begin{tabular}{llrrrrrr}
+\toprule
+Query & Method & $n$ & R@1 & R@5 & R@10 & MRR@10 & Median ms \\
+\midrule
+\RetrievalRows
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Generation with fixed retrieved evidence across prompt settings. Rates are percentages. Grounded price applies to price questions only.}
+\label{tab:qa}
+\begin{tabular}{llrrrrrr}
+\toprule
+Slice & Prompt & $n$ & Relevant & Correct & Gold in context & Grounded price & Median s \\
+\midrule
+\QARows
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Evaluation}
+\subsection{Retrieval protocol}
+Text retrieval uses 80 listing-derived queries. We take up to the first 14 title words and delete every third word. We compare sparse TF-IDF unigram/bigram search, CLIP title embeddings, and CLIP enriched embeddings on the same strings. The title-derived queries favor lexical overlap and approximate short product searches.
+
+The transformed-photo slice uses 60 primary photos. We crop a narrow border and pad with gray, then compare visual retrieval with cross-modal search. The alternate slice uses the second listing photo when available and when the mean absolute difference of padded $64\times64$ RGB thumbnails exceeds 3. The check removes exact and sufficiently similar thumbnails, while some retained alternates can still be crops or packaging variants. For this slice we also evaluate category-only queries and joint photo-plus-category retrieval. Category text comes from the provided leaf category. All systems rank the same 240 candidates.
+
+Each query has one relevance label, its source product ID. Under this design, top-1 accuracy equals Recall@1. Recall@$k$ measures how often the source appears in the first $k$ results, and MRR@10 averages $1/r$ for ranks $r\leq 10$ with zero for misses. Latency is median observed wall time on an Arm64 Mac using CPU inference. Baseline fitting and index building are offline. Generation timings can include first-call model loading.
+
+\subsection{Answer protocol}
+We evaluate exact-title price, alternate-image price, and missing-warranty cases. For exact-title price and warranty questions, the retriever uses the known title, while the decoder receives the full question. For image price cases, the alternate photo and the question are fused for retrieval. Price cases require a parseable dollar amount. Warranty cases require the term warranty to be absent from the retained descriptive fields in the target and all three retrieved records. This is an operational omission label.
+
+A price answer passes when the set of normalized dollar amounts exactly matches the singleton reference price. A warranty answer passes when it matches a missing-information expression and gives no numeric year count. A relevance proxy checks for a price mention or a warranty mention, according to the query. Grounded price correctness also requires a citation to the target listing and valid source indices. Gold-in-context measures how often the source listing appears in the three records supplied to the generator. These rules can be audited against the saved responses. Open-ended claim support and human-rated usefulness are outside the measured outcomes.
+
+\section{Results}
+\subsection{Retrieval}
+Table~\ref{tab:retrieval} gives the ablations. \RetrievalDiscussion{} The transformed-photo condition measures near-duplicate robustness. Alternate listing photos offer a more demanding test, while still coming from the same source. The category-only condition isolates how much a broad textual cue can achieve on its own.
+
+\subsection{Generation}
+Table~\ref{tab:qa} compares the three prompt variants. \QADiscussion{} The price-and-citation check and the gold-in-context column expose different failure sources. A fluent price response can describe a neighboring listing, and a correct price can be accompanied by an incorrect or missing citation.
+\CaseDiscussion
+
+All prompts gave the exact price on all six title-price questions. Four shots grounded seven of 12 price answers with the correct price and target citation. The zero- and two-shot conditions grounded none.
+
+Manual review found two valid abstentions that the warranty check missed. The zero-shot response for B07NF2VKTY reported \emph{No specific information provided}. The two-shot response for B07ZJQ1RDK said there was \emph{no mention of any warranty period}. The other 16 responses gave unsupported durations.
+
+\section{Limitations and Future Work}
+The benchmark guarantees catalog membership and uses a small weakly labeled sample. Independent customer photos and questions would test generalization. Out-of-catalog queries could support calibration of a rejection rule.
+
+Sparse metadata limits support for warranty and compatibility. Future evaluation should cover comparisons, follow-ups, and human verification of substantive claims. Multiple indexed photos per item and a hybrid lexical and dense search warrant study on held-out captures and independently written queries.
+
+\section{Conclusion}
+This prototype combines catalog image and text retrieval with a compact language model and a source-linked chat interface. \ConclusionResults{} The retrieval logs and answer checks support diagnosis of both incorrect product identification and misuse of available evidence.
+
+\section*{Impact Statement}
+Photo search can make product information easier to find. Wrong matches, stale prices, and unsupported claims can influence purchases. The interface exposes source records and labels snapshot prices. Uploads are held in memory for the session.
+
+\bibliographystyle{icml2025}
+\bibliography{references}
+
+\clearpage
+\onecolumn
+\appendix
+\section{Reproduction and Implementation}
+The project includes source code, the data snapshot, 407 cached photos, model files, the SQLite index, and measured outputs. Use Python 3.12 and install the pinned packages in \texttt{requirements.txt}. From the project root, run the following.
+\begin{verbatim}
+python catalog.py --limit 240 --seed 42 --download-images
+python rag.py index
+python evaluate.py
+python paper/render_results.py
+python -m streamlit run app.py
+\end{verbatim}
+The first step fetches photos missing from the cache. The included index can be reused. Models default to \texttt{models/clip} and \texttt{models/qwen}; \texttt{CLIP\_MODEL} and \texttt{QA\_MODEL} override those paths. Inference uses Apple MPS if available and otherwise CPU. The run manifest records the device and data fingerprints. Timing depends on hardware and cache state. Rebuild the paper from the \texttt{paper} directory using \texttt{latexmk -pdf main.tex}.
+
+\begin{table}[h]
+\centering
+\caption{Files supporting implementation and evaluation.}
+\begin{tabular}{ll}
+\toprule
+Path & Role \\
+\midrule
+\texttt{catalog.py} & Normalization, deterministic sampling, and image cache \\
+\texttt{rag.py} & CLIP encoding, SQLite persistence, fusion, and Qwen generation \\
+\texttt{app.py} & Chat, uploads, follow-ups, and listing evidence cards \\
+\texttt{evaluate.py} & Baseline construction, query generation, and scoring \\
+\texttt{data/profile.json} & Source and sampled field counts \\
+\texttt{results/run.json} & Run provenance and data fingerprints \\
+\texttt{results/retrieval\_cases.csv} & Queries, ranked product IDs, and measured timings \\
+\texttt{results/retrieval\_metrics.csv} & Retrieval estimates by slice and method \\
+\texttt{results/qa\_cases.csv} & Model outputs, expected answers, retrieved IDs, and scores \\
+\texttt{results/qa\_metrics.csv} & Aggregated answer metrics and generation latency \\
+\texttt{paper/render\_results.py} & Builds paper tables and measured statements from outputs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Using the Chatbot}
+Ask about a product title in the index, upload a photo to identify its listing, or combine a photo with a product question. To try a follow-up, submit a known title with a request to show a picture, then check the follow-up control and ask for the historical price. Products in the assignment's illustrative dialogues may fall outside the 240-item sample. See the project README for a verified catalog example.
+
+\section{Auditing the Results}
+A blank retrieval rank means the reference product was outside the top ten. In the answer CSV, the order of the retrieved IDs defines the source labels \texttt{[P1]}, \texttt{[P2]}, and \texttt{[P3]}. For price questions, compare \texttt{expected} with \texttt{response} and use \texttt{gold\_in\_context} to distinguish retrieval misses from answer errors with evidence present. For missing-warranty questions, review the response for unsupported claims about the product's actual policy.
+\end{document}

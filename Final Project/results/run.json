@@ -1,0 +1,31 @@
+{
+  "device": "cpu",
+  "architecture": "arm64",
+  "python": "3.12.14",
+  "packages": {
+    "torch": "2.14.1",
+    "transformers": "5.20.2",
+    "numpy": "2.5.4",
+    "scikit-learn": "1.9.1",
+    "Pillow": "13.0.0"
+  },
+  "models": {
+    "clip": {
+      "source": "models/clip",
+      "weight_sha256": {
+        "pytorch_model.bin": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f"
+      }
+    },
+    "qwen": {
+      "source": "models/qwen",
+      "weight_sha256": {
+        "model.safetensors": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe"
+      }
+    }
+  },
+  "catalog_sha256": "d309c0e8194bf85e1fc1d3800b24bb0448e3ab18770c3a0c83dc17c3315cc16b",
+  "raw_catalog_sha256": "ec7ad773a70e654d65ee3757748fe99d614be24ad087330e437bcc84cda85291",
+  "index_sha256": "3fcbb5e11093d3c72adedd08164901341e82d233f7bde6fd4c44bb8af4ff746a",
+  "indexed_products": 240,
+  "indexed_images": 240
+}
