@@ -1,0 +1,129 @@
+[
+  {
+    "id": "samsung-galaxy-s21-5g",
+    "title": "Samsung Galaxy S21 5G",
+    "aliases": [
+      "Samsung Galaxy S21",
+      "Galaxy S21",
+      "Galaxy S21 5G"
+    ],
+    "brand": "Samsung",
+    "model": "Galaxy S21 5G",
+    "category": "Smartphones",
+    "features": "The base Galaxy S21 5G has a 6.2-inch FHD+ Dynamic AMOLED 2X display with an adaptive refresh rate up to 120 Hz, a 4,000 mAh typical battery, and a 10 MP front camera. The rear cameras are 12 MP wide, 12 MP ultrawide, and 64 MP telephoto.",
+    "description": "",
+    "price": "",
+    "color": "",
+    "dimensions": "",
+    "images": [],
+    "source_name": "Samsung official specifications",
+    "url": "https://news.samsung.com/us/samsung-galaxy-s21-galaxy-s21-plus-unpacked-2021-make-every-day-epic/"
+  },
+  {
+    "id": "fitbit-charge-4",
+    "title": "Fitbit Charge 4",
+    "aliases": [
+      "Charge 4",
+      "Fitbit Charge4"
+    ],
+    "brand": "Fitbit",
+    "model": "Charge 4",
+    "category": "Fitness trackers",
+    "features": "This wrist-worn fitness tracker can record steps, heart rate, sleep, and workouts. It has built-in GPS for tracking pace and distance on supported outdoor activities.",
+    "usage": "Wear it on your wrist, pair it with the Fitbit app, and sync it to review your activity and sleep. Start an exercise on the tracker to record a workout.",
+    "visual_note": "Similar fitness trackers can look alike. Check the model in the Fitbit app or on the device to confirm.",
+    "description": "",
+    "price": "",
+    "color": "Black (pictured variant)",
+    "dimensions": "",
+    "images": [],
+    "source_name": "Fitbit official product guide",
+    "url": "https://device101.fitbit.com/guides/charge4-101.html",
+    "reference_photo_url": "https://staticcs.fitbit.com/content/assets/help/manuals/manual_charge_4_en_US.pdf"
+  },
+  {
+    "id": "kitchenaid-artisan-stand-mixer",
+    "title": "KitchenAid Artisan Stand Mixer",
+    "aliases": [
+      "Kitchen Aid Artisan Stand Mixer",
+      "KitchenAid Artisan Mixer",
+      "Artisan Stand Mixer",
+      "KitchenAid Artisan",
+      "KSM150PS"
+    ],
+    "brand": "KitchenAid",
+    "model": "Artisan Series KSM150PS",
+    "category": "Stand mixers",
+    "features": "The standard Artisan Series KSM150PS is a 5-quart tilt-head stand mixer. Included accessories include a flat beater, dough hook, and wire whip. Optional pasta and food grinder attachments fit the hub and are sold separately.",
+    "usage": "Use the flat beater to mix batter, the dough hook to knead bread dough, and the wire whip to whip cream or egg whites.",
+    "visual_note": "Check the model label to confirm the exact variant. Other KitchenAid tilt-head mixers have a similar shape.",
+    "description": "",
+    "price": "",
+    "color": "",
+    "dimensions": "",
+    "images": [],
+    "source_name": "KitchenAid official Artisan Series guide",
+    "url": "https://www.kitchenaid.com/content/kitchenaid/en_us/pinch-of-help/stand-mixers/classic-vs-artisan.html"
+  },
+  {
+    "id": "amazon-echo-dot-3rd-gen",
+    "title": "Amazon Echo Dot (3rd generation)",
+    "aliases": [
+      "Amazon Echo Dot",
+      "Echo Dot"
+    ],
+    "brand": "Amazon",
+    "model": "Echo Dot (3rd generation, 2018)",
+    "category": "Smart speakers",
+    "features": "The 3rd-generation Echo Dot is a compact Alexa smart speaker with a 1.6-inch driver, Bluetooth connectivity, and a wired audio output.",
+    "usage": "Ask Alexa to play music or control compatible smart-home devices.",
+    "description": "",
+    "price": "",
+    "color": "",
+    "dimensions": "",
+    "images": [],
+    "source_name": "Amazon official Echo Dot launch details",
+    "url": "https://www.aboutamazon.com/news/devices/amazon-devices-event-september-2018"
+  },
+  {
+    "id": "google-nest-mini",
+    "title": "Google Nest Mini (2nd generation)",
+    "aliases": [
+      "Google Nest Mini",
+      "Nest Mini"
+    ],
+    "brand": "Google",
+    "model": "Nest Mini (2nd generation, 2019)",
+    "category": "Smart speakers",
+    "features": "Google introduced the Nest Mini as a Google Assistant smart speaker. It has a 40 mm driver with 360-degree sound, Bluetooth 5.0, and dual-band Wi-Fi.",
+    "usage": "Use voice commands to listen to music and control compatible smart-home devices in the Google Home ecosystem.",
+    "description": "",
+    "price": "",
+    "color": "",
+    "dimensions": "",
+    "images": [],
+    "source_name": "Google official Nest Mini technical specifications",
+    "url": "https://support.google.com/googlehome/answer/7072284?hl=en#zippy=%2Cgoogle-nest-mini-nd-gen"
+  },
+  {
+    "id": "apple-airpods-pro",
+    "title": "Apple AirPods Pro (1st generation)",
+    "aliases": [
+      "Apple AirPods Pro",
+      "AirPods Pro"
+    ],
+    "brand": "Apple",
+    "model": "AirPods Pro (1st generation, 2019)",
+    "category": "Wireless earbuds",
+    "features": "First-generation AirPods Pro offer Active Noise Cancellation and include silicone ear tips in three sizes. The earbuds are rated IPX4 for sweat and water resistance during non-water activities.",
+    "usage": "Use the earbuds for listening and calls, with the silicone tips fitted comfortably. Use Active Noise Cancellation to reduce surrounding noise.",
+    "description": "",
+    "price": "",
+    "color": "White",
+    "dimensions": "",
+    "images": [],
+    "source_name": "Apple official AirPods Pro announcement",
+    "url": "https://www.apple.com/newsroom/2019/10/apple-reveals-new-airpods-pro-available-october-30/",
+    "reference_photo_url": "https://www.apple.com/newsroom/images/product/airpods/standard/Apple_AirPods-Pro_New-Design-Case-And-AirPods-Pro_102819_big.jpg.large.jpg"
+  }
+]

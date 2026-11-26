@@ -27,8 +27,8 @@ def clean(value):
     return '' if value.casefold() in {'none', 'nan', 'n/a', 'null', '-'} else value
 
 
-def prepare(limit, seed):
-    with (DATA / 'amazon.csv').open(encoding='utf-8-sig', newline='') as source:
+def load_products(seed=42, path=DATA / 'amazon.csv'):
+    with path.open(encoding='utf-8-sig', newline='') as source:
         rows = list(csv.DictReader(source))
     random.Random(seed).shuffle(rows)
     products = []
@@ -56,10 +56,15 @@ def prepare(limit, seed):
         )
         product.update(id=pid, title=title, url=clean(row['Product Url']), images=urls[:2])
         products.append(product)
+    return products, len(rows)
+
+
+def prepare(limit, seed):
+    products, raw_count = load_products(seed)
     selected = products[:limit] if limit else products
     (DATA / 'catalog.json').write_text(json.dumps(selected, ensure_ascii=False, indent=2))
     (DATA / 'profile.json').write_text(json.dumps({
-        'raw_rows': len(rows), 'unique_valid': len(products), 'selected': len(selected),
+        'raw_rows': raw_count, 'unique_valid': len(products), 'selected': len(selected),
         'seed': seed, 'field_present': {
             key: sum(bool(item[key]) for item in selected) for key in FIELDS
         }, 'listed_image_urls': sum(bool(item['images']) for item in selected),
@@ -68,6 +73,8 @@ def prepare(limit, seed):
 
 
 def image_path(product, view=0):
+    if product.get('source_name'):
+        return DATA / 'reference_images' / f"{product['id']}-{view}.jpg"
     return IMAGES / f"{product['id']}-{view}.jpg"
 
 
